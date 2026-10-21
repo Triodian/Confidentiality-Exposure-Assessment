@@ -25,7 +25,7 @@
   },
   {
    "id": "counsel",
-   "name": "Counsel (DLC Legal)"
+   "name": "Counsel (law firm)"
   },
   {
    "id": "gc",
@@ -205,7 +205,7 @@
    "code": "N1",
    "name": "Direction",
    "def": "A written AI-use direction covering the channel, issued to the deal team and insider list, with acknowledgements and dates.",
-   "producedBy": "DLC Legal drafts; deal team lead issues",
+   "producedBy": "Counsel drafts; deal team lead issues",
    "closes": "No"
   },
   {
@@ -337,12 +337,12 @@
   },
   "T1:B2": {
    "route": "Contract",
-   "owner": "DLC Legal, through the GC",
+   "owner": "Counsel, through the GC",
    "step": "Attestation and record terms in the adviser letter at the next amendment, with the register beside the clauses"
   },
   "T1:B3": {
    "route": "Direction",
-   "owner": "Deal team lead, with DLC Legal’s text",
+   "owner": "Deal team lead, with counsel’s text",
    "step": "Issue the AI-use direction; collect acknowledgements; add it to the insider list process"
   },
   "T2": {
@@ -352,7 +352,7 @@
   },
   "T3": {
    "route": "Contract",
-   "owner": "DLC Legal",
+   "owner": "Counsel",
    "step": "Clause in the letter or deed; or the finding records that no contracting point falls within 90 days"
   },
   "T4": {
@@ -662,7 +662,7 @@
   {
    "id": "privilegeMarking",
    "name": "Privilege marking",
-   "format": "As DLC Legal instructs",
+   "format": "As counsel instructs",
    "kind": "text"
   },
   {
@@ -775,7 +775,7 @@
    "id": "R1",
    "name": "Profile review",
    "when": "End of phase 1",
-   "reviewer": "DLC Legal and GC",
+   "reviewer": "Counsel and GC",
    "tests": "Profile agreed; every channel kind listed for consideration"
   },
   {
@@ -810,7 +810,7 @@
    "id": "R6",
    "name": "Counsel review",
    "when": "Phase 5",
-   "reviewer": "DLC Legal",
+   "reviewer": "Counsel",
    "tests": "Draft seen by counsel first; determinations transcribed accurately"
   },
   {
@@ -965,7 +965,7 @@
    "id": "CD4",
    "name": "The residual gap, marked",
    "contents": "The channels carrying F5, the information classes they reach, the class of control that would close it, the earliest horizon, and what the company would be able to show once it existed. No product named",
-   "accepted": "DLC Legal confirms the language rules in 10.4 are met"
+   "accepted": "Counsel confirms the language rules in 10.4 are met"
   },
   {
    "id": "CD5",
@@ -1154,7 +1154,7 @@
   },
   "privilege": {
    "term": "Privilege marking",
-   "def": "The marking DLC Legal directs, printed as the first line of every output. Storage and circulation follow counsel’s instruction.",
+   "def": "The marking counsel directs, printed as the first line of every output. Storage and circulation follow counsel’s instruction.",
    "where": "Profile, Outputs"
   },
   "legalline": {
@@ -1164,7 +1164,7 @@
   },
   "checker": {
    "term": "Independent checker",
-   "def": "Checks Triodian’s assessment and reports to DLC Legal, receiving the pack from counsel, not from Triodian. If none is confirmed, validation stands as R7.",
+   "def": "Checks Triodian’s assessment and reports to counsel, receiving the pack from counsel, not from Triodian. If none is confirmed, validation stands as R7.",
    "where": "Set-up, Review"
   },
   "roleLimits": {
@@ -1199,7 +1199,7 @@
   },
   "adviser": {
    "term": "Adviser",
-   "def": "A bank, law firm, technical adviser, accounting firm or data-room provider engaged on the deal. Each has one K7 entry. Questions to an adviser go through the deal team lead or DLC Legal, never from Triodian.",
+   "def": "A bank, law firm, technical adviser, accounting firm or data-room provider engaged on the deal. Each has one K7 entry. Questions to an adviser go through the deal team lead or counsel, never from Triodian.",
    "where": "Profile"
   }
  },

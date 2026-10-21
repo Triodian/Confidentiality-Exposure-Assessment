@@ -1,7 +1,7 @@
 # AI Confidentiality Exposure Assessment (Triodian)
 
 Single-deal web app: each deployment holds one assessment for one transaction, run as the technical half of an
-engagement led by DLC Legal. It runs as a Cloudflare Worker: the files in `public/` are served as static assets, and
+engagement led by the company’s counsel (any law firm; the firm is named in set-up). It runs as a Cloudflare Worker: the files in `public/` are served as static assets, and
 `src/worker.js` handles `/api/*`. It is built from the AI Use Assessment app (`Triodian/use-assessment`) and keeps its
 server design; the audit that set the baseline is in `docs/specs/`.
 
@@ -41,7 +41,7 @@ calibration set.
 ## How it works
 - Everyone signs in through Cloudflare Access; the app's user list (managed in `/admin`) decides who gets in.
 - Ten roles: method owner, assessor, classification reviewer, validation and delivery manager (Triodian); counsel
-  (DLC Legal); GC, deal team lead and tenant owner (the company); independent checker. A person may hold several.
+  (the engaging law firm); GC, deal team lead and tenant owner (the company); independent checker. A person may hold several.
 - Every change is saved to the server within about a second. The server checks each save against the signed-in
   person's roles, including the rules that depend on who did what: blind re-derivation of reach (R3), independent
   validation (R4), the check (R7) by the external checker or by validation, confirmations in one's own name.

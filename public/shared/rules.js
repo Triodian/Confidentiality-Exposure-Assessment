@@ -21,7 +21,7 @@ export const ROLES = [
   { id: 'peer', name: 'Classification reviewer (Triodian)' },
   { id: 'validation', name: 'Validation (Triodian)' },
   { id: 'delivery', name: 'Delivery manager (Triodian)' },
-  { id: 'counsel', name: 'Counsel (DLC Legal)' },
+  { id: 'counsel', name: 'Counsel (law firm)' },
   { id: 'gc', name: 'GC or approving executive (company)' },
   { id: 'dealLead', name: 'Deal team lead (company)' },
   { id: 'tenantOwner', name: 'Tenant owner (company)' },
