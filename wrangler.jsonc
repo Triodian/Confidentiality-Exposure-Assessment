@@ -14,7 +14,7 @@
 
   // SET-UP STEP 1: create the database (`npx wrangler d1 create confidentiality-exposure-db`) and paste its id here.
   "d1_databases": [
-    { "binding": "DB", "database_name": "confidentiality-exposure-db", "database_id": "REPLACE-WITH-THE-D1-DATABASE-ID" }
+    { "binding": "DB", "database_name": "confidentiality-exposure-db", "database_id": "35c814fa-7fa0-4fb5-967c-d0c80352ceb3" }
   ],
   "observability": { "enabled": true },
 
@@ -36,7 +36,7 @@
       "preview_urls": false,
       "routes": [{ "pattern": "confidentiality-test.triodian.com", "custom_domain": true }],
       "d1_databases": [
-        { "binding": "DB", "database_name": "confidentiality-exposure-test-db", "database_id": "REPLACE-WITH-THE-TEST-D1-DATABASE-ID" }
+        { "binding": "DB", "database_name": "confidentiality-exposure-test-db", "database_id": "de1439b4-9acb-42ce-ad4b-299efcaebf3c" }
       ],
       "vars": { "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
       "send_email": [{ "name": "EMAIL" }],
