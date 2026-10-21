@@ -31,7 +31,7 @@
   // Test copy with its own database. Deployed with `npx wrangler deploy --env test` from the `test` branch.
   "env": {
     "test": {
-      "name": "confidentiality-exposure-assessment-test",
+      "name": "cea-test",
       "workers_dev": false,
       "preview_urls": false,
       "routes": [{ "pattern": "confidentiality-test.triodian.com", "custom_domain": true }],
