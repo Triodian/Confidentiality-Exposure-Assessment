@@ -1,0 +1,11 @@
+import { redactFor, unredactSave } from '../lib/core/blind.js';
+const peer = { id: 'pr', roles: ['peer'] };
+const stored = { channels: [{ id: 'CH-01', classifiedBy: 'as', fields: { '8': { value: 'scope' }, '15': { value: 'R3' }, '16': { value: 'I6' } }, reachTests: [{ answer: true }, { answer: true }, { answer: false }], obtainability: { start: 'N5', rungs: { N5: {} } }, peerReview: { personId: '', reach: '' } }], history: [{ at: 'x', action: 'field 15', target: 'CH-01', from: null, to: 'R3' }], versions: [{ id: 'V1', snapshot: { channels: { 'CH-01': { kind: 'K1', f: { 8: 'scope', 15: 'R3' } } }, findings: {} } }], findings: [{ channelId: 'CH-01', type: 'F1' }] };
+let fails = 0; const t = (l, c) => { if (!c) fails++; console.log((c ? 'PASS' : 'FAIL') + ' · ' + l); };
+const r = redactFor(stored, peer);
+t('reach hidden', !r.channels[0].fields[15]); t('field 8 kept', r.channels[0].fields[8].value === 'scope'); t('classifier hidden', r.channels[0].classifiedBy === ''); t('tests blank', r.channels[0].reachTests[0].answer === null);
+t('history masked', r.history[0].action === 'hidden'); t('version trimmed', !r.versions[0].snapshot.channels['CH-01'].f[15]); t('findings emptied', r.findings.length === 0); t('blind list sent', r.blind[0] === 'CH-01');
+const save = JSON.parse(JSON.stringify(r)); save.channels[0].peerReview = { personId: 'pr', reach: 'R2' };
+const u = unredactSave(stored, save, peer);
+t('restored reach', u.data.channels[0].fields[15].value === 'R3'); t('restored classifier', u.data.channels[0].classifiedBy === 'as'); t('difference computed', u.data.channels[0].peerReview.differs === true); t('unblinded', u.unblinded === true); t('history restored', u.data.history[0].action === 'field 15');
+console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);

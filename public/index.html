@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Confidentiality Exposure Assessment · Triodian</title>
+<link rel="icon" href="/triodian-mark.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/source-serif-4-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/app.css">
+<style>.hdr{border-top-color:var(--copper)}.hdr .dot{background:var(--copper);box-shadow:0 0 0 3px #F1E6DD}.btn.primary{background:var(--copper);border-color:var(--copper)}.hdr .chip select{max-width:150px}.b-slate{color:var(--slate);background:#EBEEF1;border-color:#C9D1DA}@media (max-width:639px){.badge{white-space:normal;max-width:100%;overflow-wrap:anywhere}}</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="poproot"></div>
+<div id="sheetroot"></div>
+<div id="toast" class="hidden" aria-live="polite"></div>
+<script src="/cea-content.js"></script>
+<script src="/export.js"></script>
+<script type="module">
+  import { merge3 } from "/shared/merge.js";
+  import * as rules from "/shared/rules.js";
+  window.RAFMerge = { merge3 }; window.CEARuleset = rules;
+  window.dispatchEvent(new Event('cea:rules'));
+</script>
+<script src="/cea-rules.js"></script>
+<script src="/cea-outputs.js"></script>
+<script src="/cea-core.js"></script>
+<script src="/cea-screens.js"></script>
+<script>
+  // The shared rules load as a module (deferred), so the app boots once they are in.
+  (function () { function start() { const s = document.createElement('script'); s.src = '/cea.js'; document.body.appendChild(s); }
+    if (window.CEARuleset) start(); else window.addEventListener('cea:rules', start, { once: true }); })();
+</script>
+</body>
+</html>

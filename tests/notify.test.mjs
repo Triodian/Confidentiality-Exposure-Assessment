@@ -1,0 +1,16 @@
+import { eventsFromSave, dueReminders } from '../lib/core/notify.js';
+const users = [{ id: 'cn', email: 'cn@x', roles: ['counsel'], active: true }, { id: 'mo', email: 'mo@x', roles: ['methodOwner'], active: true }, { id: 'pr', email: 'pr@x', roles: ['peer'], active: true }, { id: 'dl', email: 'dl@x', roles: ['dealLead'], active: true }, { id: 'as', email: 'as@x', roles: ['assessor'], active: true }, { id: 'ck', email: 'ck@x', roles: ['checker'], active: true }, { id: 'gc', email: 'gc@x', roles: ['gc'], active: true }];
+const actor = users[4];
+const o = { engagement: { reference: 'R' }, questions: [], channels: [{ id: 'CH-01', fields: {}, peerReview: {}, notDeterminable: {} }], independentReviewPoints: [], reviews: [] };
+const n = JSON.parse(JSON.stringify(o)); n.questions.push({ ref: 'QC-01', question: 'q', status: 'open' }); n.channels[0].fields['15'] = { value: 'R3' }; n.channels[0].classifiedBy = 'as'; n.channels[0].notDeterminable = { on: true, question: 'why', who: 'them' };
+const m = eventsFromSave(o, n, users, actor, 'http://x');
+let fails = 0; const t = (l, c) => { if (!c) fails++; console.log((c ? 'PASS' : 'FAIL') + ' · ' + l); };
+t('question → counsel', m.some(x => x.to.id === 'cn' && /Question to counsel/.test(x.subject)));
+t('reach → deal lead to confirm', m.some(x => x.to.id === 'dl' && /Reach to confirm/.test(x.subject)));
+t('reach → reviewer to re-derive', m.some(x => x.to.id === 'pr' && /re-derive/.test(x.subject)));
+t('F4 → delivery (none here)', !m.some(x => /Not determinable/.test(x.subject)));
+t('no email names deal content', m.every(x => !/Kestrel/.test(x.text)));
+const due = dueReminders({ profile: { counselTurnaround: 2 }, questions: [{ ref: 'QC-01', status: 'open', sentOn: '2026-10-20', question: 'q' }] }, users, '2026-10-25', 'http://x');
+t('overdue question reminds counsel', due.length === 1 && due[0].to.id === 'cn');
+t('not overdue within turnaround', dueReminders({ profile: { counselTurnaround: 5 }, questions: [{ ref: 'QC-01', status: 'open', sentOn: '2026-10-22', question: 'q' }] }, users, '2026-10-25', 'http://x').length === 0);
+console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);

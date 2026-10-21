@@ -1,0 +1,47 @@
+// Cloudflare Worker configuration for the AI Confidentiality Exposure Assessment. Cloudflare reads this file on every deploy from GitHub.
+// Same shape as the AI Use Assessment Worker (Triodian/use-assessment); only the names, addresses and databases differ.
+{
+  "name": "confidentiality-exposure-assessment",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+
+  // Only reachable at the custom domain (behind Cloudflare Access sign-in).
+  // The default workers.dev address and preview addresses are switched off.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "confidentiality.triodian.com", "custom_domain": true }],
+
+  // SET-UP STEP 1: create the database (`npx wrangler d1 create confidentiality-exposure-db`) and paste its id here.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "confidentiality-exposure-db", "database_id": "REPLACE-WITH-THE-D1-DATABASE-ID" }
+  ],
+  "observability": { "enabled": true },
+
+  // Daily at 07:00 Brisbane time: remind counsel about questions open for two working days or more (lib/core/notify.js).
+  "triggers": { "crons": ["0 21 * * *"] },
+
+  // Email notifications are sent through Cloudflare Email Service from notifications@triodian.com (triodian.com must be
+  // onboarded in Email Service). Until it is, each send fails and is listed as Failed in Admin → Notifications; saves are
+  // never affected. To hold messages instead of sending, set NOTIFY_SENDING to "off".
+  "send_email": [{ "name": "EMAIL" }],
+
+  "vars": { "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+
+  // Test copy with its own database. Deployed with `npx wrangler deploy --env test` from the `test` branch.
+  "env": {
+    "test": {
+      "name": "confidentiality-exposure-assessment-test",
+      "workers_dev": false,
+      "preview_urls": false,
+      "routes": [{ "pattern": "confidentiality-test.triodian.com", "custom_domain": true }],
+      "d1_databases": [
+        { "binding": "DB", "database_name": "confidentiality-exposure-test-db", "database_id": "REPLACE-WITH-THE-TEST-D1-DATABASE-ID" }
+      ],
+      "vars": { "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+      "send_email": [{ "name": "EMAIL" }],
+      "triggers": { "crons": ["0 21 * * *"] },
+      "observability": { "enabled": true }
+    }
+  }
+}
