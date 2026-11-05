@@ -111,7 +111,7 @@ function header() {
       ${b !== 'phone' && (practice() || !SRV.user) ? `<label class="chip" title="Practice only: choose whose view to try"><span aria-hidden="true">⌾</span>${personSelect('who-hdr')}</label>` : ''}
       ${account()}<button class="iconbtn" data-act="drawer" aria-label="Menu" aria-expanded="${UI.drawer}">☰</button></div></div>${docband()}</header>
     ${SRV.site ? `<div class="examplebar" style="background:#FDF0E1;color:#8A4B08;border-color:#F0D2AE">${esc(SRV.site)}: a test site for trying things out, not the live assessment</div>` : ''}
-    ${S.engagement.example ? `<div class="examplebar">Worked example: a fictional company, deal and advisers, for practice only. Nothing is saved.${SRV.on ? ' <button class="lnk" data-act="leaveExample">Back to the assessment</button>' : ''}</div>` : ''}
+    ${S.engagement.example ? `<div class="examplebar">Worked example: a fictional company, deal and advisers, for practice only. Nothing is saved. <button class="lnk" data-act="leaveExample">Leave the worked example</button></div>` : ''}
     ${blindChannels().length ? `<div class="examplebar" style="background:var(--aubergine-bg);color:var(--aubergine);border-color:#D9CFE0">Blind re-derivation (R3): the classifier’s work on ${esc(blindChannels().map(e => e.id).join(', '))} is hidden until you record your own reach</div>` : ''}`;
 }
 function drawer() {
@@ -123,7 +123,7 @@ function drawer() {
     ${practice() || !SRV.user ? `<div class="grp">Acting as (practice only)</div><label class="chip" style="width:100%"><span aria-hidden="true">⌾</span>${personSelect('who-drw')}</label>` : ''}
     ${(SRV.archives || []).length ? `<div class="grp">Earlier assessments</div>${SRV.archives.map(a => `<button class="item" data-act="openArchive" data-id="${a.id}">${esc(a.label)}<span class="small soft" style="margin-left:auto">read only</span></button>`).join('')}` : ''}
     <div class="grp">Practice</div>
-    ${practice() ? (SRV.on ? '<button class="item" data-act="leaveExample">Leave the worked example</button>' : '') : '<button class="item" data-act="example">Open the worked example</button>'}
+    ${practice() ? '<button class="item" data-act="leaveExample">Leave the worked example</button>' : '<button class="item" data-act="example">Open the worked example</button>'}
     <p class="small soft" style="padding:0 10px">The worked example is fictional and runs in this browser only. Nothing in it is saved.</p>
     <div class="grp">Account</div>
     ${SRV.user ? `<p class="small soft" style="padding:0 10px">Signed in as ${esc(SRV.user.email)}</p><a class="item" href="/profile/" style="text-decoration:none">Your profile</a>` : ''}
