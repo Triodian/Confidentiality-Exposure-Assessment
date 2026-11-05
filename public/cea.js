@@ -14,8 +14,8 @@ const ACT = {
   drawer: () => { UI.drawer = !UI.drawer; render(); },
   acct: () => { UI.acct = !UI.acct; render(); },
   saveChip: () => { if (SRV.state === 'conflict') location.reload(); else if (SRV.state === 'error') X.saveNow(); else toast(X.saveChip ? '' : ''); },
-  example: () => { buildExample(); UI.screen = 'overview'; UI.channelId = null; UI.archived = null; render(); },
-  leaveExample: async () => { X.setState(null); UI.personId = ''; UI.vprev = null; UI.vkey = null; await X.loadReal(); UI.screen = S() ? 'overview' : 'entry'; render(); },
+  example: () => { markExampleLeft(false); openExample(); },
+  leaveExample: async () => { X.setState(null); UI.personId = ''; UI.vprev = null; UI.vkey = null; UI.drawer = false; markExampleLeft(true); await X.loadReal(); UI.screen = S() ? 'overview' : 'entry'; render(); },
   new: async () => { const s = R().newAssessment(); X.setState(s); s.people = SRV.people || []; X.applyIdentity(); UI.screen = 'setup'; log('start', 'assessment', null, 'started'); render(); },
   openArchive: async d => { if (!await confirmLeave()) return; const r = await X.api('GET', '/api/archive/' + d.id); if (!r.ok) return toast(r.error); try { X.setState(R().hydrate(r.body.data)); } catch (e) { return toast('The earlier assessment could not be read: ' + e.message); } UI.archived = { id: r.body.id, label: r.body.label }; UI.personId = SRV.user ? SRV.user.id : ''; UI.screen = 'overview'; UI.channelId = null; render(); },
   leaveArchive: async () => { UI.archived = null; await X.loadReal(); UI.screen = S() ? 'overview' : 'entry'; render(); },
@@ -194,6 +194,14 @@ function buildExample() {
 }
 
 /* ---------- boot ---------- */
+/* The worked example opens by default. Leaving it is remembered for this browser session, so a reload stays out.
+   A link to My actions (from an email) opens the real engagement. Same in all Triodian apps. */
+const EX_LEFT = 'triodian.example.left';
+const exampleLeft = () => { try { return sessionStorage.getItem(EX_LEFT) === '1'; } catch (e) { return false; } };
+const markExampleLeft = left => { try { if (left) sessionStorage.setItem(EX_LEFT, '1'); else sessionStorage.removeItem(EX_LEFT); } catch (e) {} };
+const openExampleByDefault = () => !exampleLeft() && location.hash !== '#actions';
+/* Opens the worked example: a fictional company and deal, never saved. */
+function openExample() { buildExample(); UI.screen = 'overview'; UI.channelId = null; UI.archived = null; UI.drawer = false; render(); }
 function boot() {
   const C0 = window.CEA_CONTENT;
   if (!C0) { document.getElementById('app').innerHTML = '<p style="padding:40px">The app content (cea-content.js) could not be loaded. Reload the page.</p>'; return; }
@@ -215,6 +223,7 @@ async function connect() {
   SRV.checked = true;
   if (r.ok) { SRV.on = true; SRV.user = r.body.user; SRV.site = r.body.site || ''; await X.loadReal(); await X.loadArchives(); if (S()) { const h = location.hash.slice(1); UI.screen = h && X.SNAME[h] ? h : 'overview'; } }
   else { SRV.on = false; SRV.code = r.code || ''; SRV.reason = r.error; }
+  if (SRV.code !== 'no_access' && openExampleByDefault()) { openExample(); return; }
   render();
 }
 window.CEAApp = { get state() { return S(); }, go, gates: () => R().gates(), finding: id => R().finding(X.ch(id)), validate: o => R().validateFile(o), broken: () => R().brokenRefs(), hits: () => R().legalHits(), hydrate: o => R().hydrate(o), setState: x => { X.setState(x); render(); }, save: () => X.snapshotForSave(), example: buildExample };
