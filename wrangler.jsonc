@@ -4,9 +4,10 @@
   "name": "confidentiality-exposure-assessment",
   "main": "src/worker.js",
   "compatibility_date": "2026-10-01",
-  "assets": { "directory": "./public", "binding": "ASSETS" },
+  // run_worker_first: every request reaches src/worker.js first, so pages can require sign-in (lib/identity/session.js).
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
 
-  // Only reachable at the custom domain (behind Cloudflare Access sign-in).
+  // Only reachable at the custom domain. People sign in at /login; Cloudflare Access guards /auth/email only.
   // The default workers.dev address and preview addresses are switched off.
   "workers_dev": false,
   "preview_urls": false,
@@ -26,7 +27,9 @@
   // never affected. To hold messages instead of sending, set NOTIFY_SENDING to "off".
   "send_email": [{ "name": "EMAIL" }],
 
-  "vars": { "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+  // DEMO_LOGIN and DEMO_SESSION_KEY (demo addition): the shared trio_demo sign-in, the same values as the other
+  // Triodian apps so one demo sign-in covers all of them. See lib/identity/session.js.
+  "vars": { "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "DEMO_SESSION_KEY": "Whrq7Fk0ZTbydyKV_pwzm3bO9lxn9-AfRmwGXnPpd3Q", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
 
   // Test copy with its own database. Deployed with `npx wrangler deploy --env test` from the `test` branch.
   "env": {
@@ -38,7 +41,7 @@
       "d1_databases": [
         { "binding": "DB", "database_name": "confidentiality-exposure-test-db", "database_id": "de1439b4-9acb-42ce-ad4b-299efcaebf3c" }
       ],
-      "vars": { "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+      "vars": { "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "DEMO_SESSION_KEY": "Whrq7Fk0ZTbydyKV_pwzm3bO9lxn9-AfRmwGXnPpd3Q", "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
       "send_email": [{ "name": "EMAIL" }],
       "triggers": { "crons": ["0 21 * * *"] },
       "observability": { "enabled": true }

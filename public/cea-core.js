@@ -127,7 +127,7 @@ function drawer() {
     <p class="small soft" style="padding:0 10px">The worked example is fictional and runs in this browser only. Nothing in it is saved.</p>
     <div class="grp">Account</div>
     ${SRV.user ? `<p class="small soft" style="padding:0 10px">Signed in as ${esc(SRV.user.email)}</p><a class="item" href="/profile/" style="text-decoration:none">Your profile</a>` : ''}
-    <a class="item" href="/cdn-cgi/access/logout" style="text-decoration:none">Sign out</a>
+    <a class="item" href="/auth/logout" style="text-decoration:none">Sign out</a>
     <div class="grp">Apps</div>
     <div class="item" aria-current="page"><span class="appic" style="background:#F1E6DD;color:var(--copper)">CE</span><span>Confidentiality Exposure<br><span class="small soft">Channels, ladder, findings for one deal</span></span><span class="badge b-green" style="margin-left:auto">now</span></div>
   </aside>`;
@@ -155,7 +155,7 @@ function entryOverlay() {
     <div class="acts">
       ${SRV.on && canSetup() ? `<button class="act" data-act="new"><span class="mono" style="color:var(--copper)">01</span><span><strong>Start the assessment</strong><br><span class="small soft">Begin at set-up. Everyone with a role then works on the same assessment.</span></span></button>` : ''}
       <button class="act" data-act="example"><span class="mono" style="color:var(--copper)">${SRV.on && canSetup() ? '02' : '01'}</span><span><strong>Open the worked example</strong><br><span class="small soft">Practise on a fictional deal: a listed company in diligence, with an enterprise assistant, a data room and three advisers. Never saved.</span></span></button>
-    </div><p class="small" style="margin-top:16px">New to the app? <a href="/user-guide/">Read the user guide</a>: who does what, the eight phases, and how the outputs are made.</p>${SRV.user ? `<p class="small soft" style="margin-top:8px">Signed in as ${esc(SRV.user.email)} · <a href="/profile/">Your profile</a>${SRV.user.isAdmin ? ' · <a href="/admin/">Admin</a>' : ''} · <a href="/cdn-cgi/access/logout">Sign out</a></p>` : `<p class="small soft" style="margin-top:8px"><a href="/cdn-cgi/access/logout">Sign out</a></p>`}<div class="scope" style="margin-top:22px"><span aria-hidden="true">⚠</span><span>${esc(C.banner)}</span></div></div></div>`;
+    </div><p class="small" style="margin-top:16px">New to the app? <a href="/user-guide/">Read the user guide</a>: who does what, the eight phases, and how the outputs are made.</p>${SRV.user ? `<p class="small soft" style="margin-top:8px">Signed in as ${esc(SRV.user.email)} · <a href="/profile/">Your profile</a>${SRV.user.isAdmin ? ' · <a href="/admin/">Admin</a>' : ''} · <a href="/auth/logout">Sign out</a></p>` : `<p class="small soft" style="margin-top:8px"><a href="/auth/logout">Sign out</a></p>`}<div class="scope" style="margin-top:22px"><span aria-hidden="true">⚠</span><span>${esc(C.banner)}</span></div></div></div>`;
 }
 const opening = (eb, h1, sub) => `<div class="opening"><div class="eyebrow">${eb}</div><h1 class="h1">${h1}</h1>${sub ? `<p class="sub">${sub}</p>` : ''}</div>`;
 function seqNav() { const i = SEQ.indexOf(UI.screen); return i < 0 ? {} : { prev: SEQ[i - 1], next: SEQ[i + 1] }; }
@@ -373,7 +373,7 @@ function account() {
     ${u.isAdmin ? '<a role="menuitem" class="item" href="/admin/">Admin · users and activity</a>' : ''}
     <a role="menuitem" class="item" href="/user-guide/">User guide</a>
     <button role="menuitem" class="item" data-act="go" data-to="reference">Reference</button>
-    <a role="menuitem" class="item signout" href="/cdn-cgi/access/logout">Sign out</a></div>` : ''}</span>`;
+    <a role="menuitem" class="item signout" href="/auth/logout">Sign out</a></div>` : ''}</span>`;
 }
 function snapshotForSave() {
   const o = JSON.parse(JSON.stringify(S));
