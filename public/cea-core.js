@@ -126,7 +126,6 @@ function drawer() {
     ${practice() ? (SRV.on ? '<button class="item" data-act="leaveExample">Leave the worked example</button>' : '') : '<button class="item" data-act="example">Open the worked example</button>'}
     <p class="small soft" style="padding:0 10px">The worked example is fictional and runs in this browser only. Nothing in it is saved.</p>
     <div class="grp">Apps</div>
-    <a class="item" href="https://use-assessment.triodian.com/" style="text-decoration:none"><span class="appic" style="background:#E3E9EF;color:var(--navy)">UA</span><span>AI Use Assessment<br><span class="small soft">The general method this deal assessment is one instance of</span></span></a>
     <div class="item" aria-current="page"><span class="appic" style="background:#F1E6DD;color:var(--copper)">CE</span><span>Confidentiality Exposure<br><span class="small soft">Channels, ladder, findings for one deal</span></span><span class="badge b-green" style="margin-left:auto">now</span></div>
   </aside>`;
 }
