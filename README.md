@@ -75,3 +75,8 @@ honours only on localhost.
 ```
 npx wrangler dev --local-upstream localhost --var LOCAL_DEV_NO_SIGNIN_EMAIL:you@example.com
 ```
+
+## Licence
+
+AI Confidentiality Exposure Assessment is open source under the [Apache License, Version 2.0](LICENSE). Copyright 2026 Triodian Pty Ltd.
+Third-party components bundled with it keep their own licences; see [`NOTICE`](NOTICE).
