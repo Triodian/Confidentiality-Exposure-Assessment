@@ -26,6 +26,8 @@ export const ROLES = [
   { id: 'dealLead', name: 'Deal team lead (company)' },
   { id: 'tenantOwner', name: 'Tenant owner (company)' },
   { id: 'checker', name: 'Independent checker' },
+  // Where the GC also acts as counsel (development plan task 0.5), the second agreement at R1 comes from this person.
+  { id: 'executive', name: 'Second approver (company executive)' },
 ];
 export const ROLE_IDS = ROLES.map(r => r.id);
 export const TRIODIAN = ['methodOwner', 'assessor', 'peer', 'validation', 'delivery'];
@@ -36,6 +38,7 @@ export const PERMISSIONS = [
   { what: 'The deal profile (P1 to P9)', roles: ['methodOwner', 'delivery'] },
   { what: 'GC agreement to the profile (R1)', roles: ['gc'] },
   { what: 'Counsel agreement to the profile (R1)', roles: ['counsel'] },
+  { what: 'Second agreement to the profile (R1), where the GC also acts as counsel: the named second approver', roles: ['executive'] },
   { what: 'Register facts, fields 1 to 14 (not on channels they review)', roles: ['assessor', 'methodOwner'] },
   { what: 'Classification, fields 15 to 22 (not on channels they review)', roles: ['assessor', 'methodOwner'] },
   { what: 'Confirm who can reach a channel (question 1)', roles: ['dealLead'] },
@@ -60,6 +63,9 @@ export const isClosed = S => !!(S && rev(S, 'R7').result === 'complete' && (((S.
 const OPEN_WHEN_CLOSED = new Set(['annex', 'sign', 'close', 'r7']);
 const validatedBy = (S, id) => !!(rev(S, 'R4').by === id && rev(S, 'R4').result);
 
+/** One person may not give both agreements to the profile (R1) unless set-up says the GC also acts as counsel. */
+export const BOTH_AGREEMENTS = 'You recorded the other agreement to the profile. One person cannot give both: if the GC also acts as counsel, tick “The GC also acts as counsel” in set-up and name a second approver, who gives the second agreement.';
+
 /**
  * The app's rules. user: { id, roles[], isAdmin }. S: the stored assessment. x: the stored channel, when the change is to one.
  * Returns '' when allowed, otherwise the reason, which the browser shows beside the disabled control.
@@ -72,8 +78,23 @@ export function deny(target, user, S, x) {
   switch (target) {
     case 'setup': return r('methodOwner') || r('delivery') || user.isAdmin ? '' : 'Only the method owner, the delivery manager or an administrator can change set-up.';
     case 'profile': return r('methodOwner') || r('delivery') || user.isAdmin ? '' : 'Only the method owner, the delivery manager or an administrator can change the deal profile.';
-    case 'agreeGC': return r('gc') ? '' : 'Only the GC can record the GC’s agreement to the profile.';
-    case 'agreeCounsel': return r('counsel') ? '' : 'Only counsel can record counsel’s agreement to the profile.';
+    case 'agreeGC': {
+      if (!r('gc')) return 'Only the GC can record the GC’s agreement to the profile.';
+      const pa = (S && S.profileAgreed) || {}, e = (S && S.engagement) || {};
+      if (!e.gcActsAsCounsel && pa.counselBy && pa.counselBy === id) return BOTH_AGREEMENTS;
+      return '';
+    }
+    case 'agreeCounsel': {
+      // Where the GC also acts as counsel (development plan task 0.5), the second agreement comes from the second approver named in set-up.
+      const pa = (S && S.profileAgreed) || {}, e = (S && S.engagement) || {};
+      if (e.gcActsAsCounsel) {
+        if (!e.secondApproverId) return 'The GC also acts as counsel. Name the second approver in set-up first.';
+        return e.secondApproverId === id && r('executive') ? '' : 'The GC also acts as counsel, so the second agreement to the profile comes from the second approver named in set-up.';
+      }
+      if (!r('counsel')) return 'Only counsel can record counsel’s agreement to the profile.';
+      if (pa.gcBy && pa.gcBy === id) return BOTH_AGREEMENTS;
+      return '';
+    }
     case 'facts':
       if (!(r('assessor') || r('methodOwner'))) return 'Only an assessor or the method owner can enter facts.';
       if (x && (x.peerReview || {}).personId === id) return 'You are the classification reviewer of this channel, so you cannot edit it.';

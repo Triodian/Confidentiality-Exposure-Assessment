@@ -61,4 +61,20 @@ t('deal content hit on a field', R.hits([]).filter(h => h.kind === 'content').le
 const copy = JSON.parse(JSON.stringify(S)); copy.channels[0].id = '';
 t('hydrate assigns a missing id and notes it', R.hydrate(copy).loadNotes.length, 1);
 t('validate rejects a wrong schema', !!R.validateFile({ schema: 'x' }), true);
+// The GC also acts as counsel (development plan task 0.5): the reasons the screens show
+const { deny: rule, BOTH_AGREEMENTS } = await import('../public/shared/rules.js');
+const gx = { id: 'gx', roles: ['gc', 'counsel'] }, ex = { id: 'ex', roles: ['executive'] };
+const st = (e, p) => ({ engagement: { ...e }, profileAgreed: { ...p }, reviews: [] });
+t('one person giving both agreements is refused with the reason', rule('agreeCounsel', gx, st({}, { gcBy: 'gx' })), BOTH_AGREEMENTS);
+t('the reason names the setting to turn on', /The GC also acts as counsel/.test(BOTH_AGREEMENTS), true);
+t('with the setting and no approver named, the reason says to name one', rule('agreeCounsel', ex, st({ gcActsAsCounsel: true }, { gcBy: 'gx' })), 'The GC also acts as counsel. Name the second approver in set-up first.');
+t('with the setting, the named second approver may agree', rule('agreeCounsel', ex, st({ gcActsAsCounsel: true, secondApproverId: 'ex' }, { gcBy: 'gx' })), '');
+// every output records that the GC held both roles
+{ const O = require('../public/cea-outputs.js'), S2 = R.newAssessment(); S2.engagement.gcActsAsCounsel = true; S2.engagement.secondApproverId = 'ex'; S2.people.push({ id: 'ex', name: 'Ed Exec', roles: ['executive'] });
+  const out = O.create({ C, S: () => S2, R: require('../public/cea-rules.js').create(C, () => S2, { today: () => '2026-11-06' }), pname: id => (S2.people.find(p => p.id === id) || {}).name || '', dDoc: d => d, fmtAt: d => d, today: () => '2026-11-06' });
+  const heads = out.OUTS.map(o => out.mdHead(o));
+  t('every Word output says the GC held both roles and who gave the second agreement', heads.every(h => h.includes('The GC also acted as counsel in this assessment') && h.includes('Ed Exec')), true);
+  t('the CSV register says so too', out.cd1Csv().includes('The GC also acted as counsel'), true);
+  S2.engagement.gcActsAsCounsel = false;
+  t('without the setting, outputs say nothing about it', out.mdHead(out.OUTS[0]).includes('also acted as counsel'), false); }
 console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);

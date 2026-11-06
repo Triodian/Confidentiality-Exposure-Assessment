@@ -42,6 +42,10 @@
   {
    "id": "checker",
    "name": "Independent checker"
+  },
+  {
+   "id": "executive",
+   "name": "Second approver (company executive)"
   }
  ],
  "boundaries": [

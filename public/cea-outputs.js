@@ -19,7 +19,12 @@ function create(ctx) {
   const outStatus = o => FORCE === 'draft' ? 'Draft' : FORCE === 'final' ? 'Final' : finalWhy(o) ? 'Draft' : 'Final';
   function mdHead(o) {
     const s = S(), e = s.engagement, p = s.profile, st = RAW ? '' : outStatus(o);
-    return `${p.privilegeMarking || '[Privilege marking not recorded in the profile]'}\n\n# ${o.id} · ${o.name}\n\n**${p.codeName || '[Code name]'}**${st ? ' · ' + st : ''} · ${dDoc(ctx.today())}${e.example ? ' · WORKED EXAMPLE, FICTIONAL' : ''}\n\n${e.company || '[Company]'} · ${e.reference || '[reference]'} · prepared for ${e.counselFirm || 'counsel'}\n\n`;
+    return `${p.privilegeMarking || '[Privilege marking not recorded in the profile]'}\n\n# ${o.id} · ${o.name}\n\n**${p.codeName || '[Code name]'}**${st ? ' · ' + st : ''} · ${dDoc(ctx.today())}${e.example ? ' · WORKED EXAMPLE, FICTIONAL' : ''}\n\n${e.company || '[Company]'} · ${e.reference || '[reference]'} · prepared for ${e.counselFirm || 'counsel'}\n\n${bothRoles()}`;
+  }
+  /* Development plan task 0.5: every output records that the GC held both roles, and who gave the second agreement. */
+  function bothRoles() {
+    const e = S().engagement; if (!e.gcActsAsCounsel) return '';
+    return `The GC also acted as counsel in this assessment. The second agreement to the profile (R1) was given by the second approver${e.secondApproverId ? ', ' + (pname(e.secondApproverId) || e.secondApproverId) : ''}.\n\n`;
   }
 
   /* ---------- pieces ---------- */
@@ -95,7 +100,7 @@ function create(ctx) {
   function cd1Csv() {
     const s = S(), q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"', o = O('CD1');
     const head = ['Channel', ...C.fields.map(d => d.n + ' ' + R.FLD(d.n).name), ...C.fields.map(d => d.n + ' source'), 'Not known', 'Absent'];
-    return [[s.profile.privilegeMarking || '[Privilege marking not recorded]'], [s.profile.codeName || '[Code name]'], [outStatus(o) + ' · ' + dDoc(ctx.today())], [(s.engagement.company || '[Company]') + ' · ' + (s.engagement.reference || '')], [],
+    return [[s.profile.privilegeMarking || '[Privilege marking not recorded]'], [s.profile.codeName || '[Code name]'], [outStatus(o) + ' · ' + dDoc(ctx.today())], [(s.engagement.company || '[Company]') + ' · ' + (s.engagement.reference || '')], ...(bothRoles() ? [[bothRoles().trim()]] : []), [],
       head, ...s.channels.map(e => [e.id, ...C.fields.map(d => fieldOut(e, d.n)), ...C.fields.map(d => fieldSrc(e, d.n)), R.notKnownCount(e), e.absent && e.absent.on ? e.absent.reason || 'yes' : ''])].map(r => r.map(q).join(',')).join('\n');
   }
   function genCD2() { return mdHead(O('CD2')) + `## Summary\n\n` + summaryTable() + `## Worksheets\n\n` + S().channels.map(e => worksheetMd(e)).join(''); }

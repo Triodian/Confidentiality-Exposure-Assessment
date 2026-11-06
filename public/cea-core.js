@@ -195,7 +195,8 @@ function myActions() {
   if ((r('methodOwner') || r('delivery')) && !G[0].ok) add('Finish set-up and the profile', 'Still open: ' + G[0].items.filter(i => !i[1]).map(i => i[0]).join('; ') + '.', { act: 'go', to: G[0].items[0][1] && G[0].items[3][1] ? 'profile' : 'setup' });
   if ((r('methodOwner') || r('delivery')) && G[0].ok && !G[1].items[1][1]) add('Consider every channel kind', 'Enter a channel for each kind K1 to K7, or record it as absent with the reason.', { act: 'go', to: 'register' });
   if (r('gc') && S.profile.codeName && !S.profileAgreed.gcBy) add('Agree the deal profile (R1)', 'The GC records their own agreement to the profile.', { act: 'go', to: 'profile' });
-  if (r('counsel') && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the deal profile (R1)', 'Counsel records its own agreement to the profile.', { act: 'go', to: 'profile' });
+  if (r('counsel') && !S.engagement.gcActsAsCounsel && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the deal profile (R1)', 'Counsel records its own agreement to the profile.', { act: 'go', to: 'profile' });
+  if (r('executive') && S.engagement.gcActsAsCounsel && S.engagement.secondApproverId === p.id && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the deal profile (R1)', 'The GC also acts as counsel, so you give the second agreement to the profile.', { act: 'go', to: 'profile' });
   S.channels.forEach(e => {
     if (blindFor(e) || R.isAbsent(e)) return;
     if ((r('assessor') || r('methodOwner')) && !deny('facts', e)) { const m = R.missingIn(e, R.FACTS_N); if (m) add(`Record the facts for ${e.id}`, `${m} of 12 fields still to record or mark not known · ${R.kindOf(e)}`, { act: 'openChannel', id: e.id, t: 'facts' }); }

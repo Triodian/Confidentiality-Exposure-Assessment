@@ -5,6 +5,7 @@ const users = [
   { id: 'dl', name: 'Dan', roles: ['dealLead'], active: true }, { id: 'cn', name: 'Cass', roles: ['counsel'], active: true },
   { id: 'gc', name: 'Gia', roles: ['gc'], active: true }, { id: 'ck', name: 'Chk', roles: ['checker'], active: true },
   { id: 'ap', name: 'AsPeer', roles: ['assessor', 'peer'], active: true }, { id: 'ad', name: 'Admin', roles: [], isAdmin: true, active: true },
+  { id: 'gx', name: 'Gina', roles: ['gc', 'counsel'], active: true }, { id: 'ex', name: 'Ed', roles: ['executive'], active: true }, { id: 'ex2', name: 'Eve', roles: ['executive'], active: true },
 ];
 const U = id => users.find(u => u.id === id);
 const base = () => ({ schema: 'triodian.cea.v1', engagement: { id: 'e1', company: 'Acme', legalPhrases: [], productPhrases: [], annexText: {}, annexSigned: { by: '', on: '' }, closure: { by: '', on: '', disposition: '', note: '' }, checkerMode: 'external', checkerPersonId: 'ck' }, profile: { codeName: 'Kestrel', folders: [], advisers: [], tools: [] }, profileAgreed: { gcBy: '', gcOn: '', counselBy: '', counselOn: '' }, people: [], documents: [], interviews: [], demonstration: {},
@@ -45,4 +46,16 @@ t('history cannot be rewritten', 'as', n => { n.history = []; }, false, (() => {
 t('field 26 is unknown', 'as', n => n.channels[0].fields['26'] = { value: 'x' }, false);
 t('closed assessment refuses facts', 'as', n => n.channels[0].fields['4'] = { value: 'y' }, false, (() => { const b = base(); b.reviews[2] = { point: 'R7', result: 'complete' }; b.engagement.closure = { by: 'cn', on: 'x', disposition: 'archive' }; return b; })());
 console.log('deny facts no role:', deny('facts', { id: 'z', roles: [] }, base()));
+// The GC also acts as counsel (development plan task 0.5)
+const pa = (gcBy, counselBy) => { const b = base(); b.profileAgreed = { gcBy, gcOn: gcBy ? '2026-11-06' : '', counselBy, counselOn: counselBy ? '2026-11-06' : '' }; return b; };
+t('without the setting, the same person cannot give the second agreement', 'gx', n => { n.profileAgreed.counselBy = 'gx'; n.profileAgreed.counselOn = '2026-11-06'; }, false, pa('gx', ''));
+t('without the setting, nor the GC agreement after giving counsel’s', 'gx', n => { n.profileAgreed.gcBy = 'gx'; n.profileAgreed.gcOn = '2026-11-06'; }, false, pa('', 'gx'));
+t('without the setting, counsel (another person) agrees as usual', 'cn', n => { n.profileAgreed.counselBy = 'cn'; n.profileAgreed.counselOn = '2026-11-06'; }, true, pa('gx', ''));
+const dual = pa('gx', ''); dual.engagement.gcActsAsCounsel = true; dual.engagement.secondApproverId = 'ex';
+t('with the setting, the named second approver gives the second agreement', 'ex', n => { n.profileAgreed.counselBy = 'ex'; n.profileAgreed.counselOn = '2026-11-06'; }, true, dual);
+t('with the setting, the GC cannot give it', 'gx', n => { n.profileAgreed.counselBy = 'gx'; n.profileAgreed.counselOn = '2026-11-06'; }, false, dual);
+t('with the setting, counsel cannot give it either', 'cn', n => { n.profileAgreed.counselBy = 'cn'; n.profileAgreed.counselOn = '2026-11-06'; }, false, dual);
+t('with the setting, an executive who is not named cannot give it', 'ex2', n => { n.profileAgreed.counselBy = 'ex2'; n.profileAgreed.counselOn = '2026-11-06'; }, false, dual);
+t('the method owner turns the setting on in set-up', 'mo', n => { n.engagement.gcActsAsCounsel = true; n.engagement.secondApproverId = 'ex'; }, true);
+t('the GC cannot turn the setting on', 'gx', n => { n.engagement.gcActsAsCounsel = true; }, false);
 console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);
