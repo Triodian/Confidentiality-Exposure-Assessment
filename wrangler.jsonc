@@ -17,6 +17,13 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "confidentiality-exposure-db", "database_id": "35c814fa-7fa0-4fb5-967c-d0c80352ceb3" }
   ],
+  // IDENTITY (development plan tasks 1B.2 and 1B.3): the suite's shared identity database, one per environment, bound to
+  // all four engagement apps. With it, people are added once, roles are kept per app, and one sign-in covers every app
+  // on SUITE_COOKIE_DOMAIN (the cookie SUITE_SESSION_COOKIE; the test sites use their own name so live and test stay apart).
+  // Each app copies its own users in the first time it starts with the binding. Create the databases once:
+  //   npx wrangler d1 create triodian-identity      and      npx wrangler d1 create triodian-identity-test
+  // then add, here and in the test env with the test database:
+  //   { "binding": "IDENTITY", "database_name": "triodian-identity", "database_id": "<id from the create command>" }
   "observability": { "enabled": true },
 
   // Daily at 07:00 Brisbane time: remind counsel about questions open for two working days or more (lib/core/notify.js).
@@ -29,7 +36,7 @@
 
   // DEMO_LOGIN (demo addition): the shared trio_demo sign-in, the same as the other Triodian apps so one demo
   // sign-in covers all of them. Its cookie key, DEMO_SESSION_KEY, is a Worker secret (the same value in every app). See lib/identity/session.js.
-  "vars": { "SUITE_DEMO": "on", "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+  "vars": { "SUITE_DEMO": "on", "SUITE_COOKIE_DOMAIN": "triodian.com", "SUITE_SESSION_COOKIE": "tri_suite", "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
 
   // Test copy with its own database. Deployed with `npx wrangler deploy --env test` from the `test` branch.
   "env": {
@@ -41,7 +48,7 @@
       "d1_databases": [
         { "binding": "DB", "database_name": "confidentiality-exposure-test-db", "database_id": "de1439b4-9acb-42ce-ad4b-299efcaebf3c" }
       ],
-      "vars": { "SUITE_DEMO": "on", "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+      "vars": { "SUITE_DEMO": "on", "SUITE_COOKIE_DOMAIN": "triodian.com", "SUITE_SESSION_COOKIE": "tri_suite_test", "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
       "send_email": [{ "name": "EMAIL" }],
       "triggers": { "crons": ["0 21 * * *"] },
       "observability": { "enabled": true }
@@ -61,7 +68,7 @@
       "d1_databases": [
         { "binding": "DB", "database_name": "confidentiality-exposure-client-db", "database_id": "REPLACE-WITH-THE-CLIENT-DATABASE-ID" }
       ],
-      "vars": { "SUITE_DEMO": "off", "DEMO_LOGIN": "", "SITE_URL": "https://confidentiality-exposure.CLIENT-DOMAIN.example", "NOTIFY_SENDING": "off", "NOTIFY_FROM": "" },
+      "vars": { "SUITE_DEMO": "off", "SUITE_COOKIE_DOMAIN": "CLIENT-DOMAIN.example", "SUITE_SESSION_COOKIE": "tri_suite", "DEMO_LOGIN": "", "SITE_URL": "https://confidentiality-exposure.CLIENT-DOMAIN.example", "NOTIFY_SENDING": "off", "NOTIFY_FROM": "" },
       "send_email": [{ "name": "EMAIL" }],
       "triggers": { "crons": ["0 21 * * *"] },
       "observability": { "enabled": true }
