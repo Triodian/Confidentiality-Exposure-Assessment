@@ -19,7 +19,12 @@ function create(ctx) {
   const outStatus = o => FORCE === 'draft' ? 'Draft' : FORCE === 'final' ? 'Final' : finalWhy(o) ? 'Draft' : 'Final';
   function mdHead(o) {
     const s = S(), e = s.engagement, p = s.profile, st = RAW ? '' : outStatus(o);
-    return `${p.privilegeMarking || '[Privilege marking not recorded in the profile]'}\n\n# ${o.id} · ${o.name}\n\n**${p.codeName || '[Code name]'}**${st ? ' · ' + st : ''} · ${dDoc(ctx.today())}${e.example ? ' · WORKED EXAMPLE, FICTIONAL' : ''}\n\n${e.company || '[Company]'} · ${e.reference || '[reference]'} · prepared for ${e.counselFirm || 'counsel'}\n\n`;
+    return `${p.privilegeMarking || '[Privilege marking not recorded in the profile]'}\n\n# ${o.id} · ${o.name}\n\n**${p.codeName || '[Code name]'}**${st ? ' · ' + st : ''} · ${dDoc(ctx.today())}${e.example ? ' · WORKED EXAMPLE, FICTIONAL' : ''}\n\n${e.company || '[Company]'} · ${e.reference || '[reference]'} · prepared for ${e.counselFirm || 'counsel'}\n\n${bothRoles()}`;
+  }
+  /* Development plan task 0.5: every output records that the GC held both roles, and who gave the second agreement. */
+  function bothRoles() {
+    const e = S().engagement; if (!e.gcActsAsCounsel) return '';
+    return `The GC also acted as counsel in this assessment. The second agreement to the profile (R1) was given by the second approver${e.secondApproverId ? ', ' + (pname(e.secondApproverId) || e.secondApproverId) : ''}.\n\n`;
   }
 
   /* ---------- pieces ---------- */
@@ -95,7 +100,7 @@ function create(ctx) {
   function cd1Csv() {
     const s = S(), q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"', o = O('CD1');
     const head = ['Channel', ...C.fields.map(d => d.n + ' ' + R.FLD(d.n).name), ...C.fields.map(d => d.n + ' source'), 'Not known', 'Absent'];
-    return [[s.profile.privilegeMarking || '[Privilege marking not recorded]'], [s.profile.codeName || '[Code name]'], [outStatus(o) + ' · ' + dDoc(ctx.today())], [(s.engagement.company || '[Company]') + ' · ' + (s.engagement.reference || '')], [],
+    return [[s.profile.privilegeMarking || '[Privilege marking not recorded]'], [s.profile.codeName || '[Code name]'], [outStatus(o) + ' · ' + dDoc(ctx.today())], [(s.engagement.company || '[Company]') + ' · ' + (s.engagement.reference || '')], ...(bothRoles() ? [[bothRoles().trim()]] : []), [],
       head, ...s.channels.map(e => [e.id, ...C.fields.map(d => fieldOut(e, d.n)), ...C.fields.map(d => fieldSrc(e, d.n)), R.notKnownCount(e), e.absent && e.absent.on ? e.absent.reason || 'yes' : ''])].map(r => r.map(q).join(',')).join('\n');
   }
   function genCD2() { return mdHead(O('CD2')) + `## Summary\n\n` + summaryTable() + `## Worksheets\n\n` + S().channels.map(e => worksheetMd(e)).join(''); }
@@ -143,6 +148,36 @@ function create(ctx) {
   }
   function genCM() { return mdHead(O('CM')) + tbl(['Measure', 'Result'], R.measures()) + `## Exceptions\n\n` + (S().exceptions.length ? tbl(['Ref', 'Departure', 'Reason'], S().exceptions.map(x => [x.ref, x.departure, x.reason])) : 'None.\n'); }
 
+  /* ---------- engagement plan (development plan task 0.7) ----------
+     The phases come from the framework's own workplan (section 5.1), so the plan says what the method says. Sessions are
+     the framework's interviews, with the dates set-up records; attendees by role come from the people list; inputs are
+     the documents the company is asked for; sign-off points are the review points R1 to R7, with where each stands. */
+  function fwTable(heading) {
+    const m = C.frameworkMarkdown || '', i = m.indexOf(heading); if (i < 0) return [];
+    const rows = []; for (const l of m.slice(i).split('\n').slice(1)) { if (!l.startsWith('|')) { if (rows.length) break; continue; } rows.push(l.replace(/^\|\s*|\s*\|$/g, '').split(/\s*\|\s*/)); }
+    return rows.filter(r => !r.every(c => /^-+$/.test(c))).slice(1);
+  }
+  function genEP() {
+    // RAW: the legal-line check (R5) is scanning every output's wording; the gates run that check, so skip them here.
+    const s = S(), e = s.engagement, G = RAW ? [] : R.gates();
+    let m = mdHead(O('EP'));
+    m += `This plan follows the framework’s workplan. It is for everyone taking part: what happens when, who attends, what the company is asked to provide, and where each sign-off stands.\n\n`;
+    m += `## Phases\n\n` + tbl(['Phase', 'When', 'Activities', 'Exit gate', 'Where it stands'], fwTable('### 5.1 Phases').map((r, n) => [r[0], r[1], r[2], r[4] || '', G[n] ? (G[n].ok ? 'Met' : 'Open') : ''])) + '\n';
+    m += `## Sessions\n\n` + tbl(['Session', 'Who', 'Purpose', 'Length', 'Date'], C.interviews.map((v, i) => { const iv = s.interviews.find(x => x.who === v.who) || s.interviews[i] || {}; return [iv.id || 'IV-' + (i + 1), v.who, v.purpose, v.length, iv.date ? dDoc(iv.date) : 'To be set']; }))
+      + `\nTriodian’s assessor attends every interview. Counsel convenes the opening briefing and receives every draft first.\n\n`;
+    const named = id => s.people.filter(p => (p.roles || []).includes(id)).map(p => p.name + (p.organisation ? ' (' + p.organisation + ')' : '')).join('; ');
+    m += `## Attendees by role\n\n` + tbl(['Role', 'Named'], C.roles.map(r => [r.name, named(r.id) || 'Not yet named'])) + '\n';
+    if (bothRoles()) m += bothRoles();
+    const docStatus = ref => { const ds = s.documents.filter(d => d.ref === ref); if (!ds.length) return 'Not yet requested'; const st = ds.map(d => d.status || 'listed'); return ds.length === 1 ? st[0].replace(/^\w/, c => c.toUpperCase()) : `${ds.length} documents: ${[...new Set(st)].join(', ')}`; };
+    m += `## Documents needed from the company\n\n` + tbl(['Ref', 'Document', 'Used for', 'Status'], C.documents.map(d => [d.ref, d.name, d.usedFor, docStatus(d.ref)]))
+      + `\n${e.documentsRequestedOn ? 'The document request was issued on ' + dDoc(e.documentsRequestedOn) + '. ' : ''}No document holds deal content: the deal is referred to by its code name, and counsel directs how documents are handled.\n\n`;
+    const pa = s.profileAgreed, rv = id => (s.reviews || []).find(r => r.point === id) || {};
+    const r1 = pa.gcBy && pa.counselBy ? `Agreed ${dDoc(pa.counselOn || pa.gcOn)}` : pa.gcBy || pa.counselBy ? 'One of the two agreements recorded' : 'Not yet';
+    const st = x => x.id === 'R1' ? r1 : rv(x.id).result || rv(x.id).on ? `${String(rv(x.id).result || 'Recorded').replace(/^\w/, c => c.toUpperCase())}${rv(x.id).on ? ' ' + dDoc(rv(x.id).on) : ''}` : 'Not yet';
+    m += `## Sign-off points\n\n` + tbl(['Point', 'Review', 'When', 'Reviewer', 'Where it stands'], C.reviews.map(x => [x.id, x.name, x.when, x.id === 'R1' && e.gcActsAsCounsel ? 'GC and the second approver' : x.reviewer, st(x)]))
+      + `\nThe technical annex is signed by the method owner once the phase 5 gate is met, and counsel records the closure.\n`;
+    return m;
+  }
   const OUTS = [
     { id: 'CD1', name: 'Channel register', gate: 2, gen: genCD1 },
     { id: 'CD2', name: 'Finding per channel', gate: 5, gen: genCD2 },
@@ -152,9 +187,10 @@ function create(ctx) {
     { id: 'QS', name: 'Question set to counsel', gate: 2, gen: genQS },
     { id: 'RP', name: 'Review pack for the check', gate: 5, gen: genRP },
     { id: 'CM', name: 'Closing measures', gate: 7, gen: genCM },
+    { id: 'EP', name: 'Engagement plan', gate: 0, gen: genEP },
   ];
   const O = id => OUTS.find(o => o.id === id) || OUTS[0];
-  const outDesc = o => ((C.deliverables || []).find(d => d.id === o.id) || {}).contents || ({ QS: 'Every open question put to counsel, in the template layout.', RP: 'What the checker needs to test the assessment, received through counsel.', CM: 'The measures that close the assessment (framework 12.5).' })[o.id] || '';
+  const outDesc = o => ((C.deliverables || []).find(d => d.id === o.id) || {}).contents || ({ EP: 'The phases with their timing, the sessions and who attends, the documents needed from the company, and the sign-off points, with where each stands.', QS: 'Every open question put to counsel, in the template layout.', RP: 'What the checker needs to test the assessment, received through counsel.', CM: 'The measures that close the assessment (framework 12.5).' })[o.id] || '';
 
   /* ---------- cache ---------- */
   let cache = { rev: -1, map: {} };

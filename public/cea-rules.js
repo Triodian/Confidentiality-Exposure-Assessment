@@ -23,7 +23,7 @@ function create(C, getS, opts) {
   function newAssessment() {
     return {
       schema: 'triodian.cea.v1',
-      engagement: { id: uid(), company: '', reference: '', counselFirm: '', startDate: '', briefConfirmed: { by: '', on: '', ref: '' }, documentsRequestedOn: '',
+      engagement: { id: uid(), company: '', reference: '', counselFirm: '', gcActsAsCounsel: false, secondApproverId: '', startDate: '', briefConfirmed: { by: '', on: '', ref: '' }, documentsRequestedOn: '',
         checkerMode: 'validation', checkerPersonId: '', checkerOrganisation: '', example: false, autosave: false,
         legalPhrases: C.legalPhrases.slice(), productPhrases: C.productPhrases.slice(), annexText: {}, annexSigned: { by: '', on: '' }, closure: { by: '', on: '', disposition: '', note: '' } },
       profile: { codeName: '', stage: '', teamCounts: '', folders: [], advisers: [], tools: [], devicePolicy: '', privilegeMarking: '', counselTurnaround: 2 },

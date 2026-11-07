@@ -28,6 +28,7 @@ C = {
     {'id': 'dealLead', 'name': 'Deal team lead (company)'},
     {'id': 'tenantOwner', 'name': 'Tenant owner (company)'},
     {'id': 'checker', 'name': 'Independent checker'},
+    {'id': 'executive', 'name': 'Second approver (company executive)'},
   ],
 
   'boundaries': [

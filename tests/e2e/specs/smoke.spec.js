@@ -18,7 +18,7 @@ test('worked example: every screen and every output opens without errors', async
   await page.selectOption('#who-hdr', 'p5');
   await page.evaluate(() => window.CEAApp.go('outputs'));
   const n = await page.locator('.outrow').count();
-  expect(n).toBe(8);
+  expect(n).toBe(9);
   for (let i = 0; i < n; i++) { await page.locator('.outrow').nth(i).click(); await expect(page.locator('#out-back')).toBeVisible(); await page.click('#out-back'); }
   const gates = await page.evaluate(() => window.CEAApp.gates().map(g => g.ok));
   expect(gates.slice(0, 3)).toEqual([true, true, true]);

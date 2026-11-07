@@ -1,0 +1,21 @@
+// The engagement plan (development plan task 0.7) generates from the worked example. Run: node tests/plan.test.mjs
+import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
+const require = createRequire(import.meta.url);
+const C = JSON.parse(readFileSync(new URL('../public/cea-content.json', import.meta.url)));
+let fails = 0; const t = (label, ok, extra) => { if (!ok) fails++; console.log((ok ? 'PASS' : 'FAIL') + ' · ' + label + (extra ? ' → ' + extra : '')); };
+let S; const R = require('../public/cea-rules.js').create(C, () => S, { today: () => '2026-11-06' });
+S = R.newAssessment();
+S.people.push({ id: 'p1', name: 'Meredith Vance', organisation: 'Askew Lane', roles: ['counsel'] }, { id: 'p2', name: 'Helen Brandt', roles: ['gc'] });
+S.profileAgreed = { gcBy: 'p2', gcOn: '2026-11-03', counselBy: 'p1', counselOn: '2026-11-04' };
+const O = require('../public/cea-outputs.js').create({ C, S: () => S, R, pname: id => (S.people.find(p => p.id === id) || {}).name || '', dDoc: d => d, fmtAt: d => d, today: () => '2026-11-06' });
+const ep = O.OUTS.find(o => o.id === 'EP'), md = ep.gen();
+t('the plan is listed with the outputs', !!ep && ep.name === 'Engagement plan');
+t('it carries the privilege marking line first', md.split('\n')[0].length > 0);
+for (const h of ['## Phases', '## Sessions', '## Attendees by role', '## Documents needed from the company', '## Sign-off points']) t('it has ' + h.slice(3), md.includes(h));
+t('the phases come from the framework’s workplan, eight of them', (md.split('## Phases')[1].split('## Sessions')[0].match(/^\| \d\. /gm) || []).length === 8);
+t('sessions come from the framework’s interviews', C.interviews.every(v => md.includes(v.who)));
+t('attendees are named by role', md.includes('Meredith Vance (Askew Lane)'));
+t('R1 shows it is agreed', /\| R1 \|[^\n]*Agreed 2026-11-04/.test(md));
+t('the legal-line scan of every output still runs (no loop)', Array.isArray(O.rawTexts()));
+console.log(fails ? `\n${fails} failed` : '\nAll passed'); process.exit(fails ? 1 : 0);
