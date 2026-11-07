@@ -27,9 +27,10 @@
   // never affected. To hold messages instead of sending, set NOTIFY_SENDING to "off".
   "send_email": [{ "name": "EMAIL" }],
 
-  // DEMO_LOGIN (demo addition): the shared trio_demo sign-in, the same as the other Triodian apps so one demo
-  // sign-in covers all of them. Its cookie key, DEMO_SESSION_KEY, is a Worker secret (the same value in every app). See lib/identity/session.js.
-  "vars": { "SUITE_DEMO": "on", "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+  // DEMO_LOGIN (demo addition, a Worker secret, not set here): username sign-in for the shared trio_demo account,
+  // its password held only as a PBKDF2 hash. It is a secret so the hash is not public; see docs/demo-sign-in.md.
+  // Its cookie key, DEMO_SESSION_KEY, is also a Worker secret (the same value in every app). See lib/identity/session.js.
+  "vars": { "SUITE_DEMO": "on", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
 
   // Test copy with its own database. Deployed with `npx wrangler deploy --env test` from the `test` branch.
   "env": {
@@ -41,7 +42,7 @@
       "d1_databases": [
         { "binding": "DB", "database_name": "confidentiality-exposure-test-db", "database_id": "de1439b4-9acb-42ce-ad4b-299efcaebf3c" }
       ],
-      "vars": { "SUITE_DEMO": "on", "DEMO_LOGIN": "[{\"username\": \"trio_demo\", \"email\": \"demo@triodian.com\", \"hash\": \"pbkdf2-sha256$100000$ae_ndll6YbjpSddRDhFBLg$HAVf7tKSohiJck-ohKQ1KYft_e1YpCuWF8xcJgmjNqM\", \"anyCharAt\": [3]}]", "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
+      "vars": { "SUITE_DEMO": "on", "SITE_LABEL": "Test site", "SITE_URL": "https://confidentiality-test.triodian.com", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
       "send_email": [{ "name": "EMAIL" }],
       "triggers": { "crons": ["0 21 * * *"] },
       "observability": { "enabled": true }
