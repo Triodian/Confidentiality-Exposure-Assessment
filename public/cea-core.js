@@ -99,7 +99,7 @@ function docband() {
   const priv = String(p.privilegeMarking || '').trim() ? `<span class="priv" title="Privilege marking · printed as the first line of every output">${esc(p.privilegeMarking)}</span>`
     : `<span class="priv none">No privilege marking set.${canSet ? ' <button class="lnk" data-act="go" data-to="profile">Set it in the profile</button>' : ' Counsel directs the marking.'}</span>`;
   const stat = p.codeName || S.engagement.company ? `<span class="stat"><strong>${esc(p.codeName || '[no code name]')}</strong>${S.engagement.reference ? ' · ' + esc(S.engagement.reference) : ''}</span>` : '';
-  return `<div class="docband"><div class="docband-in">${priv}${stat}</div></div>`;
+  return `<div class="docband"><div class="docband-in"><span style="display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap">${priv}${TriodianBrand.chip(S.engagement.practitioner)}</span>${stat}</div></div>`;
 }
 function header() {
   const b = bp(), steps = ['setup', 'profile', 'register', 'classify', 'counsel', 'findings', 'review', 'outputs'], nAct = S ? CEA.myActions().length : 0;
