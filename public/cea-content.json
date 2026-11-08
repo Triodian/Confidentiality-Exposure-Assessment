@@ -698,6 +698,7 @@
  "matterTypes": [
   {
    "id": "deal",
+   "boardClass": "G6",
    "name": "Deal (M&A or capital raising)",
    "noun": "deal",
    "title": "The deal profile",
@@ -756,6 +757,7 @@
   },
   {
    "id": "litigation",
+   "boardClass": "G5",
    "name": "Litigation or dispute",
    "noun": "dispute",
    "title": "The dispute profile",
@@ -814,6 +816,7 @@
   },
   {
    "id": "rdIp",
+   "boardClass": "G5",
    "name": "R&D or intellectual property",
    "noun": "programme",
    "title": "The programme profile",
@@ -872,6 +875,7 @@
   },
   {
    "id": "tender",
+   "boardClass": "G3",
    "name": "Tender or bid",
    "noun": "bid",
    "title": "The bid profile",
@@ -930,6 +934,7 @@
   },
   {
    "id": "boardPapers",
+   "boardClass": "G6",
    "name": "Board papers",
    "noun": "board matter",
    "title": "The board matter profile",
@@ -988,6 +993,7 @@
   },
   {
    "id": "exportControlled",
+   "boardClass": "G5",
    "name": "Export-controlled data",
    "noun": "project",
    "title": "The project profile",
@@ -1045,6 +1051,31 @@
    ]
   }
  ],
+ "boardPosition": {
+  "format": "triodian.bd.confidentiality.v1",
+  "classes": {
+   "G1": "Public",
+   "G2": "Internal",
+   "G3": "Commercial in confidence",
+   "G4": "Personal information",
+   "G5": "Restricted",
+   "G6": "Board and transaction"
+  },
+  "marks": {
+   "P": "permitted",
+   "C": "permitted with conditions",
+   "N": "not permitted"
+  },
+  "rung": {
+   "N": "N5",
+   "P": "N0"
+  },
+  "why": {
+   "N": "The board does not permit this class of information in this kind of tool, so the evidence that fits is containment: the channel cannot reach the matter’s content.",
+   "C": "The board permits it only on conditions, so the indicative rung for the channel’s reach applies, and the conditions show what the evidence has to cover.",
+   "P": "The board permits this class of information in this kind of tool, so its position calls for no evidence on this channel."
+  }
+ },
  "documents": [
   {
    "ref": "D1",
