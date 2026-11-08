@@ -182,6 +182,39 @@ function create(C, getS, opts) {
   const matterType = () => { const id = ((S() || {}).profile || {}).matterType || 'deal'; return (C.matterTypes || []).find(t => t.id === id) || (C.matterTypes || [])[0] || { id: 'deal', noun: 'deal', p: {}, stages: C.stageLabels, adviserTypes: C.adviserTypes, infoClasses: C.infoClasses.map(x => [x.name, x.def]) }; };
   const infoClasses = () => matterType().infoClasses.map(([name, def], i) => ({ code: IC[i], name, def }));
 
+  /* ---------- the board's confidentiality position (task 2.8) ----------
+     AI Board Direction's file marks each class of company information (G1 to G6) against each kind of AI tool
+     (P, C or N). The matter type's board class and the channel's kind pick the mark, which suggests a required
+     rung for counsel to confirm. Field 24 itself is set only from counsel's answer, as before. */
+  const BP = C.boardPosition || { format: 'triodian.bd.confidentiality.v1', classes: {}, marks: {}, rung: { N: 'N5', P: 'N0' }, why: {} };
+  const MARK_RE = /^G[1-6]:K[1-7]$/;
+  /** Read a position file. Returns { error } or { position } in the form the assessment stores. */
+  function readBoardPosition(text, loadedOn, loadedBy) {
+    let o = text;
+    if (typeof text === 'string') { try { o = JSON.parse(text); } catch (e) { return { error: 'This file is not a confidentiality position: it is not valid JSON.' }; } }
+    if (!o || typeof o !== 'object' || Array.isArray(o)) return { error: 'This file is not a confidentiality position.' };
+    if (o.format !== BP.format) return { error: o.briefFormat ? 'This is a matter brief from the AI Obligations Atlas, not the board’s confidentiality position. Export the position from AI Board Direction (Outputs, Confidentiality position file).' : `This file is not the board’s confidentiality position from AI Board Direction (format ${BP.format}).` };
+    const m = o.markings && typeof o.markings === 'object' && !Array.isArray(o.markings) ? o.markings : null;
+    if (!m) return { error: 'The position has no markings.' };
+    const markings = {};
+    for (const [k, v] of Object.entries(m)) { if (!MARK_RE.test(k) || !['P', 'C', 'N'].includes(v)) return { error: `The marking “${String(k).slice(0, 12)}” is not a class and tool kind marked P, C or N.` }; markings[k] = v; }
+    const conditions = Array.isArray(o.conditions) ? o.conditions.filter(x => typeof x === 'string').slice(0, 40).map(x => x.slice(0, 600)) : [];
+    const date = v => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : '');
+    return { position: { format: BP.format, status: o.status === 'resolved' ? 'resolved' : 'draft', resolvedOn: date(o.resolvedOn), issuedOn: date(o.issuedOn), markings, conditions, loadedOn: loadedOn || '', loadedBy: String(loadedBy || '').slice(0, 120) } };
+  }
+  /** The suggested required rung for a channel, or null when there is no position or the channel has no kind yet. */
+  function boardSuggestion(e) {
+    const pos = (S() || {}).boardPosition; if (!pos || !pos.markings) return null;
+    const k = kindOf(e); if (!k) return null;
+    const g = matterType().boardClass || 'G6', cls = `${g} ${BP.classes[g] || ''}`.trim(), base = { cls: g, clsName: cls, kind: k, status: pos.status };
+    if (k === 'K6') return { ...base, rung: '', note: 'The board’s position has no column for data-room and document movement (K6), so it suggests no rung here.' };
+    const mark = pos.markings[`${g}:${k}`];
+    if (!mark) return { ...base, rung: '', note: `The board left ${cls} against ${k} unmarked, so its position suggests no rung here.` };
+    const ix = mark === 'C' ? indicative(e) : null;
+    const rung = BP.rung[mark] || (ix ? ix.value : '');
+    return { ...base, mark, rung, why: BP.why[mark] || '', conditions: mark === 'C' ? (pos.conditions || []) : [], note: mark === 'C' && !ix ? 'Record the channel’s reach to see the indicative rung the conditions apply to.' : '' };
+  }
+
   /* ---------- names ---------- */
   const rungName = c => (C.rungs.find(t => t.code === c) || {}).name || '';
   const reachName = c => (C.reaches.find(t => t.code === c) || {}).name || '';
@@ -340,6 +373,7 @@ function create(C, getS, opts) {
     const isObj = v => v && typeof v === 'object' && !Array.isArray(v), str = (v, p) => { if (v != null && typeof v !== 'string') E(p, 'must be text'); };
     if (!isObj(o.engagement)) E('engagement', 'missing');
     if (o.profile != null && !isObj(o.profile)) E('profile', 'must be an object');
+    if (o.boardPosition != null) { const bp = o.boardPosition; if (!isObj(bp) || !isObj(bp.markings) || Object.entries(bp.markings).some(([k, v]) => !MARK_RE.test(k) || !['P', 'C', 'N'].includes(v))) E('boardPosition', 'not a confidentiality position'); }
     if (isObj(o.profile) && o.profile.matterType != null && !MATTER_TYPES.includes(o.profile.matterType)) E('profile.matterType', 'not a matter type');
     ['channels', 'questions', 'reviews', 'exceptions', 'independentReviewPoints', 'documents', 'interviews', 'people', 'history', 'versions'].forEach(k => { if (o[k] != null && !Array.isArray(o[k])) E(k, 'must be a list'); });
     (Array.isArray(o.channels) ? o.channels : []).forEach((e, i) => { const p = 'channels[' + i + ']'; if (!isObj(e)) return E(p, 'not an object'); if (e.id != null && e.id !== '' && (typeof e.id !== 'string' || !IDRE.test(e.id))) E(p + '.id', 'not a valid id'); if (e.fields != null && !isObj(e.fields)) E(p + '.fields', 'must be an object');
@@ -373,7 +407,7 @@ function create(C, getS, opts) {
   return { RE, IC, NV, XC, CONF, KINDS, FACTS_N, CLASS_N, EVID_N, rk, newAssessment, newChannel, FLD, fv, kindOf, boundaryOf, notKnownCount, isAbsent, fieldDone, missingIn,
     proposeReach, reachOf, classOf, exposure, indicative, ladder, testsFor, obResult, needsRetest, proposedConfidence, confRaisedNoReason, confidence,
     acceptsText, hasF5, reachDetermination, finding, findingCls, findingName, planSteps, f5Summary, newest,
-    MATTER_TYPES, matterType, infoClasses, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
+    MATTER_TYPES, matterType, infoClasses, readBoardPosition, boardSuggestion, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
     rev, considered, live, gates, brokenRefs, textSources, hits, setHitsProvider, legalHits, r5Clear, measures, snapshotOf, signOffs, validateFile, hydrate, uid, today };
 }
 

@@ -33,6 +33,14 @@ t('deal lead cannot ask a question', 'dl', n => n.questions.push({ ref: 'QC-01',
 t('counsel sets field 24 (required rung)', 'cn', n => n.channels[0].fields['24'] = { value: 'N5', source: 'QC-01' }, true);
 t('deal lead cannot set field 24 (Triodian may transcribe)', 'dl', n => n.channels[0].fields['24'] = { value: 'N5', source: 'QC-01' }, false);
 t('admin edits set-up', 'ad', n => n.engagement.company = 'Acme Mutual', true);
+// the board's confidentiality position (task 2.8): loading it is set-up; it never lets anyone but counsel set field 24
+t('admin loads the board’s confidentiality position', 'ad', n => n.boardPosition = { format: 'triodian.bd.confidentiality.v1', status: 'resolved', markings: { 'G6:K1': 'N' }, conditions: [] }, true);
+t('deal lead cannot load the position', 'dl', n => n.boardPosition = { format: 'triodian.bd.confidentiality.v1', status: 'resolved', markings: { 'G6:K1': 'N' }, conditions: [] }, false);
+const withPos = (() => { const b = base(); b.boardPosition = { format: 'triodian.bd.confidentiality.v1', status: 'resolved', markings: { 'G6:K1': 'N' }, conditions: [] }; return b; })();
+t('with the position loaded, deal lead still cannot set field 24', 'dl', n => n.channels[0].fields['24'] = { value: 'N5', source: 'board position' }, false, withPos);
+t('with the position loaded, the GC still cannot set field 24', 'gc', n => n.channels[0].fields['24'] = { value: 'N5', source: 'board position' }, false, withPos);
+t('with the position loaded, counsel sets field 24', 'cn', n => n.channels[0].fields['24'] = { value: 'N5', source: 'QC-01' }, true, withPos);
+t('a malformed position is refused', 'ad', n => n.boardPosition = { markings: { 'X9:K1': 'maybe' } }, false);
 t('assessor cannot edit the profile', 'as', n => n.profile.codeName = 'Other', false);
 t('GC agrees the profile in own name', 'gc', n => { n.profileAgreed.gcBy = 'gc'; n.profileAgreed.gcOn = 'x'; }, true);
 t('checker logs a check point', 'ck', n => n.independentReviewPoints.push({ ref: 'CP-01', point: 'p', status: 'open' }), true);

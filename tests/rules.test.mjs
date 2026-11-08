@@ -77,4 +77,29 @@ t('with the setting, the named second approver may agree', rule('agreeCounsel', 
   t('the CSV register says so too', out.cd1Csv().includes('The GC also acted as counsel'), true);
   S2.engagement.gcActsAsCounsel = false;
   t('without the setting, outputs say nothing about it', out.mdHead(out.OUTS[0]).includes('also acted as counsel'), false); }
+// the board's confidentiality position (task 2.8): a suggestion beside field 24, never field 24 itself
+{ S = R.newAssessment();
+  const file = { format: 'triodian.bd.confidentiality.v1', status: 'resolved', resolvedOn: '2026-09-18', markings: { 'G6:K1': 'N', 'G6:K2': 'C', 'G6:K5': 'P', 'G3:K1': 'P' }, conditions: ['Enterprise tools only'] };
+  const rd = R.readBoardPosition(JSON.stringify(file), '2026-11-08', 'Sam');
+  t('the position reads', rd.position && rd.position.status, 'resolved');
+  t('a brief is refused with the reason', /matter brief/.test(R.readBoardPosition('{"briefFormat":"triodian.matterBrief/1"}').error), true);
+  t('a bad marking is refused', /not a class and tool kind/.test(R.readBoardPosition({ format: 'triodian.bd.confidentiality.v1', markings: { 'G6:K1': 'yes' } }).error), true);
+  S.boardPosition = rd.position;
+  const ch = k => { const e = R.newChannel(k); S.channels.push(e); return e; };
+  const k1 = ch('K1');
+  t('N suggests containment (N5)', R.boardSuggestion(k1).rung, 'N5');
+  t('the suggestion never fills field 24', k1.fields[24], undefined);
+  const k2 = ch('K2'); k2.fields[4] = f('dealTeam'); k2.fields[8] = f('paste'); k2.reachTests = [{ answer: false }, { answer: false }, { answer: false }];
+  t('C suggests the indicative rung for the reach', R.boardSuggestion(k2).rung, R.indicative(k2) ? R.indicative(k2).value : '');
+  t('C carries the board’s conditions', R.boardSuggestion(k2).conditions, ['Enterprise tools only']);
+  t('P suggests N0', R.boardSuggestion(ch('K5')).rung, 'N0');
+  t('K6 has no column: no rung', R.boardSuggestion(ch('K6')).rung, '');
+  t('an unmarked cell: no rung', R.boardSuggestion(ch('K3')).rung, '');
+  S.profile.matterType = 'tender';
+  t('the matter type picks the board class (a tender is G3)', [R.boardSuggestion(k1).cls, R.boardSuggestion(k1).rung], ['G3', 'N0']);
+  S.boardPosition.status = 'draft';
+  t('a draft position is flagged', R.boardSuggestion(k1).status, 'draft');
+  delete S.boardPosition;
+  t('no position, no suggestion', R.boardSuggestion(k1), null);
+  t('a file with a bad position does not load', /boardPosition/.test(R.validateFile({ ...R.newAssessment(), boardPosition: { markings: { a: 1 } } })), true); }
 console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);

@@ -39,6 +39,9 @@ const ACT = {
   hist: d => { UI.hist = UI.hist === d.k ? null : d.k; render(); },
   sheet: d => { UI.sheet = d.s; if (d.s === 'ask' && !UI.ask) UI.ask = { channelId: UI.channelId || '', question5: 5, targetField: '', facts: '', question: '', why: '' }; X.renderSheet(); const c = document.getElementById('sheetClose'); if (c) c.focus(); },
   closeSheet: () => { UI.sheet = null; X.renderSheet(); },
+  loadPosition: () => { if (deny('setup')) return toast(deny('setup')); document.getElementById('bpIn').click(); },
+  togglePosPaste: () => { UI.posPaste = !UI.posPaste; render(); },
+  pastePosition: () => { const t = document.getElementById('pos_paste'); loadPositionText(t ? t.value : ''); },
   askFrom: d => { const e = X.ch(d.id), n = +d.n; UI.ask = { channelId: e.id, question5: n >= 23 ? (n === 23 ? 4 : 5) : 2, targetField: n === 23 || n === 24 ? String(n) : '', facts: `${e.id} field ${n} (${R().FLD(n).name}): ${e.fields[n] && !e.fields[n].notKnown ? e.fields[n].value : 'not known'}${e.fields[n] && e.fields[n].source ? ' · source ' + e.fields[n].source : ''}`, question: '', why: `Field ${n}` }; go('counsel'); if (X.bp() === 'phone') ACT.sheet({ s: 'ask' }); else { const f = document.getElementById('askForm'); if (f) f.scrollIntoView(); } },
   classifyChannel: d => { if (d.id) UI.channelId = d.id; if (d.step) UI.step = +d.step; go('classify'); },
   pickChannel: (d, el) => { UI.channelId = el.value; UI.err = {}; render(); },
@@ -84,7 +87,17 @@ function onClick(ev) {
   const el = ev.target.closest('[data-act]'); if (!el || el.tagName === 'SELECT' || el.tagName === 'INPUT') return;
   const a = el.dataset.act; if (ACT[a]) { UI.lastCtl = el.id || UI.lastCtl; ACT[a](el.dataset, el); }
 }
-function onChange(ev) { X.inChange = true; try { changeHandler(ev); } finally { X.inChange = false; } }
+/* The board's confidentiality position (task 2.8): read, checked and stored; it never touches field 24. */
+function loadPositionText(text) {
+  if (deny('setup')) return toast(deny('setup'));
+  const r = R().readBoardPosition(text, today(), pname(UI.personId) || '');
+  if (r.error) { UI.posError = r.error; toast(r.error); render(); return; }
+  const s = S(), had = !!s.boardPosition; s.boardPosition = r.position; UI.posError = ''; UI.posPaste = false;
+  log(had ? 'replace' : 'add', 'boardPosition', null, r.position.status);
+  toast(`The board’s confidentiality position loaded (${r.position.status === 'resolved' ? 'resolved' : 'draft'}). Suggestions show on each channel’s Counsel tab.`); render();
+}
+function onChange(ev) {
+  if (ev.target && ev.target.id === 'bpIn') { const f = ev.target.files[0]; ev.target.value = ''; if (f) f.text().then(loadPositionText, () => toast('The file could not be read.')); return; } X.inChange = true; try { changeHandler(ev); } finally { X.inChange = false; } }
 function changeHandler(ev) {
   const el = ev.target, d = el.dataset, s = S(); if (!s) return;
   if (d.act && ['person', 'tab', 'pickChannel'].includes(d.act)) return ACT[d.act](d, el);
@@ -121,6 +134,11 @@ function buildExample() {
   s.people = [['p1', 'Meredith Vance', 'Askew Lane Partners', ['counsel']], ['p2', 'Helen Brandt', 'Marrowgate · GC', ['gc']], ['p3', 'Tomas Reilly', 'Marrowgate · CFO office', ['dealLead']], ['p4', 'Sam Okoro', 'Triodian', ['methodOwner']], ['p5', 'Jordan Pike', 'Triodian', ['assessor']], ['p6', 'Ravi Menon', 'Triodian', ['peer']], ['p7', 'Elise Tan', 'Triodian', ['validation']], ['p8', 'Kit Morrow', 'Triodian', ['delivery']], ['p9', 'Priya Natarajan', 'Marrowgate · IT security', ['tenantOwner']], ['p10', 'Lena Hartmann', 'Independent checker', ['checker']]].map(x => ({ id: x[0], name: x[1], organisation: x[2], roles: x[3] }));
   Object.assign(s.profile, { codeName: 'Project Kestrel', stage: 'diligence', teamCounts: 'Deal team 7 (CFO office 3, legal 2, strategy 1, IT 1); insider list 19', folders: [{ location: 'SharePoint · Finance', name: 'Kestrel-DD', sharing: 'Deal team only', count: '214' }, { location: 'SharePoint · Board', name: 'Kestrel-Board', sharing: 'Deal team and board secretariat', count: '9' }, { location: 'Data room (provider)', name: 'Kestrel VDR', sharing: 'Advisers by invitation', count: '1,120' }], advisers: [{ id: 'ADV-01', type: 'Bank', role: 'Financial adviser', name: 'Harrow & Finch (fictional)' }, { id: 'ADV-02', type: 'Law firm', role: 'Transaction counsel', name: 'Askew Lane Partners (fictional), also the engaging firm' }, { id: 'ADV-03', type: 'Data-room provider', role: 'Virtual data room', name: 'Quillon Rooms (fictional)' }], tools: [{ tool: 'Enterprise assistant (M365)', tier: 'E5 add-on', reaches: 'yes' }, { tool: 'Enterprise chatbot licence', tier: 'Team', reaches: 'no' }, { tool: 'Meeting recap in the video tool', tier: 'Included', reaches: 'notKnown' }], devicePolicy: 'byod', privilegeMarking: 'Privileged and confidential · prepared at the direction of counsel · worked example', counselTurnaround: 2 });
   s.profileAgreed = { gcBy: 'p2', gcOn: '2026-10-27', counselBy: 'p1', counselOn: '2026-10-27' };
+  // The board's confidentiality position, as AI Board Direction issued it at step B5 (fictional): board and
+  // transaction information (G6) may go into no AI tool, except the enterprise tools on conditions.
+  s.boardPosition = { format: 'triodian.bd.confidentiality.v1', status: 'resolved', resolvedOn: '2026-09-18', issuedOn: '2026-09-19', loadedOn: '2026-10-26', loadedBy: 'Sam Okoro',
+    markings: { 'G6:K1': 'C', 'G6:K2': 'C', 'G6:K3': 'N', 'G6:K4': 'N', 'G6:K5': 'N', 'G6:K7': 'C', 'G5:K1': 'C', 'G5:K2': 'C', 'G5:K3': 'N', 'G5:K4': 'N', 'G5:K5': 'N', 'G5:K7': 'C', 'G3:K1': 'P', 'G3:K2': 'P', 'G3:K3': 'C', 'G3:K4': 'N', 'G3:K5': 'N', 'G3:K7': 'C' },
+    conditions: ['Enterprise tools only where the assistant’s scope excludes folders holding board or transaction information', 'Advisers confirm in writing that their tools retain nothing and train on nothing'] };
   s.documents.forEach(d => { d.status = 'received'; d.date = '2026-10-27'; });
   s.documents.push({ id: 'D5-TENANT', ref: 'D5', title: 'Tenant configuration export, 27 Oct 2026', status: 'received', date: '2026-10-27' }, { id: 'D3-ADV01', ref: 'D3', title: 'Harrow & Finch engagement letter', status: 'received', date: '2026-10-27' }, { id: 'D7-VDR', ref: 'D7', title: 'Quillon Rooms terms and AI feature settings', status: 'received', date: '2026-10-28' });
   s.interviews.forEach((v, i) => { v.date = '2026-10-2' + (7 + Math.min(i, 2)); v.notesRef = 'IN-0' + (i + 1); });

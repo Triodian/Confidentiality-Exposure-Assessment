@@ -179,42 +179,42 @@ C = {
   # classes I1 to I6 take the type's wording; everything else says "matter". The deal type keeps the wording the app
   # had before matter types, so a deal reads as it did. I1 to I6 keep their order: I6 is always the most sensitive.
   'matterTypes': [
-    {'id': 'deal', 'name': 'Deal (M&A or capital raising)', 'noun': 'deal', 'title': 'The deal profile',
+    {'id': 'deal', 'boardClass': 'G6', 'name': 'Deal (M&A or capital raising)', 'noun': 'deal', 'title': 'The deal profile',
      'lede': 'Nine items recorded once, agreed with the GC and counsel. The deal is referred to by its code name only. No counterparty name, price or figure appears anywhere.',
      'p': {'codeName': 'Deal code name', 'stage': 'Deal stage', 'teamCounts': 'Deal team size and insider list size', 'teamPh': 'Deal team 6 (CFO office 3, legal 2, IT 1); insider list 14',
            'folders': 'Deal folders', 'sharingPh': 'Deal team only; everyone with the link', 'role': 'Role on the deal', 'reaches': 'Scope reaches the deal folders', 'section1': 'The deal'},
      'stages': {'preApproach': 'Pre-approach', 'diligence': 'In diligence', 'signed': 'Signed, pre-completion', 'completed': 'Completed within 90 days'},
      'adviserTypes': ['Bank', 'Law firm', 'Technical adviser', 'Accounting', 'Data-room provider', 'Other'],
      'infoClasses': [['Existence of the deal and the counterparty', 'Code name resolved; a calendar entry; an adviser’s name'], ['Process and timetable', 'Bid dates, exclusivity, conditions precedent'], ['Price, terms and structure', 'Offer price, consideration, earn-outs'], ['Valuation and synergy models', 'Assumptions, synergy lines, sensitivities'], ['Due diligence findings', 'Technical, financial and legal findings about either party'], ['Board papers and recommendations', 'The board’s position and the reasons for it']]},
-    {'id': 'litigation', 'name': 'Litigation or dispute', 'noun': 'dispute', 'title': 'The dispute profile',
+    {'id': 'litigation', 'boardClass': 'G5', 'name': 'Litigation or dispute', 'noun': 'dispute', 'title': 'The dispute profile',
      'lede': 'Nine items recorded once, agreed with the GC and counsel. The dispute is referred to by its code name only. No party name, amount claimed or settlement figure appears anywhere.',
      'p': {'codeName': 'Matter code name', 'stage': 'Stage of the dispute', 'teamCounts': 'Matter team size and people with access', 'teamPh': 'Matter team 5 (legal 3, finance 1, IT 1); others with access 9',
            'folders': 'Matter folders', 'sharingPh': 'Matter team only; external counsel', 'role': 'Role in the dispute', 'reaches': 'Scope reaches the matter folders', 'section1': 'The dispute'},
      'stages': {'preAction': 'Before proceedings', 'pleadings': 'Pleadings and discovery', 'hearing': 'Evidence and hearing', 'resolved': 'Judgment, appeal or settlement within 90 days'},
      'adviserTypes': ['Law firm', 'Barrister', 'Expert witness', 'Litigation funder', 'E-discovery provider', 'Other'],
      'infoClasses': [['Existence of the dispute and the parties', 'Code name resolved; a calendar entry; an adviser’s name'], ['Strategy and timetable', 'Hearing dates, steps planned, settlement windows'], ['Settlement position and offers', 'Offers made or received, authority to settle'], ['Merits and quantum assessments', 'Prospects, exposure ranges, damages models'], ['Evidence and expert reports', 'Witness statements, expert reports, discovered documents'], ['Privileged advice and instructions', 'Counsel’s advice and the board’s or GC’s instructions on it']]},
-    {'id': 'rdIp', 'name': 'R&D or intellectual property', 'noun': 'programme', 'title': 'The programme profile',
+    {'id': 'rdIp', 'boardClass': 'G5', 'name': 'R&D or intellectual property', 'noun': 'programme', 'title': 'The programme profile',
      'lede': 'Nine items recorded once, agreed with the GC and counsel. The programme is referred to by its code name only. No invention, formula, design or partner name appears anywhere.',
      'p': {'codeName': 'Programme code name', 'stage': 'Programme stage', 'teamCounts': 'Programme team size and people with access', 'teamPh': 'Programme team 12 (research 8, legal 2, IT 2); others with access 20',
            'folders': 'Programme folders and repositories', 'sharingPh': 'Programme team only; research partner', 'role': 'Role on the programme', 'reaches': 'Scope reaches the programme folders', 'section1': 'The programme'},
      'stages': {'research': 'Research', 'development': 'Development', 'filing': 'Before patent filing', 'launch': 'Pre-launch or launched within 90 days'},
      'adviserTypes': ['Patent attorney', 'Law firm', 'Research partner', 'Contract manufacturer', 'Technical adviser', 'Other'],
      'infoClasses': [['Existence of the programme and its partners', 'Code name resolved; a calendar entry; a partner’s name'], ['Milestones and timetable', 'Trial, filing and launch dates'], ['Commercial terms and licensing', 'Licence terms, royalties, partner agreements'], ['Technical designs and data', 'Designs, specifications, datasets, results'], ['Source code and models', 'Code, model weights, algorithms'], ['Unfiled inventions and trade secrets', 'What is not yet protected and the reasons for keeping it secret']]},
-    {'id': 'tender', 'name': 'Tender or bid', 'noun': 'bid', 'title': 'The bid profile',
+    {'id': 'tender', 'boardClass': 'G3', 'name': 'Tender or bid', 'noun': 'bid', 'title': 'The bid profile',
      'lede': 'Nine items recorded once, agreed with the GC and counsel. The bid is referred to by its code name only. No client name, price or margin appears anywhere.',
      'p': {'codeName': 'Bid code name', 'stage': 'Bid stage', 'teamCounts': 'Bid team size and people with access', 'teamPh': 'Bid team 8 (commercial 3, solution 3, legal 1, IT 1); others with access 11',
            'folders': 'Bid folders', 'sharingPh': 'Bid team only; teaming partner', 'role': 'Role on the bid', 'reaches': 'Scope reaches the bid folders', 'section1': 'The bid'},
      'stages': {'preparing': 'Preparing', 'submitted': 'Submitted, under evaluation', 'negotiation': 'Preferred, in negotiation', 'decided': 'Awarded or lost within 90 days'},
      'adviserTypes': ['Bid consultant', 'Law firm', 'Teaming partner', 'Subcontractor', 'Technical adviser', 'Other'],
      'infoClasses': [['Existence of the bid and its partners', 'Code name resolved; a calendar entry; a partner’s name'], ['Process and timetable', 'Submission dates, clarifications, evaluation steps'], ['Price and commercial terms', 'Price, payment terms, risk allocation'], ['Cost models and margins', 'Cost build-up, margins, sensitivities'], ['Solution and win strategy', 'Technical solution, differentiators, competitor analysis'], ['Board approvals and bid decisions', 'Bid or no-bid decisions and the authority to submit']]},
-    {'id': 'boardPapers', 'name': 'Board papers', 'noun': 'board matter', 'title': 'The board matter profile',
+    {'id': 'boardPapers', 'boardClass': 'G6', 'name': 'Board papers', 'noun': 'board matter', 'title': 'The board matter profile',
      'lede': 'Nine items recorded once, agreed with the GC and counsel. The board matter is referred to by its code name only. No proposal, figure or person affected appears anywhere.',
      'p': {'codeName': 'Matter code name', 'stage': 'Stage before the board', 'teamCounts': 'Directors, secretariat and executives with access', 'teamPh': 'Directors 9; secretariat 2; executives 4',
            'folders': 'Board folders', 'sharingPh': 'Directors and secretariat only', 'role': 'Role for the board', 'reaches': 'Scope reaches the board folders', 'section1': 'The board matter'},
      'stages': {'preparing': 'Papers in preparation', 'circulated': 'Circulated to directors', 'decided': 'Decided, not yet announced', 'announced': 'Announced within 90 days'},
      'adviserTypes': ['Law firm', 'Bank', 'Accounting', 'Board portal provider', 'Consultant', 'Other'],
      'infoClasses': [['Existence of the matter before the board', 'Code name resolved; an agenda item; an adviser’s name'], ['Agenda and timetable', 'Meeting dates, papers due, announcement plans'], ['Proposals and terms', 'What management proposes, and its terms'], ['Forecasts and financial models', 'Forecasts, budgets, sensitivities'], ['Management and adviser reports', 'Reports and advice put to the board'], ['Board deliberations and resolutions', 'Directors’ positions, minutes and resolutions']]},
-    {'id': 'exportControlled', 'name': 'Export-controlled data', 'noun': 'project', 'title': 'The project profile',
+    {'id': 'exportControlled', 'boardClass': 'G5', 'name': 'Export-controlled data', 'noun': 'project', 'title': 'The project profile',
      'lede': 'Nine items recorded once, agreed with the GC and counsel. The project is referred to by its code name only. No controlled data, specification or customer name appears anywhere.',
      'p': {'codeName': 'Project code name', 'stage': 'Project stage', 'teamCounts': 'Project team size and people cleared for controlled data', 'teamPh': 'Project team 15 (engineering 10, programme 3, IT 2); cleared 11',
            'folders': 'Controlled data folders', 'sharingPh': 'Cleared staff only', 'role': 'Role on the project', 'reaches': 'Scope reaches the controlled data folders', 'section1': 'The project'},
@@ -223,6 +223,22 @@ C = {
      'infoClasses': [['Existence of the project and its partners', 'Code name resolved; a calendar entry; a partner’s name'], ['Programme and schedule', 'Milestones, deliveries, test dates'], ['Contract terms', 'Prices, obligations, licence conditions'], ['Controlled technical data, summary level', 'Descriptions and parameters of controlled items'], ['Detailed designs and specifications', 'Drawings, specifications, source code of controlled items'], ['Classified or licence-restricted material', 'Material whose handling a security classification or export licence restricts']]},
   ],
 
+  # The board's confidentiality position (development plan task 2.8): the file AI Board Direction issues at step B5
+  # (format triodian.bd.confidentiality.v1). It marks each class of company information G1 to G6 against each kind of
+  # AI tool: P permitted, C with conditions, N not permitted. The matter type says which class the matter's
+  # information is (boardClass above); the mark for that class and the channel's kind suggests a required rung.
+  # Only counsel sets the required rung (field 24); the suggestion is shown beside it, for counsel to confirm.
+  'boardPosition': {
+    'format': 'triodian.bd.confidentiality.v1',
+    'classes': {'G1': 'Public', 'G2': 'Internal', 'G3': 'Commercial in confidence', 'G4': 'Personal information', 'G5': 'Restricted', 'G6': 'Board and transaction'},
+    'marks': {'P': 'permitted', 'C': 'permitted with conditions', 'N': 'not permitted'},
+    'rung': {'N': 'N5', 'P': 'N0'},
+    'why': {
+      'N': 'The board does not permit this class of information in this kind of tool, so the evidence that fits is containment: the channel cannot reach the matter’s content.',
+      'C': 'The board permits it only on conditions, so the indicative rung for the channel’s reach applies, and the conditions show what the evidence has to cover.',
+      'P': 'The board permits this class of information in this kind of tool, so its position calls for no evidence on this channel.',
+    },
+  },
   'documents': [
     {'ref': 'D1', 'name': 'Matter team and insider list, by role and count (names only if counsel permits)', 'usedFor': 'Matter profile; B3 channels'},
     {'ref': 'D2', 'name': 'Matter folder structure: locations, folder names, sharing settings, document counts. No documents', 'usedFor': 'K1 reach; K6 paths'},

@@ -84,6 +84,7 @@ calibration set.
 
 ## The method, as the app applies it
 - **Matter profile** (P1 to P9) under a code name; the GC and counsel agree it (R1). The **matter type** (deal, litigation or dispute, R&D or IP, tender or bid, board papers, export-controlled data) sets the profile's wording, its stages, the adviser types and the names of the information classes I1 to I6. They are in `tools/build-content.py` (`matterTypes`). A deal reads as the app did before matter types.
+- **The board's confidentiality position**: the Profile screen loads the file AI Board Direction issues at step B5 (`triodian.bd.confidentiality.v1`). The matter type gives the board class (G6 for a deal or board papers, G5 for a dispute, R&D or export-controlled data, G3 for a tender); the board's mark for that class and the channel's kind suggests a required rung on the channel's Counsel tab, "from the board's position, counsel to confirm": N (not permitted) suggests N5, C (with conditions) the indicative rung for the reach, P (permitted) N0. Only counsel sets the required rung (field 24), as before.
 - **Channel register**: one entry per channel, kinds K1 to K7, boundaries B1 to B3, fields 1 to 25. Every kind is
   entered or recorded as absent with the reason. Fields are scanned for matter content.
 - **Reach** R1 to R4 from three tests; **information class** I1 to I6; **exposure consequence** X1 to X4 derived.
