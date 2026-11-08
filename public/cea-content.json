@@ -1,7 +1,7 @@
 {
  "schema": "triodian.cea.content.v1",
  "frameworkDate": "21 October 2026",
- "banner": "A technical assessment prepared for counsel. It states what the documents show, how each channel is classified and what evidence can be produced. It gives no legal advice, names no product and holds no deal content.",
+ "banner": "A technical assessment prepared for counsel. It states what the documents show, how each channel is classified and what evidence can be produced. It gives no legal advice, names no product and holds no matter content.",
  "roles": [
   {
    "id": "methodOwner",
@@ -33,7 +33,7 @@
   },
   {
    "id": "dealLead",
-   "name": "Deal team lead (company)"
+   "name": "Matter team lead (company)"
   },
   {
    "id": "tenantOwner",
@@ -64,7 +64,7 @@
   {
    "code": "B3",
    "name": "Personal estate",
-   "controls": "A member of the deal team or insider list, on a personal account or device",
+   "controls": "A member of the matter team or insider list, on a personal account or device",
    "can": "Direct only; evidence is the direction and its acknowledgement"
   }
  ],
@@ -73,7 +73,7 @@
    "code": "K1",
    "name": "Sanctioned enterprise assistant with reach over stored content",
    "boundary": "B1",
-   "example": "Microsoft 365 Copilot answering from any deal folder the user can open"
+   "example": "Microsoft 365 Copilot answering from any matter folder the user can open"
   },
   {
    "code": "K2",
@@ -85,7 +85,7 @@
    "code": "K3",
    "name": "Embedded AI in collaboration and meeting tools",
    "boundary": "B1",
-   "example": "Meeting transcription and recap; AI notetakers invited to deal calls"
+   "example": "Meeting transcription and recap; AI notetakers invited to matter calls"
   },
   {
    "code": "K4",
@@ -97,7 +97,7 @@
    "code": "K5",
    "name": "Personal device",
    "boundary": "B3",
-   "example": "A chatbot on a phone, with a deal document photographed or a paragraph retyped"
+   "example": "A chatbot on a phone, with a matter document photographed or a paragraph retyped"
   },
   {
    "code": "K6",
@@ -171,7 +171,7 @@
   }
  ],
  "reachTests": [
-  "Can the channel answer from stored deal content without a person pasting it? (K1: yes if the assistant’s scope includes any deal folder the user can open.)",
+  "Can the channel answer from stored matter content without a person pasting it? (K1: yes if the assistant’s scope includes any matter folder the user can open.)",
   "Can a person put whole documents into it, rather than only typed and pasted text?",
   "Does it receive content without anyone deciding to submit it? (K3 transcription; K6 automatic sync.)"
  ],
@@ -208,42 +208,42 @@
   {
    "code": "N1",
    "name": "Direction",
-   "def": "A written AI-use direction covering the channel, issued to the deal team and insider list, with acknowledgements and dates.",
-   "producedBy": "Counsel drafts; deal team lead issues",
+   "def": "A written AI-use direction covering the channel, issued to the matter team and insider list, with acknowledgements and dates.",
+   "producedBy": "Counsel drafts; matter team lead issues",
    "closes": "No"
   },
   {
    "code": "N2",
    "name": "Attestation",
-   "def": "A signed statement from the tool provider’s terms or from an adviser: what the tool retains, whether content trains any model, what the adviser’s tooling can reach, over the deal window.",
+   "def": "A signed statement from the tool provider’s terms or from an adviser: what the tool retains, whether content trains any model, what the adviser’s tooling can reach, over the matter window.",
    "producedBy": "The provider’s terms; the adviser",
    "closes": "No"
   },
   {
    "code": "N3",
    "name": "Configuration",
-   "def": "A dated export of the settings in force: assistant scope, DLP rules, labels, barriers, web filter, device policy, with change history for the deal window.",
+   "def": "A dated export of the settings in force: assistant scope, DLP rules, labels, barriers, web filter, device policy, with change history for the matter window.",
    "producedBy": "The tenant owner",
    "closes": "No"
   },
   {
    "code": "N4",
    "name": "Record",
-   "def": "A retrievable log of what crossed the channel in the deal window: submissions, uploads, exports, transcriptions, with who and when, capturing enough to answer “what left”.",
+   "def": "A retrievable log of what crossed the channel in the matter window: submissions, uploads, exports, transcriptions, with who and when, capturing enough to answer “what left”.",
    "producedBy": "The tenant owner; the data-room provider; the adviser",
    "closes": "Partly: shows what left, after the fact"
   },
   {
    "code": "N5",
    "name": "Containment",
-   "def": "Evidence that the channel cannot reach deal content at all for the deal window: assistant scope excluding the deal folders, barriers between the deal team and the rest, uploads disabled, data-room AI features off.",
+   "def": "Evidence that the channel cannot reach matter content at all for the matter window: assistant scope excluding the matter folders, barriers between the matter team and the rest, uploads disabled, data-room AI features off.",
    "producedBy": "The tenant owner; the data-room provider",
    "closes": "For R3 and R4 reach only"
   },
   {
    "code": "N6",
    "name": "Meaning control",
-   "def": "A control at the boundary that reads the meaning of outbound text against the deal’s sensitive content, independent of the AI, with a signed record per submission of what was requested, what applied and what was allowed.",
+   "def": "A control at the boundary that reads the meaning of outbound text against the matter’s sensitive content, independent of the AI, with a signed record per submission of what was requested, what applied and what was allowed.",
    "producedBy": "A control not yet deployed in the company’s estate",
    "closes": "Yes"
   }
@@ -263,8 +263,8 @@
   },
   {
    "id": "T2",
-   "name": "Deal-scoped",
-   "q": "Can it be produced for this deal window and this deal team without exposing deal content or individuals’ personal data beyond what the question needs?",
+   "name": "Matter-scoped",
+   "q": "Can it be produced for this matter window and this matter team without exposing matter content or individuals’ personal data beyond what the question needs?",
    "source": "Nature of the record"
   },
   {
@@ -337,7 +337,7 @@
   "T1:B1": {
    "route": "Configuration",
    "owner": "Tenant owner",
-   "step": "Restrict assistant scope over the deal folders; apply barriers; enable retrievable logging; disable AI features on the data room"
+   "step": "Restrict assistant scope over the matter folders; apply barriers; enable retrievable logging; disable AI features on the data room"
   },
   "T1:B2": {
    "route": "Contract",
@@ -346,13 +346,13 @@
   },
   "T1:B3": {
    "route": "Direction",
-   "owner": "Deal team lead, with counsel’s text",
+   "owner": "Matter team lead, with counsel’s text",
    "step": "Issue the AI-use direction; collect acknowledgements; add it to the insider list process"
   },
   "T2": {
    "route": "Configuration",
    "owner": "Tenant owner",
-   "step": "Scope logs and exports to the deal team and window"
+   "step": "Scope logs and exports to the matter team and window"
   },
   "T3": {
    "route": "Contract",
@@ -378,9 +378,9 @@
  "questions5": [
   {
    "n": 1,
-   "q": "Who can reach this channel, and with what deal information?",
+   "q": "Who can reach this channel, and with what matter information?",
    "scale": "Reach R1 to R4; information class I1 to I6",
-   "by": "Triodian classifies; deal team lead confirms",
+   "by": "Triodian classifies; matter team lead confirms",
    "facts": "Who uses it, how information enters, scope over folders",
    "fields": "4, 8, 15, 16"
   },
@@ -447,7 +447,7 @@
   {
    "n": 4,
    "name": "Who uses it",
-   "format": "Deal team · insider list · adviser · everyone with folder access",
+   "format": "Matter team · insider list · adviser · everyone with folder access",
    "kind": "select:dealTeam|insiders|adviser|everyone",
    "tab": "facts"
   },
@@ -600,7 +600,7 @@
   }
  ],
  "optLabels": {
-  "dealTeam": "Deal team",
+  "dealTeam": "Matter team",
   "insiders": "Insider list",
   "adviser": "Adviser",
   "everyone": "Everyone with folder access",
@@ -695,15 +695,365 @@
   "Data-room provider",
   "Other"
  ],
+ "matterTypes": [
+  {
+   "id": "deal",
+   "name": "Deal (M&A or capital raising)",
+   "noun": "deal",
+   "title": "The deal profile",
+   "lede": "Nine items recorded once, agreed with the GC and counsel. The deal is referred to by its code name only. No counterparty name, price or figure appears anywhere.",
+   "p": {
+    "codeName": "Deal code name",
+    "stage": "Deal stage",
+    "teamCounts": "Deal team size and insider list size",
+    "teamPh": "Deal team 6 (CFO office 3, legal 2, IT 1); insider list 14",
+    "folders": "Deal folders",
+    "sharingPh": "Deal team only; everyone with the link",
+    "role": "Role on the deal",
+    "reaches": "Scope reaches the deal folders",
+    "section1": "The deal"
+   },
+   "stages": {
+    "preApproach": "Pre-approach",
+    "diligence": "In diligence",
+    "signed": "Signed, pre-completion",
+    "completed": "Completed within 90 days"
+   },
+   "adviserTypes": [
+    "Bank",
+    "Law firm",
+    "Technical adviser",
+    "Accounting",
+    "Data-room provider",
+    "Other"
+   ],
+   "infoClasses": [
+    [
+     "Existence of the deal and the counterparty",
+     "Code name resolved; a calendar entry; an adviser’s name"
+    ],
+    [
+     "Process and timetable",
+     "Bid dates, exclusivity, conditions precedent"
+    ],
+    [
+     "Price, terms and structure",
+     "Offer price, consideration, earn-outs"
+    ],
+    [
+     "Valuation and synergy models",
+     "Assumptions, synergy lines, sensitivities"
+    ],
+    [
+     "Due diligence findings",
+     "Technical, financial and legal findings about either party"
+    ],
+    [
+     "Board papers and recommendations",
+     "The board’s position and the reasons for it"
+    ]
+   ]
+  },
+  {
+   "id": "litigation",
+   "name": "Litigation or dispute",
+   "noun": "dispute",
+   "title": "The dispute profile",
+   "lede": "Nine items recorded once, agreed with the GC and counsel. The dispute is referred to by its code name only. No party name, amount claimed or settlement figure appears anywhere.",
+   "p": {
+    "codeName": "Matter code name",
+    "stage": "Stage of the dispute",
+    "teamCounts": "Matter team size and people with access",
+    "teamPh": "Matter team 5 (legal 3, finance 1, IT 1); others with access 9",
+    "folders": "Matter folders",
+    "sharingPh": "Matter team only; external counsel",
+    "role": "Role in the dispute",
+    "reaches": "Scope reaches the matter folders",
+    "section1": "The dispute"
+   },
+   "stages": {
+    "preAction": "Before proceedings",
+    "pleadings": "Pleadings and discovery",
+    "hearing": "Evidence and hearing",
+    "resolved": "Judgment, appeal or settlement within 90 days"
+   },
+   "adviserTypes": [
+    "Law firm",
+    "Barrister",
+    "Expert witness",
+    "Litigation funder",
+    "E-discovery provider",
+    "Other"
+   ],
+   "infoClasses": [
+    [
+     "Existence of the dispute and the parties",
+     "Code name resolved; a calendar entry; an adviser’s name"
+    ],
+    [
+     "Strategy and timetable",
+     "Hearing dates, steps planned, settlement windows"
+    ],
+    [
+     "Settlement position and offers",
+     "Offers made or received, authority to settle"
+    ],
+    [
+     "Merits and quantum assessments",
+     "Prospects, exposure ranges, damages models"
+    ],
+    [
+     "Evidence and expert reports",
+     "Witness statements, expert reports, discovered documents"
+    ],
+    [
+     "Privileged advice and instructions",
+     "Counsel’s advice and the board’s or GC’s instructions on it"
+    ]
+   ]
+  },
+  {
+   "id": "rdIp",
+   "name": "R&D or intellectual property",
+   "noun": "programme",
+   "title": "The programme profile",
+   "lede": "Nine items recorded once, agreed with the GC and counsel. The programme is referred to by its code name only. No invention, formula, design or partner name appears anywhere.",
+   "p": {
+    "codeName": "Programme code name",
+    "stage": "Programme stage",
+    "teamCounts": "Programme team size and people with access",
+    "teamPh": "Programme team 12 (research 8, legal 2, IT 2); others with access 20",
+    "folders": "Programme folders and repositories",
+    "sharingPh": "Programme team only; research partner",
+    "role": "Role on the programme",
+    "reaches": "Scope reaches the programme folders",
+    "section1": "The programme"
+   },
+   "stages": {
+    "research": "Research",
+    "development": "Development",
+    "filing": "Before patent filing",
+    "launch": "Pre-launch or launched within 90 days"
+   },
+   "adviserTypes": [
+    "Patent attorney",
+    "Law firm",
+    "Research partner",
+    "Contract manufacturer",
+    "Technical adviser",
+    "Other"
+   ],
+   "infoClasses": [
+    [
+     "Existence of the programme and its partners",
+     "Code name resolved; a calendar entry; a partner’s name"
+    ],
+    [
+     "Milestones and timetable",
+     "Trial, filing and launch dates"
+    ],
+    [
+     "Commercial terms and licensing",
+     "Licence terms, royalties, partner agreements"
+    ],
+    [
+     "Technical designs and data",
+     "Designs, specifications, datasets, results"
+    ],
+    [
+     "Source code and models",
+     "Code, model weights, algorithms"
+    ],
+    [
+     "Unfiled inventions and trade secrets",
+     "What is not yet protected and the reasons for keeping it secret"
+    ]
+   ]
+  },
+  {
+   "id": "tender",
+   "name": "Tender or bid",
+   "noun": "bid",
+   "title": "The bid profile",
+   "lede": "Nine items recorded once, agreed with the GC and counsel. The bid is referred to by its code name only. No client name, price or margin appears anywhere.",
+   "p": {
+    "codeName": "Bid code name",
+    "stage": "Bid stage",
+    "teamCounts": "Bid team size and people with access",
+    "teamPh": "Bid team 8 (commercial 3, solution 3, legal 1, IT 1); others with access 11",
+    "folders": "Bid folders",
+    "sharingPh": "Bid team only; teaming partner",
+    "role": "Role on the bid",
+    "reaches": "Scope reaches the bid folders",
+    "section1": "The bid"
+   },
+   "stages": {
+    "preparing": "Preparing",
+    "submitted": "Submitted, under evaluation",
+    "negotiation": "Preferred, in negotiation",
+    "decided": "Awarded or lost within 90 days"
+   },
+   "adviserTypes": [
+    "Bid consultant",
+    "Law firm",
+    "Teaming partner",
+    "Subcontractor",
+    "Technical adviser",
+    "Other"
+   ],
+   "infoClasses": [
+    [
+     "Existence of the bid and its partners",
+     "Code name resolved; a calendar entry; a partner’s name"
+    ],
+    [
+     "Process and timetable",
+     "Submission dates, clarifications, evaluation steps"
+    ],
+    [
+     "Price and commercial terms",
+     "Price, payment terms, risk allocation"
+    ],
+    [
+     "Cost models and margins",
+     "Cost build-up, margins, sensitivities"
+    ],
+    [
+     "Solution and win strategy",
+     "Technical solution, differentiators, competitor analysis"
+    ],
+    [
+     "Board approvals and bid decisions",
+     "Bid or no-bid decisions and the authority to submit"
+    ]
+   ]
+  },
+  {
+   "id": "boardPapers",
+   "name": "Board papers",
+   "noun": "board matter",
+   "title": "The board matter profile",
+   "lede": "Nine items recorded once, agreed with the GC and counsel. The board matter is referred to by its code name only. No proposal, figure or person affected appears anywhere.",
+   "p": {
+    "codeName": "Matter code name",
+    "stage": "Stage before the board",
+    "teamCounts": "Directors, secretariat and executives with access",
+    "teamPh": "Directors 9; secretariat 2; executives 4",
+    "folders": "Board folders",
+    "sharingPh": "Directors and secretariat only",
+    "role": "Role for the board",
+    "reaches": "Scope reaches the board folders",
+    "section1": "The board matter"
+   },
+   "stages": {
+    "preparing": "Papers in preparation",
+    "circulated": "Circulated to directors",
+    "decided": "Decided, not yet announced",
+    "announced": "Announced within 90 days"
+   },
+   "adviserTypes": [
+    "Law firm",
+    "Bank",
+    "Accounting",
+    "Board portal provider",
+    "Consultant",
+    "Other"
+   ],
+   "infoClasses": [
+    [
+     "Existence of the matter before the board",
+     "Code name resolved; an agenda item; an adviser’s name"
+    ],
+    [
+     "Agenda and timetable",
+     "Meeting dates, papers due, announcement plans"
+    ],
+    [
+     "Proposals and terms",
+     "What management proposes, and its terms"
+    ],
+    [
+     "Forecasts and financial models",
+     "Forecasts, budgets, sensitivities"
+    ],
+    [
+     "Management and adviser reports",
+     "Reports and advice put to the board"
+    ],
+    [
+     "Board deliberations and resolutions",
+     "Directors’ positions, minutes and resolutions"
+    ]
+   ]
+  },
+  {
+   "id": "exportControlled",
+   "name": "Export-controlled data",
+   "noun": "project",
+   "title": "The project profile",
+   "lede": "Nine items recorded once, agreed with the GC and counsel. The project is referred to by its code name only. No controlled data, specification or customer name appears anywhere.",
+   "p": {
+    "codeName": "Project code name",
+    "stage": "Project stage",
+    "teamCounts": "Project team size and people cleared for controlled data",
+    "teamPh": "Project team 15 (engineering 10, programme 3, IT 2); cleared 11",
+    "folders": "Controlled data folders",
+    "sharingPh": "Cleared staff only",
+    "role": "Role on the project",
+    "reaches": "Scope reaches the controlled data folders",
+    "section1": "The project"
+   },
+   "stages": {
+    "planning": "Planning",
+    "active": "Active, controlled data held",
+    "delivery": "Delivery or transfer",
+    "closed": "Closed within 90 days"
+   },
+   "adviserTypes": [
+    "Law firm",
+    "Export compliance adviser",
+    "Prime contractor",
+    "Subcontractor",
+    "Technical adviser",
+    "Other"
+   ],
+   "infoClasses": [
+    [
+     "Existence of the project and its partners",
+     "Code name resolved; a calendar entry; a partner’s name"
+    ],
+    [
+     "Programme and schedule",
+     "Milestones, deliveries, test dates"
+    ],
+    [
+     "Contract terms",
+     "Prices, obligations, licence conditions"
+    ],
+    [
+     "Controlled technical data, summary level",
+     "Descriptions and parameters of controlled items"
+    ],
+    [
+     "Detailed designs and specifications",
+     "Drawings, specifications, source code of controlled items"
+    ],
+    [
+     "Classified or licence-restricted material",
+     "Material whose handling a security classification or export licence restricts"
+    ]
+   ]
+  }
+ ],
  "documents": [
   {
    "ref": "D1",
-   "name": "Deal team and insider list, by role and count (names only if counsel permits)",
-   "usedFor": "Deal profile; B3 channels"
+   "name": "Matter team and insider list, by role and count (names only if counsel permits)",
+   "usedFor": "Matter profile; B3 channels"
   },
   {
    "ref": "D2",
-   "name": "Deal folder structure: locations, folder names, sharing settings, document counts. No documents",
+   "name": "Matter folder structure: locations, folder names, sharing settings, document counts. No documents",
    "usedFor": "K1 reach; K6 paths"
   },
   {
@@ -738,7 +1088,7 @@
   },
   {
    "ref": "D9",
-   "name": "AI acceptable-use policy and any AI-use direction already issued for the deal",
+   "name": "AI acceptable-use policy and any AI-use direction already issued for the matter",
    "usedFor": "N1 evidence; what staff have been told"
   },
   {
@@ -754,7 +1104,7 @@
    "length": "30 min"
   },
   {
-   "who": "Deal team lead, CFO’s office",
+   "who": "Matter team lead, CFO’s office",
    "purpose": "How the team works: tools in daily use, late-night habits, what is pasted where, what has been told to the team",
    "length": "45 min"
   },
@@ -787,7 +1137,7 @@
    "name": "Register completeness",
    "when": "End of phase 2",
    "reviewer": "Delivery manager",
-   "tests": "Fields 1 to 14 complete or not known; every value sourced and dated; no deal content in any field"
+   "tests": "Fields 1 to 14 complete or not known; every value sourced and dated; no matter content in any field"
   },
   {
    "id": "R3",
@@ -808,7 +1158,7 @@
    "name": "Legal-line and content check",
    "when": "Before any draft leaves Triodian",
    "reviewer": "Method owner",
-   "tests": "No sentence states what the law requires; no deal content; “required”, “gap” and “residual gap” used only as 10.4 allows; no product named"
+   "tests": "No sentence states what the law requires; no matter content; “required”, “gap” and “residual gap” used only as 10.4 allows; no product named"
   },
   {
    "id": "R6",
@@ -835,7 +1185,7 @@
   },
   {
    "n": 1,
-   "name": "Deal profile",
+   "name": "Matter profile",
    "days": "Days 1 to 2",
    "screenName": "Profile",
    "screen": "profile"
@@ -885,8 +1235,8 @@
  ],
  "annexOutline": [
   "Purpose, and the question the assessment answers",
-  "What was and was not done: no deal content, no system access, no logs read, no vendor or adviser system examined, no forensics, no legal advice",
-  "The deal profile, by code name, and the channel kinds covered",
+  "What was and was not done: no matter content, no system access, no logs read, no vendor or adviser system examined, no forensics, no legal advice",
+  "The matter profile, by code name, and the channel kinds covered",
   "Method: register, five questions, ladder, obtainability test",
   "The five-minute demonstration: whether performed, on what text, which controls passed",
   "Summary table of findings",
@@ -974,7 +1324,7 @@
   {
    "id": "CD5",
    "name": "Technical annex, in Triodian’s name",
-   "contents": "Method, deal profile (code name only), summary table, findings, the demonstration record, limitations, not-known count, statement of what was not done",
+   "contents": "Method, matter profile (code name only), summary table, findings, the demonstration record, limitations, not-known count, statement of what was not done",
    "accepted": "Validation complete; the check complete and its points closed or disclosed"
   }
  ],
@@ -987,7 +1337,7 @@
   [
    "B",
    "Path",
-   "How deal information reaches the channel, from folder to model, with the parties on the way"
+   "How matter information reaches the channel, from folder to model, with the parties on the way"
   ],
   [
    "C",
@@ -1033,12 +1383,12 @@
  "glossary": {
   "channel": {
    "term": "Channel",
-   "def": "One path by which deal information can reach an external AI model: a sanctioned tool and its terms, a personal account or device, an enterprise assistant’s reach over the deal folders, a data-room export path, or one adviser’s tooling. The unit of assessment.",
+   "def": "One path by which matter information can reach an external AI model: a sanctioned tool and its terms, a personal account or device, an enterprise assistant’s reach over the matter folders, a data-room export path, or one adviser’s tooling. The unit of assessment.",
    "where": "Register"
   },
   "kind": {
    "term": "Channel kind",
-   "def": "One of seven fixed kinds, K1 to K7, so registers from different deals can be compared. A ban on a tool does not remove a channel; it usually moves a K2 or K4 channel to K5.",
+   "def": "One of seven fixed kinds, K1 to K7, so registers from different matters can be compared. A ban on a tool does not remove a channel; it usually moves a K2 or K4 channel to K5.",
    "where": "Register"
   },
   "boundary": {
@@ -1048,12 +1398,12 @@
   },
   "infoClass": {
    "term": "Information class",
-   "def": "The highest class of deal information the channel can reach, I1 (the deal exists) to I6 (board papers). Descriptive only; counsel determines its legal character.",
+   "def": "The highest class of matter information the channel can reach, I1 (the matter exists) to I6 (the most sensitive class, which depends on the matter type: board papers for a deal, privileged advice for a dispute). Descriptive only; counsel determines its legal character.",
    "where": "Classify"
   },
   "reach": {
    "term": "Reach",
-   "def": "How deal information can enter the channel: typed text only (R1), documents a person submits (R2), stored content the user can open (R3), or content it receives without a submission (R4). Three yes-or-no tests derive it.",
+   "def": "How matter information can enter the channel: typed text only (R1), documents a person submits (R2), stored content the user can open (R3), or content it receives without a submission (R4). Three yes-or-no tests derive it.",
    "where": "Classify"
   },
   "exposure": {
@@ -1078,12 +1428,12 @@
   },
   "obtainable": {
    "term": "Obtainable rung",
-   "def": "The highest evidence type that can in fact be produced for the deal window and independently checked. Found by testing each rung from the indicative one down until one passes all five tests.",
+   "def": "The highest evidence type that can in fact be produced for the matter window and independently checked. Found by testing each rung from the indicative one down until one passes all five tests.",
    "where": "Classify"
   },
   "obtest": {
    "term": "Obtainability test",
-   "def": "Five conditions a rung must pass: produced (T1), deal-scoped (T2), reachable (T3), checkable (T4), timely (T5).",
+   "def": "Five conditions a rung must pass: produced (T1), matter-scoped (T2), reachable (T3), checkable (T4), timely (T5).",
    "where": "Classify"
   },
   "confidence": {
@@ -1098,7 +1448,7 @@
   },
   "F5": {
    "term": "Residual gap",
-   "def": "Every channel that accepts typed or pasted text has the same gap: a paraphrase of a deal paragraph passes every control the company owns, because those controls check files, patterns and destinations and none reads meaning. Named on every channel where it exists; the decision is the company’s. No product is named.",
+   "def": "Every channel that accepts typed or pasted text has the same gap: a paraphrase of a matter paragraph passes every control the company owns, because those controls check files, patterns and destinations and none reads meaning. Named on every channel where it exists; the decision is the company’s. No product is named.",
    "where": "Findings"
   },
   "F4": {
@@ -1117,18 +1467,18 @@
    "where": "Outputs"
   },
   "profile": {
-   "term": "Deal profile",
-   "def": "Nine items recorded once: code name, stage, team and insider counts, deal folders, advisers, sanctioned tools, device policy, privilege marking and counsel turnaround. Set by counsel and the GC.",
+   "term": "Matter profile",
+   "def": "Nine items recorded once: code name, stage, team and insider counts, matter folders, advisers, sanctioned tools, device policy, privilege marking and counsel turnaround. Set by counsel and the GC.",
    "where": "Profile"
   },
   "codeName": {
    "term": "Code name",
-   "def": "The only name the assessment uses for the deal. Chosen by counsel. No counterparty name, price or figure appears anywhere.",
+   "def": "The only name the assessment uses for the matter. Chosen by counsel. No counterparty name, price or figure appears anywhere.",
    "where": "Profile"
   },
   "dealContent": {
-   "term": "Deal content",
-   "def": "A deal document, a paragraph from one, a price, a counterparty name or a valuation figure. None enters the assessment. A reviewer who finds any in a field records an exception and the field is cleared.",
+   "term": "Matter content",
+   "def": "A matter document, a paragraph from one, a price, a counterparty name or a valuation figure. None enters the assessment. A reviewer who finds any in a field records an exception and the field is cleared.",
    "where": "Register, Review"
   },
   "notKnown": {
@@ -1163,7 +1513,7 @@
   },
   "legalline": {
    "term": "Legal-line check",
-   "def": "R5: every draft output is scanned for wording that states what the law requires, names a product, or holds deal content. Each hit is cleared by the method owner before any output is final.",
+   "def": "R5: every draft output is scanned for wording that states what the law requires, names a product, or holds matter content. Each hit is cleared by the method owner before any output is final.",
    "where": "Review"
   },
   "checker": {
@@ -1182,8 +1532,8 @@
    "where": "Counsel"
   },
   "window": {
-   "term": "Deal window",
-   "def": "The period from the first confidential step to completion or 90 days after. Evidence is produced for this window and this deal team.",
+   "term": "Matter window",
+   "def": "The period from the first confidential step to completion or 90 days after. Evidence is produced for this window and this matter team.",
    "where": "Profile"
   },
   "moved": {
@@ -1203,7 +1553,7 @@
   },
   "adviser": {
    "term": "Adviser",
-   "def": "A bank, law firm, technical adviser, accounting firm or data-room provider engaged on the deal. Each has one K7 entry. Questions to an adviser go through the deal team lead or counsel, never from Triodian.",
+   "def": "A bank, law firm, technical adviser, accounting firm or data-room provider engaged on the matter. Each has one K7 entry. Questions to an adviser go through the matter team lead or counsel, never from Triodian.",
    "where": "Profile"
   }
  },

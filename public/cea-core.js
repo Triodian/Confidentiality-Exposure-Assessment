@@ -1,6 +1,6 @@
 /* AI Confidentiality Exposure Assessment · Triodian
    Core: state, helpers, the shell (header, drawer, footer, document band), permissions bridge, persistence.
-   The assessment is saved on the server (one deal per site) and every save is checked against the signed-in
+   The assessment is saved on the server (one matter per site) and every save is checked against the signed-in
    person's roles there too. The worked example runs in the browser only and is never saved.
    Loaded before cea-screens.js and cea.js; everything shared sits on window.CEA. */
 (function () {
@@ -76,6 +76,8 @@ function setPath(path, v) {
   if (path === 'engagement.productPhrasesText') { S.engagement.productPhrases = String(v).split('\n').map(x => x.trim()).filter(Boolean); log('productPhrases', 'R5', null, S.engagement.productPhrases.length + ' names'); return true; }
   const ks = path.split('.'), last = ks.pop(); let o = S; ks.forEach(k => { if (o[k] == null) o[k] = {}; o = o[k]; });
   const from = o[last]; if (from === v) return true; o[last] = v;
+  // A new matter type has its own stages: a stage the new type does not have is cleared (task 2.7).
+  if (path === 'profile.matterType' && S.profile.stage && !(S.profile.stage in R.matterType().stages)) { log('edit', 'profile.stage', S.profile.stage, ''); S.profile.stage = ''; }
   if (/^channels\.\d+\.notDeterminable\.on$/.test(path) && v) { const nd = S.channels[+ks[1]].notDeterminable; if (!nd.since) nd.since = today(); }
   log('edit', path, typeof from === 'object' ? null : from, v); return true;
 }
@@ -91,7 +93,7 @@ const gate = (ok, t) => `<span class="gate ${ok ? 'ok' : 'no'}" role="status"><i
 const SEQ = ['setup', 'overview', 'profile', 'register', 'classify', 'counsel', 'findings', 'review', 'outputs'];
 const SNAME = { actions: 'My actions', setup: 'Set-up', overview: 'Overview', profile: 'Profile', register: 'Register', classify: 'Classify', counsel: 'Counsel', findings: 'Findings', review: 'Review', outputs: 'Outputs', reference: 'Reference' };
 function personSelect(id) { return `<select id="${id}" data-act="person" aria-label="Acting as"><option value="">Choose person</option>${S.people.map(p => `<option value="${esc(p.id)}" ${UI.personId === p.id ? 'selected' : ''}>${esc(p.name || 'Unnamed')} · ${esc(p.roles.map(r => roleName(r).replace(/ \(.*\)/, '')).join(', ') || 'no role')}</option>`).join('')}</select>`; }
-/* Document band under the header: the privilege marking counsel directs, and the deal code name. */
+/* Document band under the header: the privilege marking counsel directs, and the matter code name. */
 function docband() {
   if (!S) return '';
   if (UI.archived) return `<div class="docband practice"><div class="docband-in"><span class="priv none" style="color:var(--ochre)"><strong>Earlier assessment · ${esc(UI.archived.label)} · read only</strong></span><span class="stat"><button class="lnk" data-act="leaveArchive">Back to the current assessment</button></span></div></div>`;
@@ -133,7 +135,7 @@ function drawer() {
     <a class="item" href="${SRV.site ? 'https://board-direction-test.triodian.com/?suite=1' : 'https://board-direction.triodian.com/?suite=1'}" style="text-decoration:none"><span class="appic" style="background:var(--green-bg);color:var(--green)">BD</span><span>AI Board Direction<br><span class="small soft">The board’s direction on AI: where to use it and what to rule out</span></span></a>
     <a class="item" href="${SRV.site ? 'https://risk-appetite-test.triodian.com/?suite=1' : 'https://risk-appetite.triodian.com/?suite=1'}" style="text-decoration:none"><span class="appic" style="background:var(--aubergine-bg);color:var(--aubergine)">RA</span><span>AI Risk Appetite<br><span class="small soft">Board positions and calibration set</span></span></a>
     <a class="item" href="${SRV.site ? 'https://use-assessment-test.triodian.com/?suite=1' : 'https://use-assessment.triodian.com/?suite=1'}" style="text-decoration:none"><span class="appic" style="background:#E3E9EF;color:var(--navy)">UA</span><span>AI Use Assessment<br><span class="small soft">Register, tests and findings</span></span></a>
-    <div class="item" aria-current="page"><span class="appic" style="background:#F1E6DD;color:var(--copper)">CE</span><span>AI Confidentiality Exposure Assessment<br><span class="small soft">Channels, ladder, findings for one deal</span></span><span class="badge b-green" style="margin-left:auto">now</span></div>
+    <div class="item" aria-current="page"><span class="appic" style="background:#F1E6DD;color:var(--copper)">CE</span><span>AI Confidentiality Exposure Assessment<br><span class="small soft">Channels, ladder, findings for one matter</span></span><span class="badge b-green" style="margin-left:auto">now</span></div>
   </aside>`;
 }
 function footer() {
@@ -153,7 +155,7 @@ function entryOverlay() {
   return `<div class="overlay" role="dialog" aria-modal="true" aria-labelledby="entry-h"><div class="entry" style="border-top-color:var(--copper)">
     <div class="row" style="gap:12px;margin-bottom:22px">${LOGO(26)}<span class="vrule"></span><span style="font-weight:600">AI Confidentiality Exposure Assessment</span></div>
     <div class="eyebrow">For one live or recently closed transaction</div>
-    <h1 id="entry-h" class="h1" style="font-size:32px">Every channel by which deal information can reach an external AI model, and what the company could show about each</h1>
+    <h1 id="entry-h" class="h1" style="font-size:32px">Every channel by which matter information can reach an external AI model, and what the company could show about each</h1>
     <p class="soft">The assessment runs in eight phases over two weeks, from set-up to close. Each channel goes through five questions. Starting from the indicative rung, each rung of the non-egress evidence ladder is tested in turn until one passes the obtainability test. Each channel ends with one finding, and the residual gap is marked beside it.</p>
     ${entryStatus()}
     <div class="acts">
@@ -194,9 +196,9 @@ function myActions() {
   const add = (title, detail, nav, tone) => out.push({ title, detail, nav, tone: tone || '' });
   if ((r('methodOwner') || r('delivery')) && !G[0].ok) add('Finish set-up and the profile', 'Still open: ' + G[0].items.filter(i => !i[1]).map(i => i[0]).join('; ') + '.', { act: 'go', to: G[0].items[0][1] && G[0].items[3][1] ? 'profile' : 'setup' });
   if ((r('methodOwner') || r('delivery')) && G[0].ok && !G[1].items[1][1]) add('Consider every channel kind', 'Enter a channel for each kind K1 to K7, or record it as absent with the reason.', { act: 'go', to: 'register' });
-  if (r('gc') && S.profile.codeName && !S.profileAgreed.gcBy) add('Agree the deal profile (R1)', 'The GC records their own agreement to the profile.', { act: 'go', to: 'profile' });
-  if (r('counsel') && !S.engagement.gcActsAsCounsel && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the deal profile (R1)', 'Counsel records its own agreement to the profile.', { act: 'go', to: 'profile' });
-  if (r('executive') && S.engagement.gcActsAsCounsel && S.engagement.secondApproverId === p.id && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the deal profile (R1)', 'The GC also acts as counsel, so you give the second agreement to the profile.', { act: 'go', to: 'profile' });
+  if (r('gc') && S.profile.codeName && !S.profileAgreed.gcBy) add('Agree the matter profile (R1)', 'The GC records their own agreement to the profile.', { act: 'go', to: 'profile' });
+  if (r('counsel') && !S.engagement.gcActsAsCounsel && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the matter profile (R1)', 'Counsel records its own agreement to the profile.', { act: 'go', to: 'profile' });
+  if (r('executive') && S.engagement.gcActsAsCounsel && S.engagement.secondApproverId === p.id && S.profile.codeName && !S.profileAgreed.counselBy) add('Agree the matter profile (R1)', 'The GC also acts as counsel, so you give the second agreement to the profile.', { act: 'go', to: 'profile' });
   S.channels.forEach(e => {
     if (blindFor(e) || R.isAbsent(e)) return;
     if ((r('assessor') || r('methodOwner')) && !deny('facts', e)) { const m = R.missingIn(e, R.FACTS_N); if (m) add(`Record the facts for ${e.id}`, `${m} of 12 fields still to record or mark not known · ${R.kindOf(e)}`, { act: 'openChannel', id: e.id, t: 'facts' }); }
@@ -206,7 +208,7 @@ function myActions() {
     if (r('peer') && e.peerReview.personId === p.id && e.peerReview.differs && !String(e.peerReview.resolution || '').trim()) add(`Record how the R3 difference on ${e.id} was resolved`, `Your reach ${R.codeOpt(e.peerReview.reach)} differs from the recorded ${R.codeOpt(R.reachOf(e))}. Agree it with the classifier, then record the resolution.`, { act: 'classifyChannel', id: e.id, step: 5 }, 'due');
   });
   if (r('counsel')) S.questions.filter(q => q.status !== 'answered').forEach(q => add(`Answer question ${q.ref}`, String(q.question || '').slice(0, 160), { act: 'go', to: 'counsel' }, 'due'));
-  if (r('delivery') && G[2].items[0][1] && R.rev('R2').result !== 'passed') add('Run the register completeness and content check (R2)', 'Check that fields 1 to 14 are filled in or marked not known, every value has a source, and no field holds deal content.', { act: 'go', to: 'review' });
+  if (r('delivery') && G[2].items[0][1] && R.rev('R2').result !== 'passed') add('Run the register completeness and content check (R2)', 'Check that fields 1 to 14 are filled in or marked not known, every value has a source, and no field holds matter content.', { act: 'go', to: 'review' });
   if (tri && !S.demonstration.performed) add('Record the five-minute demonstration', 'Performed or not; on what text; which controls passed the paraphrase.', { act: 'go', to: 'review' });
   if (r('validation') && G[3].items[0][1] && !R.rev('R4').result && !deny('r4')) add('Record validation (R4)', 'Check that the rules were applied consistently and that every adjustment has a reason.', { act: 'go', to: 'review' });
   if (r('methodOwner')) { const open = R.legalHits().filter(h => !h.cleared).length; if (open) add('Clear legal-line and content hits (R5)', `${open} ${open === 1 ? 'hit is' : 'hits are'} open. No output can be exported as final until each is cleared.`, { act: 'go', to: 'review' }, 'due'); }
@@ -264,7 +266,7 @@ function copyText(text) {
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
   function fallback() { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { toast('Copy failed. Select the markdown and copy it manually.'); } ta.remove(); }
 }
-const slug = s => (s || 'deal').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+const slug = s => (s || 'matter').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
 
 /* ---------- render ---------- */
 let lastBp = null, inChange = false, pendingRender = false, LEAVING = false;
