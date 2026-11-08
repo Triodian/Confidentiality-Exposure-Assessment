@@ -181,6 +181,8 @@ function create(C, getS, opts) {
   const MATTER_TYPES = (C.matterTypes || []).map(t => t.id);
   const matterType = () => { const id = ((S() || {}).profile || {}).matterType || 'deal'; return (C.matterTypes || []).find(t => t.id === id) || (C.matterTypes || [])[0] || { id: 'deal', noun: 'deal', p: {}, stages: C.stageLabels, adviserTypes: C.adviserTypes, infoClasses: C.infoClasses.map(x => [x.name, x.def]) }; };
   const infoClasses = () => matterType().infoClasses.map(([name, def], i) => ({ code: IC[i], name, def }));
+  /** The exposure consequences X1 to X4: a type other than a deal gives X2 to X4 its own reading (framework 8.2). */
+  const exposures = () => { const o = matterType().exposures; return C.exposures.map((x, i) => (o && i > 0 && o[i - 1] ? { code: x.code, name: o[i - 1][0], def: o[i - 1][1] } : x)); };
 
   /* ---------- the board's confidentiality position (task 2.8) ----------
      AI Board Direction's file marks each class of company information (G1 to G6) against each kind of AI tool
@@ -220,8 +222,8 @@ function create(C, getS, opts) {
   const reachName = c => (C.reaches.find(t => t.code === c) || {}).name || '';
   const className = c => (infoClasses().find(t => t.code === c) || {}).name || '';
   const kindName = c => (C.kinds.find(t => t.code === c) || {}).name || '';
-  const exposureName = c => (C.exposures.find(t => t.code === c) || {}).name || '';
-  const codeName = c => { const all = [].concat(C.rungs, C.reaches, infoClasses(), C.findings, C.boundaries, C.exposures, C.kinds); return (all.find(t => t.code === c) || {}).name || ''; };
+  const exposureName = c => (exposures().find(t => t.code === c) || {}).name || '';
+  const codeName = c => { const all = [].concat(C.rungs, C.reaches, infoClasses(), C.findings, C.boundaries, exposures(), C.kinds); return (all.find(t => t.code === c) || {}).name || ''; };
   const codeOpt = c => codeName(c) ? c + ' ' + codeName(c) : String(c || '');
   const optL = v => C.optLabels[v] || v;
 
@@ -407,7 +409,7 @@ function create(C, getS, opts) {
   return { RE, IC, NV, XC, CONF, KINDS, FACTS_N, CLASS_N, EVID_N, rk, newAssessment, newChannel, FLD, fv, kindOf, boundaryOf, notKnownCount, isAbsent, fieldDone, missingIn,
     proposeReach, reachOf, classOf, exposure, indicative, ladder, testsFor, obResult, needsRetest, proposedConfidence, confRaisedNoReason, confidence,
     acceptsText, hasF5, reachDetermination, finding, findingCls, findingName, planSteps, f5Summary, newest,
-    MATTER_TYPES, matterType, infoClasses, readBoardPosition, boardSuggestion, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
+    MATTER_TYPES, matterType, infoClasses, exposures, readBoardPosition, boardSuggestion, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
     rev, considered, live, gates, brokenRefs, textSources, hits, setHitsProvider, legalHits, r5Clear, measures, snapshotOf, signOffs, validateFile, hydrate, uid, today };
 }
 

@@ -18,6 +18,7 @@ test('six matter types, each complete', () => {
     assert.equal(Object.keys(t.stages).length, 4, t.id);
     assert.equal(t.infoClasses.length, 6, t.id);
     assert.ok(t.adviserTypes.includes('Other'), t.id);
+    if (t.id !== 'deal') assert.equal(t.exposures.length, 3, `${t.id}: X2 to X4`);
     assert.ok(!/\b(must|required)\b/i.test(JSON.stringify(t)), `${t.id}: no "must" or "required"`);
   }
 });
@@ -59,4 +60,13 @@ test('files and the server accept the types and refuse others', () => {
 test('the next assessment keeps the matter type', () => {
   S = R.newAssessment(); S.profile.matterType = 'boardPapers';
   assert.equal(nextAssessment(S, 'next1', 'p1', '2026-11-08T00:00:00Z', 'x').profile.matterType, 'boardPapers');
+});
+
+test('the exposure consequences X2 to X4 read for the type; a deal keeps the original labels', () => {
+  S = R.newAssessment();
+  assert.deepEqual(R.exposures(), C.exposures);
+  S.profile.matterType = 'litigation';
+  assert.equal(R.exposureName('X4'), 'Privilege consequence');
+  assert.equal(R.exposureName('X1'), 'Immaterial');
+  assert.equal(R.codeName('X2'), 'Order and undertaking consequence');
 });
