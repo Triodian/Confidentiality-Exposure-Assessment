@@ -2,7 +2,7 @@
    The rules engine: pure functions over the assessment (S) and the content file (C). No DOM, no network.
    Loaded by the app (window.CEARules) and by the unit tests (module.exports). Every number the screens and
    outputs show comes from here: reach, the indicative rung, the ladder, the obtainability result, confidence,
-   the exposure code, the finding, the gates and the legal-line, product and deal-content hits. */
+   the exposure code, the finding, the gates and the legal-line, product and matter-content hits. */
 (function (root) {
 'use strict';
 
@@ -26,7 +26,7 @@ function create(C, getS, opts) {
       engagement: { id: uid(), company: '', reference: '', counselFirm: '', gcActsAsCounsel: false, secondApproverId: '', startDate: '', briefConfirmed: { by: '', on: '', ref: '' }, documentsRequestedOn: '',
         checkerMode: 'validation', checkerPersonId: '', checkerOrganisation: '', example: false, autosave: false,
         legalPhrases: C.legalPhrases.slice(), productPhrases: C.productPhrases.slice(), annexText: {}, annexSigned: { by: '', on: '' }, closure: { by: '', on: '', disposition: '', note: '' } },
-      profile: { codeName: '', stage: '', teamCounts: '', folders: [], advisers: [], tools: [], devicePolicy: '', privilegeMarking: '', counselTurnaround: 2 },
+      profile: { matterType: 'deal', codeName: '', stage: '', teamCounts: '', folders: [], advisers: [], tools: [], devicePolicy: '', privilegeMarking: '', counselTurnaround: 2 },
       profileAgreed: { gcBy: '', gcOn: '', counselBy: '', counselOn: '' },
       people: [],
       documents: C.documents.map(d => ({ id: d.ref, ref: d.ref, title: d.name, status: '', date: '' })),
@@ -175,13 +175,20 @@ function create(C, getS, opts) {
     return { count: es.length, channels: es.map(e => e.id), classes, kinds, horizons: [...new Set(es.map(e => e.horizon).filter(Boolean))] };
   }
 
+  /* ---------- matter types (task 2.7) ----------
+     The profile's matter type sets the wording of the profile, its stages, the adviser types and the names of the
+     information classes I1 to I6. An assessment without a type is a deal, as every assessment was before types. */
+  const MATTER_TYPES = (C.matterTypes || []).map(t => t.id);
+  const matterType = () => { const id = ((S() || {}).profile || {}).matterType || 'deal'; return (C.matterTypes || []).find(t => t.id === id) || (C.matterTypes || [])[0] || { id: 'deal', noun: 'deal', p: {}, stages: C.stageLabels, adviserTypes: C.adviserTypes, infoClasses: C.infoClasses.map(x => [x.name, x.def]) }; };
+  const infoClasses = () => matterType().infoClasses.map(([name, def], i) => ({ code: IC[i], name, def }));
+
   /* ---------- names ---------- */
   const rungName = c => (C.rungs.find(t => t.code === c) || {}).name || '';
   const reachName = c => (C.reaches.find(t => t.code === c) || {}).name || '';
-  const className = c => (C.infoClasses.find(t => t.code === c) || {}).name || '';
+  const className = c => (infoClasses().find(t => t.code === c) || {}).name || '';
   const kindName = c => (C.kinds.find(t => t.code === c) || {}).name || '';
   const exposureName = c => (C.exposures.find(t => t.code === c) || {}).name || '';
-  const codeName = c => { const all = [].concat(C.rungs, C.reaches, C.infoClasses, C.findings, C.boundaries, C.exposures, C.kinds); return (all.find(t => t.code === c) || {}).name || ''; };
+  const codeName = c => { const all = [].concat(C.rungs, C.reaches, infoClasses(), C.findings, C.boundaries, C.exposures, C.kinds); return (all.find(t => t.code === c) || {}).name || ''; };
   const codeOpt = c => codeName(c) ? c + ' ' + codeName(c) : String(c || '');
   const optL = v => C.optLabels[v] || v;
 
@@ -191,7 +198,7 @@ function create(C, getS, opts) {
   const live = () => S().channels.filter(e => !isAbsent(e));
   function gates() {
     const s = S(), e = s.engagement, p = s.profile || {}, g = [];
-    g[0] = [['Brief confirmed by the GC', !!(e.briefConfirmed.on && e.briefConfirmed.by)], ['Privilege marking entered', !!String(p.privilegeMarking || '').trim()], ['Deal code name chosen', !!String(p.codeName || '').trim()], ['Document request issued', !!e.documentsRequestedOn]];
+    g[0] = [['Brief confirmed by the GC', !!(e.briefConfirmed.on && e.briefConfirmed.by)], ['Privilege marking entered', !!String(p.privilegeMarking || '').trim()], [`${matterType().p.codeName || 'Code name'} chosen`, !!String(p.codeName || '').trim()], ['Document request issued', !!e.documentsRequestedOn]];
     const cv = considered();
     g[1] = [['Profile agreed by the GC and by counsel (R1)', !!(s.profileAgreed.gcBy && s.profileAgreed.counselBy)], ['Every channel kind K1 to K7 considered: a channel entered, or recorded as absent with the reason', KINDS.every(k => cv[k])]];
     const es = live(), ab = s.channels.filter(isAbsent);
@@ -220,7 +227,7 @@ function create(C, getS, opts) {
     return out;
   }
 
-  /* ---------- R5: legal line, product names and deal content ---------- */
+  /* ---------- R5: legal line, product names and matter content ---------- */
   /** Every free-text value in the assessment, with where it came from. Outputs are scanned separately for fixed text. */
   function textSources() {
     const s = S(), src = [], add = (id, label, t) => { if (t != null && String(t).trim()) src.push({ id, label, text: String(t) }); };
@@ -244,11 +251,11 @@ function create(C, getS, opts) {
   const nz = s => String(s).toLowerCase().replace(/\\\|/g, '|').replace(/\s+/g, ' ').trim();
   const hash = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
   const normLine = s => String(s).replace(/^[\s|>*#-]+/, '').replace(/\s+/g, ' ').trim().slice(0, 240);
-  /** Deal-content patterns: money, large figures, percentages, per-share, named counterparties (framework 6.3, 10.4). */
+  /** Matter-content patterns: money, large figures, percentages, per-share, named counterparties (framework 6.3, 10.4). */
   const contentRes = () => (C.contentPatterns || []).map(p => ({ id: p.id, label: p.label, re: new RegExp(p.re, 'i') }));
   /**
    * Hits for R5. outputsText: [[outputId, rawMarkdown]] from the outputs module (fixed text is scanned there).
-   * Three kinds: legal (a legal-line phrase), product (a product name), content (deal content). Each hit is keyed by
+   * Three kinds: legal (a legal-line phrase), product (a product name), content (matter content). Each hit is keyed by
    * phrase, source and text hash, so clearing it clears it everywhere the same text appears.
    */
   function hits(outputsText) {
@@ -333,6 +340,7 @@ function create(C, getS, opts) {
     const isObj = v => v && typeof v === 'object' && !Array.isArray(v), str = (v, p) => { if (v != null && typeof v !== 'string') E(p, 'must be text'); };
     if (!isObj(o.engagement)) E('engagement', 'missing');
     if (o.profile != null && !isObj(o.profile)) E('profile', 'must be an object');
+    if (isObj(o.profile) && o.profile.matterType != null && !MATTER_TYPES.includes(o.profile.matterType)) E('profile.matterType', 'not a matter type');
     ['channels', 'questions', 'reviews', 'exceptions', 'independentReviewPoints', 'documents', 'interviews', 'people', 'history', 'versions'].forEach(k => { if (o[k] != null && !Array.isArray(o[k])) E(k, 'must be a list'); });
     (Array.isArray(o.channels) ? o.channels : []).forEach((e, i) => { const p = 'channels[' + i + ']'; if (!isObj(e)) return E(p, 'not an object'); if (e.id != null && e.id !== '' && (typeof e.id !== 'string' || !IDRE.test(e.id))) E(p + '.id', 'not a valid id'); if (e.fields != null && !isObj(e.fields)) E(p + '.fields', 'must be an object');
       Object.entries(e.fields || {}).forEach(([n, f]) => { if (!/^\d+$/.test(n) || +n < 1 || +n > 25) E(p + '.fields.' + n, 'unknown field'); if (f != null && !isObj(f)) E(p + '.fields.' + n, 'must be an object'); else if (f) { str(f.value, p + '.fields.' + n + '.value'); str(f.source, p + '.fields.' + n + '.source'); } }); });
@@ -365,7 +373,7 @@ function create(C, getS, opts) {
   return { RE, IC, NV, XC, CONF, KINDS, FACTS_N, CLASS_N, EVID_N, rk, newAssessment, newChannel, FLD, fv, kindOf, boundaryOf, notKnownCount, isAbsent, fieldDone, missingIn,
     proposeReach, reachOf, classOf, exposure, indicative, ladder, testsFor, obResult, needsRetest, proposedConfidence, confRaisedNoReason, confidence,
     acceptsText, hasF5, reachDetermination, finding, findingCls, findingName, planSteps, f5Summary, newest,
-    rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
+    MATTER_TYPES, matterType, infoClasses, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
     rev, considered, live, gates, brokenRefs, textSources, hits, setHitsProvider, legalHits, r5Clear, measures, snapshotOf, signOffs, validateFile, hydrate, uid, today };
 }
 

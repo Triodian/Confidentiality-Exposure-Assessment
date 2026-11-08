@@ -33,7 +33,7 @@ reach each other through Cloudflare service bindings.
 
 ## How it is built
 
-Single-deal web app: each deployment holds one assessment for one transaction, run as the technical half of an
+Single-matter web app: each deployment holds one assessment for one confidential matter (a deal, a dispute, an R&D or IP programme, a tender, board papers or export-controlled data), run as the technical half of an
 engagement led by the company’s counsel (any law firm; the firm is named in set-up). It runs as a Cloudflare Worker: the files in `public/` are served as static assets, and
 `src/worker.js` handles `/api/*`. It is built from the AI Use Assessment app (`Triodian/use-assessment`) and keeps its
 server design; the audit that set the baseline is in `docs/specs/`.
@@ -47,7 +47,7 @@ server design; the audit that set the baseline is in `docs/specs/`.
   - `/user-guide/` – the user guide
 - `src/worker.js` – Cloudflare entry point
 - `lib/core/` – cloud-neutral API (`api.js`), the server-side save check (`rbac.js`), blind re-derivation (`blind.js`),
-  versions, another deal (`review.js`), notifications, three-way merge
+  versions, another matter (`review.js`), notifications, three-way merge
 - `lib/identity/cloudflare-access.js` – verifies the Cloudflare Access sign-in
 - `lib/store/d1.js` – database access (Cloudflare D1)
 - `lib/config.js` – Access team domain and AUD tag, first administrator
@@ -68,13 +68,13 @@ server design; the audit that set the baseline is in `docs/specs/`.
    administrator and adds everyone else in Admin.
 
 Email needs `triodian.com` onboarded in Cloudflare Email Service; until then sends are listed as Failed in
-Admin → Notifications and saves are unaffected. There is no link to the Risk Appetite app: a deal assessment has no
+Admin → Notifications and saves are unaffected. There is no link to the Risk Appetite app: a matter assessment has no
 calibration set.
 
 ## How it works
 - Everyone signs in through Cloudflare Access; the app's user list (managed in `/admin`) decides who gets in.
 - Ten roles: method owner, assessor, classification reviewer, validation and delivery manager (Triodian); counsel
-  (the engaging law firm); GC, deal team lead and tenant owner (the company); independent checker. A person may hold several.
+  (the engaging law firm); GC, matter team lead and tenant owner (the company); independent checker. A person may hold several.
 - Every change is saved to the server within about a second. The server checks each save against the signed-in
   person's roles, including the rules that depend on who did what: blind re-derivation of reach (R3), independent
   validation (R4), the check (R7) by the external checker or by validation, confirmations in one's own name.
@@ -83,9 +83,9 @@ calibration set.
 - The worked example (a fictional company and deal) runs in the browser only and is never saved.
 
 ## The method, as the app applies it
-- **Deal profile** (P1 to P9) under a code name; the GC and counsel agree it (R1).
+- **Matter profile** (P1 to P9) under a code name; the GC and counsel agree it (R1). The **matter type** (deal, litigation or dispute, R&D or IP, tender or bid, board papers, export-controlled data) sets the profile's wording, its stages, the adviser types and the names of the information classes I1 to I6. They are in `tools/build-content.py` (`matterTypes`). A deal reads as the app did before matter types.
 - **Channel register**: one entry per channel, kinds K1 to K7, boundaries B1 to B3, fields 1 to 25. Every kind is
-  entered or recorded as absent with the reason. Fields are scanned for deal content.
+  entered or recorded as absent with the reason. Fields are scanned for matter content.
 - **Reach** R1 to R4 from three tests; **information class** I1 to I6; **exposure consequence** X1 to X4 derived.
 - **Indicative rung** by the base rule (R1/R2 → N4, R3/R4 → N5), capped at N4 in an adviser's estate and N1 on a
   personal device. **Obtainability** T1 to T5 walks the ladder down; at B3 only T1 is asked.
@@ -93,8 +93,8 @@ calibration set.
   recorded beside F1 or F2 wherever the channel accepts typed or pasted text. Priority from the gap size and X code.
 - **Outputs**: CD1 register (+CSV), CD2 findings and worksheets, CD3 90-day plan, CD4 residual gap, CD5 technical
   annex, QS question set, RP review pack, CM closing measures. Draft until R5 is cleared and the gates are met.
-- **R5** scans every field and output for legal-line phrases, product names and deal content.
-- **Close**: counsel records the closure and directs archive or destroy; another deal can then be started.
+- **R5** scans every field and output for legal-line phrases, product names and matter content.
+- **Close**: counsel records the closure and directs archive or destroy; another matter can then be started.
 
 ## Tests
 ```
