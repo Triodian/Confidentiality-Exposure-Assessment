@@ -431,7 +431,7 @@ function screenReference() {
   <h2 class="sh">${T('boundary', 'Boundaries')}</h2>${t(['Code', 'Boundary', 'Who controls the near side', 'What the company can do'], c.boundaries.map(x => [x.code, esc(x.name), esc(x.controls), esc(x.can)]))}
   <h2 class="sh">${T('infoClass', 'Information classes')}</h2>${t(['Code', 'Class', 'Illustration'], R().infoClasses().map(x => [x.code, esc(x.name), esc(x.def)]))}
   <h2 class="sh">${T('reach', 'Reach classes')}</h2>${t(['Code', 'Reach', 'Deciding test', 'Illustration'], c.reaches.map(x => [x.code, esc(x.name), esc(x.test), esc(x.example)]))}
-  <h2 class="sh">${T('exposure', 'Exposure consequence')}</h2>${t(['Code', 'Consequence', 'Meaning for the assessment'], c.exposures.map(x => [x.code, esc(x.name), esc(x.def)]))}
+  <h2 class="sh">${T('exposure', 'Exposure consequence')}</h2>${t(['Code', 'Consequence', 'Meaning for the assessment'], R().exposures().map(x => [x.code, esc(x.name), esc(x.def)]))}
   <h2 class="sh">${T('rung', 'Non-egress evidence ladder')}</h2>${t(['Code', 'Rung', 'What the company holds', 'Produced by', 'Closes the paraphrase gap', 'Frequency'], c.rungs.map(x => [x.code, esc(x.name), esc(x.def), esc(x.producedBy), esc(x.closes), esc(O().FREQ[x.code])]))}
   <p class="small">Indicative rung by the base rule: ${Object.entries(c.baseRule).map(([r, n]) => `${r} → ${n}`).join(' · ')}. B2 capped at N4; B3 is N1.</p>
   <h2 class="sh">${T('obtest', 'Obtainability test')}</h2>${t(['#', 'Condition', 'Question', 'Source'], c.tests.map(x => [x.id, esc(x.name), esc(x.q), esc(x.source)]))}
