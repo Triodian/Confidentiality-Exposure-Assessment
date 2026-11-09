@@ -2,9 +2,9 @@
 // Same shape as the AI Use Assessment Worker (Triodian/use-assessment); only the names, addresses and databases differ.
 {
   "name": "confidentiality-exposure-assessment",
-  "main": "src/worker.js",
+  "main": "src/index.js",
   "compatibility_date": "2026-10-01",
-  // run_worker_first: every request reaches src/worker.js first, so pages can require sign-in (lib/identity/session.js).
+  // run_worker_first: every request reaches the Worker (src/index.js → src/worker.js) first, so pages can require sign-in (lib/identity/session.js).
   "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
 
   // Only reachable at the custom domain. People sign in at /login; Cloudflare Access guards /auth/email only.
