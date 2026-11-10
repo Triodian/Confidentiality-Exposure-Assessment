@@ -217,6 +217,51 @@ function create(C, getS, opts) {
     return { ...base, mark, rung, why: BP.why[mark] || '', conditions: mark === 'C' ? (pos.conditions || []) : [], note: mark === 'C' && !ix ? 'Record the channel’s reach to see the indicative rung the conditions apply to.' : '' };
   }
 
+  /* ---------- AI activity by tool (task 6.6) ----------
+     A summary of AI activity from Microsoft Purview or Harmonic Security, made by Triodian integrations (counts only:
+     no user names, file names or prompt text). It is evidence for the facts of a channel (fields 5, 8 and 11) and a
+     prompt for channels not yet in the register. It never sets a classification. */
+  const ACT_FORMAT = 'triodian.cea.channels.v1', ACT_HOW = ['scope', 'paste', 'upload', 'transcription', 'export'];
+  const nint = v => (Number.isFinite(+v) && +v >= 0 ? Math.floor(+v) : 0);
+  /** Read an activity summary. Returns { error } or { activity } in the form the assessment stores. */
+  function readChannelActivity(text, loadedOn, loadedBy) {
+    let o = text;
+    if (typeof text === 'string') { try { o = JSON.parse(text); } catch (e) { return { error: 'This file is not an AI activity summary: it is not valid JSON.' }; } }
+    if (!o || typeof o !== 'object' || Array.isArray(o)) return { error: 'This file is not an AI activity summary.' };
+    if (o.format !== ACT_FORMAT) return { error: `This file is not an AI activity summary (expected format ${ACT_FORMAT}, made by Triodian integrations from a Purview or Harmonic Security export).` };
+    if (!Array.isArray(o.tools)) return { error: 'The summary lists no tools.' };
+    const str = (v, n) => String(v == null ? '' : v).slice(0, n), date = v => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : '');
+    const tools = o.tools.filter(t => t && typeof t === 'object' && String(t.tool || '').trim()).slice(0, 300).map(t => { const en = t.enforcement || {};
+      return { tool: str(t.tool, 120).trim(), domain: str(t.domain, 120), suggestedKind: /^K[1-7]$/.test(t.suggestedKind) ? t.suggestedKind : '', events: nint(t.events), people: nint(t.people),
+        withSensitiveInfo: nint(t.withSensitiveInfo), withSensitivityLabel: nint(t.withSensitivityLabel), enforcement: { block: nint(en.block), warn: nint(en.warn), audit: nint(en.audit), allow: nint(en.allow) },
+        howEntered: ACT_HOW.includes(t.howEntered) ? t.howEntered : '' }; });
+    const period = o.period && typeof o.period === 'object' ? o.period : {};
+    return { activity: { format: ACT_FORMAT, source: str(o.source, 40) || 'export', period: { from: date(period.from), to: date(period.to) }, events: nint(o.events), tools, loadedOn: loadedOn || '', loadedBy: str(loadedBy, 120) } };
+  }
+  const tnorm = v => String(v || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  /** The activity recorded for a channel's tool (field 5), matched on the tool's name or its domain; null if none. */
+  function activityFor(e) {
+    const a = (S() || {}).channelActivity; if (!a || !Array.isArray(a.tools)) return null;
+    const name = tnorm(fv(e, 5)); if (name.length < 3) return null;
+    return a.tools.find(t => { const n = tnorm(t.tool), d = tnorm(String(t.domain || '').split('.')[0]); return (n.length >= 3 && (name.includes(n) || n.includes(name))) || (d.length >= 3 && name.includes(d)); }) || null;
+  }
+  /** Tools in the summary that no channel in the register names. */
+  function unmatchedActivity() {
+    const a = (S() || {}).channelActivity; if (!a || !Array.isArray(a.tools)) return [];
+    const matched = new Set((S().channels || []).map(activityFor).filter(Boolean));
+    return a.tools.filter(t => !matched.has(t));
+  }
+  /** One paragraph a person can read, and field 11 can carry, about a tool's recorded activity. */
+  function activityText(t, a) {
+    a = a || (S() || {}).channelActivity || {};
+    const src = a.source === 'purview' ? 'Microsoft Purview' : a.source === 'harmonic' ? 'Harmonic Security' : (a.source || 'an export');
+    const per = a.period && a.period.from ? ` from ${a.period.from}${a.period.to && a.period.to !== a.period.from ? ' to ' + a.period.to : ''}` : '';
+    const en = t.enforcement || {}, pol = [en.block && `${en.block} blocked`, en.warn && `${en.warn} warned`, en.audit && `${en.audit} audited only`].filter(Boolean);
+    return `${src} recorded ${t.events} AI ${t.events === 1 ? 'event' : 'events'} for ${t.tool}${per}, by ${t.people} ${t.people === 1 ? 'person' : 'people'}` +
+      `${t.withSensitiveInfo ? `; ${t.withSensitiveInfo} with sensitive information detected` : ''}${t.withSensitivityLabel ? `; ${t.withSensitivityLabel} with a sensitivity label` : ''}` +
+      `${pol.length ? `; the policy ${pol.join(', ')}` : ''}. Counts only, from the activity summary loaded${a.loadedOn ? ' ' + a.loadedOn : ''}.`;
+  }
+
   /* ---------- names ---------- */
   const rungName = c => (C.rungs.find(t => t.code === c) || {}).name || '';
   const reachName = c => (C.reaches.find(t => t.code === c) || {}).name || '';
@@ -376,6 +421,7 @@ function create(C, getS, opts) {
     if (!isObj(o.engagement)) E('engagement', 'missing');
     if (o.profile != null && !isObj(o.profile)) E('profile', 'must be an object');
     if (o.boardPosition != null) { const bp = o.boardPosition; if (!isObj(bp) || !isObj(bp.markings) || Object.entries(bp.markings).some(([k, v]) => !MARK_RE.test(k) || !['P', 'C', 'N'].includes(v))) E('boardPosition', 'not a confidentiality position'); }
+    if (o.channelActivity != null && (!isObj(o.channelActivity) || !Array.isArray(o.channelActivity.tools) || o.channelActivity.tools.some(t => !isObj(t) || typeof t.tool !== 'string'))) E('channelActivity', 'not an AI activity summary');
     if (isObj(o.profile) && o.profile.matterType != null && !MATTER_TYPES.includes(o.profile.matterType)) E('profile.matterType', 'not a matter type');
     ['channels', 'questions', 'reviews', 'exceptions', 'independentReviewPoints', 'documents', 'interviews', 'people', 'history', 'versions'].forEach(k => { if (o[k] != null && !Array.isArray(o[k])) E(k, 'must be a list'); });
     (Array.isArray(o.channels) ? o.channels : []).forEach((e, i) => { const p = 'channels[' + i + ']'; if (!isObj(e)) return E(p, 'not an object'); if (e.id != null && e.id !== '' && (typeof e.id !== 'string' || !IDRE.test(e.id))) E(p + '.id', 'not a valid id'); if (e.fields != null && !isObj(e.fields)) E(p + '.fields', 'must be an object');
@@ -409,7 +455,7 @@ function create(C, getS, opts) {
   return { RE, IC, NV, XC, CONF, KINDS, FACTS_N, CLASS_N, EVID_N, rk, newAssessment, newChannel, FLD, fv, kindOf, boundaryOf, notKnownCount, isAbsent, fieldDone, missingIn,
     proposeReach, reachOf, classOf, exposure, indicative, ladder, testsFor, obResult, needsRetest, proposedConfidence, confRaisedNoReason, confidence,
     acceptsText, hasF5, reachDetermination, finding, findingCls, findingName, planSteps, f5Summary, newest,
-    MATTER_TYPES, matterType, infoClasses, exposures, readBoardPosition, boardSuggestion, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
+    MATTER_TYPES, matterType, infoClasses, exposures, readBoardPosition, boardSuggestion, readChannelActivity, activityFor, unmatchedActivity, activityText, rungName, reachName, className, kindName, exposureName, codeName, codeOpt, optL,
     rev, considered, live, gates, brokenRefs, textSources, hits, setHitsProvider, legalHits, r5Clear, measures, snapshotOf, signOffs, validateFile, hydrate, uid, today };
 }
 

@@ -81,6 +81,29 @@ function screenSetup() {
   </div>${nextAssessmentCard()}${gateCard(0)}${stepbar(gate(R().gates()[0].ok, R().gates()[0].ok ? 'Phase 0 met' : 'Phase 0 open'))}`;
 }
 
+/* ---------- AI activity by tool (task 6.6) ---------- */
+function activityCard() {
+  const s = S(), a = s.channelActivity, why = deny('setup'), fs = why ? 'disabled' : '', canAdd = !deny('facts');
+  let h = `<section class="card" id="activityCard"><div class="row between"><h2 class="sh" style="margin:0">AI activity by tool</h2><div class="row"><button class="btn sm" data-act="loadActivity" ${fs}>${a ? 'Load a newer summary' : 'Load a summary'}</button><button class="btn sm ghost" data-act="toggleActPaste" ${fs}>${UI.actPaste ? 'Hide paste box' : 'Paste instead'}</button></div></div>
+    <p class="small soft" style="margin:8px 0 12px">A summary of AI activity from Microsoft Purview or Harmonic Security, made with Triodian integrations. It carries counts only: no user names, file names or prompt text. Each channel whose tool it names shows the counts on its Facts tab, and a tool not yet in the register can be added as a channel. It is evidence for the facts; it sets no classification.</p>`;
+  if (UI.actPaste) h += `<textarea class="in" id="act_paste" rows="4" placeholder="Paste the activity summary (channels.json)" aria-label="AI activity summary JSON"></textarea><div class="row" style="margin:6px 0 12px"><button class="btn sm" data-act="pasteActivity" ${fs}>Load the pasted summary</button></div>`;
+  if (UI.actError) h += `<p class="err" role="alert">${esc(UI.actError)}</p>`;
+  if (!a) return h + '<p class="small soft" style="margin:0">No summary loaded.</p></section>';
+  const src = a.source === 'purview' ? 'Microsoft Purview' : a.source === 'harmonic' ? 'Harmonic Security' : a.source;
+  const chOf = t => s.channels.find(e => R().activityFor(e) === t), un = new Set(R().unmatchedActivity());
+  h += `<p class="small" style="margin:0 0 8px">${esc(src)}${a.period.from ? ` · ${esc(dAU(a.period.from))}${a.period.to ? ' to ' + esc(dAU(a.period.to)) : ''}` : ''} · ${a.events} events · loaded ${esc(dAU(a.loadedOn))}${a.loadedBy ? ' by ' + esc(a.loadedBy) : ''}</p>
+    <div class="tw"><table class="lg"><thead><tr><th>Tool</th><th>Suggested kind</th><th style="text-align:right">Events</th><th style="text-align:right">People</th><th style="text-align:right">Sensitive</th><th style="text-align:right">Blocked</th><th>Channel</th></tr></thead><tbody>
+    ${a.tools.map(t => { const c = chOf(t); return `<tr><td>${esc(t.tool)}${t.domain && t.domain !== t.tool ? `<div class="mini">${esc(t.domain)}</div>` : ''}</td><td class="code">${esc(t.suggestedKind)}</td><td style="text-align:right">${t.events}</td><td style="text-align:right">${t.people}</td><td style="text-align:right">${t.withSensitiveInfo}</td><td style="text-align:right">${t.enforcement.block}</td>
+      <td>${c ? `<button class="lnk mono" data-act="openChannel" data-id="${esc(c.id)}" data-t="facts">${esc(c.id)}</button>` : un.has(t) && canAdd ? `<button class="btn sm" data-act="addActivityChannel" data-tool="${esc(t.tool)}">Add as a channel</button>` : '<span class="soft small">not in the register</span>'}</td></tr>`; }).join('')}</tbody></table></div>
+    <p class="small soft" style="margin:6px 0 0">The suggested kind comes from the tool’s name and the sanctioned tools named when the summary was made. Confirm it on the channel.</p>`;
+  return h + '</section>';
+}
+/** On a channel's Facts tab: the activity recorded for its tool, if a summary names it. */
+function activityPanel(e) {
+  const t = R().activityFor(e); if (!t) return '';
+  return `<div class="panel2" style="padding:12px 14px" id="activity-${esc(e.id)}"><div class="mini" style="margin-bottom:4px">AI activity recorded for this tool</div><p class="small" style="margin:0">${esc(R().activityText(t))}</p>${t.howEntered ? `<p class="small soft" style="margin:4px 0 0">Mostly entered by: ${esc(R().optL(t.howEntered))} (compare field 8).</p>` : ''}</div>`;
+}
+
 /* ---------- the board's confidentiality position (task 2.8) ---------- */
 function positionCard() {
   const s = S(), pos = s.boardPosition, why = deny('setup'), fs = why ? 'disabled' : '', bp = C().boardPosition || { classes: {} }, mt = R().matterType(), g = mt.boardClass || 'G6';
@@ -122,6 +145,7 @@ function screenProfile() {
   <div class="stack">
   <section class="card"><h2 class="sh">Matter type</h2><div class="fgrid">${fld('What kind of confidential matter this is', 'profile.matterType', p.matterType || 'deal', { select: types })}</div><p class="small soft" style="margin:8px 0 0">The type sets the wording of the profile below, its stages, the adviser types and the information classes I1 to I6 on the register. Agreed with the profile (R1).</p></section>
   ${positionCard()}
+  ${activityCard()}
   <section class="card"><h2 class="sh">P1 to P3 · ${esc(P.section1)}</h2><div class="fgrid">${fld(T('codeName', esc(P.codeName)) + ' (P1, chosen by counsel)', 'profile.codeName', p.codeName, { raw: true })}${fld(P.stage + ' (P2)', 'profile.stage', p.stage, { select: stage })}${fld(P.teamCounts + ' (P3, counts by role)', 'profile.teamCounts', p.teamCounts, { ph: P.teamPh })}</div></section>
   <section class="card"><div class="row between"><h2 class="sh" style="margin:0">P4 · ${esc(P.folders)}</h2><button class="btn sm" data-act="addListItem" data-list="folders" ${fs}>Add folder</button></div><p class="small soft" style="margin:8px 0 12px">Location and folder name, with sharing scope and document count, from D2. Folder names only; no documents.</p><div class="stack" style="gap:10px">${folders || '<p class="small soft">No folders recorded.</p>'}</div></section>
   <section class="card"><div class="row between"><h2 class="sh" style="margin:0">P5 · ${T('adviser', 'Advisers')}</h2><button class="btn sm" data-act="addListItem" data-list="advisers" ${fs}>Add adviser</button></div><p class="small soft" style="margin:8px 0 12px">Firm type and role for each. Each adviser gets one K7 channel on the register.</p><div class="stack" style="gap:10px">${advisers || '<p class="small soft">No advisers recorded.</p>'}</div></section>
@@ -189,6 +213,7 @@ function channelEditor(e) {
     <div class="card" style="padding:14px 16px"><label class="cb"><input type="checkbox" id="e-${sid(e.id)}-abs" data-path="channels.${i}.absent.on" ${abs ? 'checked' : ''} ${ed ? '' : 'disabled'}> ${T('absent', 'Considered, absent')}: the company says this kind of channel does not exist</label>${abs ? `<div style="margin-top:8px">${fld('The reason, with its source', `channels.${i}.absent.reason`, e.absent.reason, { ph: 'No meeting tool has AI features enabled (D5 p.4); confirmed by the tenant owner, IV-3' })}</div>` : ''}</div>
     ${abs ? '' : `${[2, 3, 4, 5].map(n => fieldRow(e, n)).join('')}
     ${kind === 'K7' ? `<div class="panel2" style="padding:12px 14px">${fld('Adviser this channel belongs to (one K7 entry per adviser, from the profile P5)', `channels.${i}.adviserId`, e.adviserId, { select: [['', '—'], ...(s.profile.advisers || []).map(a => [a.id, `${a.id} · ${a.type || ''} · ${a.role || ''}`])] })}</div>` : ''}
+    ${activityPanel(e)}
     ${[6, 7, 8, 9, 10, 11, 12, 13].map(n => fieldRow(e, n)).join('')}
     ${b2 ? `<div class="panel2" style="padding:12px 14px"><div class="mini" style="margin-bottom:6px">Three points flagged for counsel on every B2 channel (question 4)</div><ul class="small" style="margin:0;padding-left:20px">${C().b2Prompts.map(q => `<li>${esc(q)}</li>`).join('')}</ul>${ok('ask') ? `<button class="btn sm" style="margin-top:8px" data-act="askFrom" data-id="${esc(e.id)}" data-n="23">Ask counsel</button>` : ''}</div>` : ''}
     ${fieldRow(e, 14)}
