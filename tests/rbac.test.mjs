@@ -41,6 +41,11 @@ t('with the position loaded, deal lead still cannot set field 24', 'dl', n => n.
 t('with the position loaded, the GC still cannot set field 24', 'gc', n => n.channels[0].fields['24'] = { value: 'N5', source: 'board position' }, false, withPos);
 t('with the position loaded, counsel sets field 24', 'cn', n => n.channels[0].fields['24'] = { value: 'N5', source: 'QC-01' }, true, withPos);
 t('a malformed position is refused', 'ad', n => n.boardPosition = { markings: { 'X9:K1': 'maybe' } }, false);
+// the AI activity summary (task 6.6): loading it is set-up, like the board's position
+const act = { format: 'triodian.cea.channels.v1', source: 'purview', period: {}, tools: [{ tool: 'ChatGPT', events: 3 }] };
+t('admin loads an AI activity summary', 'ad', n => n.channelActivity = act, true);
+t('assessor cannot load the summary', 'as', n => n.channelActivity = act, false);
+t('a malformed summary is refused', 'ad', n => n.channelActivity = { tools: [{ events: 3 }] }, false);
 t('assessor cannot edit the profile', 'as', n => n.profile.codeName = 'Other', false);
 t('GC agrees the profile in own name', 'gc', n => { n.profileAgreed.gcBy = 'gc'; n.profileAgreed.gcOn = 'x'; }, true);
 t('checker logs a check point', 'ck', n => n.independentReviewPoints.push({ ref: 'CP-01', point: 'p', status: 'open' }), true);

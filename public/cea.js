@@ -42,6 +42,18 @@ const ACT = {
   loadPosition: () => { if (deny('setup')) return toast(deny('setup')); document.getElementById('bpIn').click(); },
   togglePosPaste: () => { UI.posPaste = !UI.posPaste; render(); },
   pastePosition: () => { const t = document.getElementById('pos_paste'); loadPositionText(t ? t.value : ''); },
+  loadActivity: () => { if (deny('setup')) return toast(deny('setup')); document.getElementById('actIn').click(); },
+  toggleActPaste: () => { UI.actPaste = !UI.actPaste; render(); },
+  pasteActivity: () => { const t = document.getElementById('act_paste'); loadActivityText(t ? t.value : ''); },
+  addActivityChannel: d => {
+    if (deny('facts')) return toast(deny('facts'));
+    const a = S().channelActivity, t = a && R().unmatchedActivity().find(x => x.tool === d.tool); if (!t) return;
+    const e = R().newChannel(t.suggestedKind || 'K4'), src = `AI activity summary (${a.source}${a.period.from ? ', ' + a.period.from + (a.period.to ? ' to ' + a.period.to : '') : ''})`;
+    const put = (n, v) => { if (v) e.fields[n] = { value: v, source: src, notKnown: false, by: UI.personId, on: today(), carried: true }; };
+    put(5, t.tool); put(8, t.howEntered); put(11, R().activityText(t, a));
+    S().channels.push(e); log('add', e.id, null, `${t.suggestedKind || 'K4'} from AI activity: ${t.tool}`);
+    UI.channelId = e.id; UI.tab = 'facts'; go('register'); toast(`${e.id} added for ${t.tool}. The kind and facts are carried from the activity summary: confirm each.`);
+  },
   askFrom: d => { const e = X.ch(d.id), n = +d.n; UI.ask = { channelId: e.id, question5: n >= 23 ? (n === 23 ? 4 : 5) : 2, targetField: n === 23 || n === 24 ? String(n) : '', facts: `${e.id} field ${n} (${R().FLD(n).name}): ${e.fields[n] && !e.fields[n].notKnown ? e.fields[n].value : 'not known'}${e.fields[n] && e.fields[n].source ? ' · source ' + e.fields[n].source : ''}`, question: '', why: `Field ${n}` }; go('counsel'); if (X.bp() === 'phone') ACT.sheet({ s: 'ask' }); else { const f = document.getElementById('askForm'); if (f) f.scrollIntoView(); } },
   classifyChannel: d => { if (d.id) UI.channelId = d.id; if (d.step) UI.step = +d.step; go('classify'); },
   pickChannel: (d, el) => { UI.channelId = el.value; UI.err = {}; render(); },
@@ -96,7 +108,18 @@ function loadPositionText(text) {
   log(had ? 'replace' : 'add', 'boardPosition', null, r.position.status);
   toast(`The board’s confidentiality position loaded (${r.position.status === 'resolved' ? 'resolved' : 'draft'}). Suggestions show on each channel’s Counsel tab.`); render();
 }
+/* An AI activity summary (task 6.6): read, checked and stored; evidence for channel facts, never a classification. */
+function loadActivityText(text) {
+  if (deny('setup')) return toast(deny('setup'));
+  const r = R().readChannelActivity(text, today(), pname(UI.personId) || '');
+  if (r.error) { UI.actError = r.error; toast(r.error); render(); return; }
+  const s = S(), had = !!s.channelActivity; s.channelActivity = r.activity; UI.actError = ''; UI.actPaste = false;
+  log(had ? 'replace' : 'add', 'channelActivity', null, `${r.activity.tools.length} tools, ${r.activity.source}`);
+  const n = R().unmatchedActivity().length;
+  toast(`AI activity loaded: ${r.activity.tools.length} tools${n ? `, ${n} not yet in the register` : ''}. It shows on each matching channel’s Facts tab.`); render();
+}
 function onChange(ev) {
+  if (ev.target && ev.target.id === 'actIn') { const f = ev.target.files[0]; ev.target.value = ''; if (f) f.text().then(loadActivityText, () => toast('The file could not be read.')); return; }
   if (ev.target && ev.target.id === 'bpIn') { const f = ev.target.files[0]; ev.target.value = ''; if (f) f.text().then(loadPositionText, () => toast('The file could not be read.')); return; } X.inChange = true; try { changeHandler(ev); } finally { X.inChange = false; } }
 function changeHandler(ev) {
   const el = ev.target, d = el.dataset, s = S(); if (!s) return;

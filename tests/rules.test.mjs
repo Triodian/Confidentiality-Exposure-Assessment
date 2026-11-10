@@ -102,4 +102,26 @@ t('with the setting, the named second approver may agree', rule('agreeCounsel', 
   delete S.boardPosition;
   t('no position, no suggestion', R.boardSuggestion(k1), null);
   t('a file with a bad position does not load', /boardPosition/.test(R.validateFile({ ...R.newAssessment(), boardPosition: { markings: { a: 1 } } })), true); }
+// AI activity by tool (task 6.6): evidence beside the facts, never a classification
+{ S = R.newAssessment();
+  const file = { format: 'triodian.cea.channels.v1', source: 'purview', period: { from: '2026-10-01', to: '2026-10-06' }, events: 7,
+    tools: [{ tool: 'ChatGPT', domain: 'chatgpt.com', suggestedKind: 'K4', events: 3, people: 2, withSensitiveInfo: 1, withSensitivityLabel: 0, enforcement: { block: 1, warn: 1, audit: 0, allow: 0, none: 1 }, howEntered: 'paste', user: 'alex@example.com' },
+      { tool: 'Microsoft 365 Copilot', domain: '', suggestedKind: 'K1', events: 2, people: 2, withSensitiveInfo: 1, withSensitivityLabel: 2, enforcement: { audit: 2 }, howEntered: 'scope' },
+      { tool: 'Otter.ai', domain: 'otter.ai', suggestedKind: 'K9', events: 1, people: 1, enforcement: {}, howEntered: 'dictation' }] };
+  const rd = R.readChannelActivity(JSON.stringify(file), '2026-11-10', 'Sam');
+  t('the summary reads', [rd.activity.tools.length, rd.activity.source, rd.activity.period.from], [3, 'purview', '2026-10-01']);
+  t('only the known fields are kept (no user carried through)', JSON.stringify(rd.activity).includes('alex@'), false);
+  t('an unknown kind or entry route is dropped, not stored', [rd.activity.tools[2].suggestedKind, rd.activity.tools[2].howEntered], ['', '']);
+  t('a board position is refused with the reason', /not an AI activity summary/.test(R.readChannelActivity('{"format":"triodian.bd.confidentiality.v1","tools":[]}').error), true);
+  t('bad JSON is refused', /not valid JSON/.test(R.readChannelActivity('{x').error), true);
+  S.channelActivity = rd.activity;
+  const ch = (k, tool) => { const e = R.newChannel(k); S.channels.push(e); if (tool) e.fields[5] = f(tool); return e; };
+  const c1 = ch('K1', 'Microsoft 365 Copilot (E5)'), c4 = ch('K4', 'Any consumer tool'), c5 = ch('K4', 'chatgpt.com in the browser');
+  t('a channel naming the tool shows its activity', R.activityFor(c1).tool, 'Microsoft 365 Copilot');
+  t('the domain matches too', R.activityFor(c5).tool, 'ChatGPT');
+  t('a channel naming no tool in the summary shows none', R.activityFor(c4), null);
+  t('the tools no channel names', R.unmatchedActivity().map(x => x.tool), ['Otter.ai']);
+  t('the text a person reads', R.activityText(rd.activity.tools[0]), 'Microsoft Purview recorded 3 AI events for ChatGPT from 2026-10-01 to 2026-10-06, by 2 people; 1 with sensitive information detected; the policy 1 blocked, 1 warned. Counts only, from the activity summary loaded 2026-11-10.');
+  t('the activity sets no classification', [c1.fields[15], c1.fields[16], c1.fields[24]], [undefined, undefined, undefined]);
+  t('a file with a bad summary does not load', /channelActivity/.test(R.validateFile({ ...R.newAssessment(), channelActivity: { tools: 'x' } })), true); }
 console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);
