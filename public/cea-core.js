@@ -94,26 +94,37 @@ const SEQ = ['setup', 'overview', 'profile', 'register', 'classify', 'counsel', 
 const SNAME = { actions: 'My actions', setup: 'Set-up', overview: 'Overview', profile: 'Profile', register: 'Register', classify: 'Classify', counsel: 'Counsel', findings: 'Findings', review: 'Review', outputs: 'Outputs', reference: 'Reference' };
 function personSelect(id) { return `<select id="${id}" data-act="person" aria-label="Acting as"><option value="">Choose person</option>${S.people.map(p => `<option value="${esc(p.id)}" ${UI.personId === p.id ? 'selected' : ''}>${esc(p.name || 'Unnamed')} · ${esc(p.roles.map(r => roleName(r).replace(/ \(.*\)/, '')).join(', ') || 'no role')}</option>`).join('')}</select>`; }
 /* Document band under the header: the privilege marking counsel directs, and the matter code name. */
+/* The demo band (public/suite.js, on the demo and test sites) carries the worked example's note, so the app shows no
+   band of its own for it there. A client site has no demo band and keeps the app's band. */
+const suiteBand = () => (document.documentElement.getAttribute('data-suite-demo') || 'on') !== 'off';
+const EXAMPLE_NOTE = 'Worked example: a fictional company, deal and advisers, for practice only. Nothing is saved.';
+function suiteNote() {
+  const h = S && S.engagement.example && suiteBand() ? `<span class="examplenote"><span class="tsu-long">${EXAMPLE_NOTE}</span><span class="tsu-short">Worked example, fictional. Nothing is saved.</span><button data-act="leaveExample">Leave<span class="tsu-long"> the worked example</span></button></span>` : '';
+  if (window.TriodianSuiteNote !== h) { window.TriodianSuiteNote = h; window.dispatchEvent(new Event('triodian:note')); }
+}
+/* In the header the worked example is named once, by its note. The names and the marking keep their "fictional" and
+   "worked example" wording everywhere else (the outputs and the profile); the header shows them without the repeat. */
+const hdrName = s => practice() ? String(s || '').replace(/\s*\(fictional\)\s*$/, '') : s;
+const hdrMarking = s => practice() ? String(s || '').replace(/\s*·\s*worked example\s*$/i, '') : s;
 function docband() {
   if (!S) return '';
   if (UI.archived) return `<div class="docband practice"><div class="docband-in"><span class="priv none" style="color:var(--ochre)"><strong>Earlier assessment · ${esc(UI.archived.label)} · read only</strong></span><span class="stat"><button class="lnk" data-act="leaveArchive">Back to the current assessment</button></span></div></div>`;
   const p = S.profile, canSet = !deny('profile');
-  const priv = String(p.privilegeMarking || '').trim() ? `<span class="priv" title="Privilege marking · printed as the first line of every output">${esc(p.privilegeMarking)}</span>`
+  const priv = String(p.privilegeMarking || '').trim() ? `<span class="priv" title="Privilege marking · printed as the first line of every output">${esc(hdrMarking(p.privilegeMarking))}</span>`
     : `<span class="priv none">No privilege marking set.${canSet ? ' <button class="lnk" data-act="go" data-to="profile">Set it in the profile</button>' : ' Counsel directs the marking.'}</span>`;
   const stat = p.codeName || S.engagement.company ? `<span class="stat"><strong>${esc(p.codeName || '[no code name]')}</strong>${S.engagement.reference ? ' · ' + esc(S.engagement.reference) : ''}</span>` : '';
-  return `<div class="docband"><div class="docband-in"><span style="display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap">${priv}${TriodianBrand.chip(S.engagement.practitioner)}</span>${stat}</div></div>`;
+  return `<div class="docband"><div class="docband-in"><span class="docband-l">${TriodianBrand.chip(S.engagement.practitioner && practice() ? Object.assign({}, S.engagement.practitioner, { firm: hdrName(S.engagement.practitioner.firm) }) : S.engagement.practitioner)}${priv}</span>${stat}${bp() !== 'phone' && (practice() || !SRV.user) ? `<label class="chip actingas" title="Practice only: choose whose view to try"><span aria-hidden="true">⌾</span>${personSelect('who-hdr')}</label>` : ''}</div></div>`;
 }
 function header() {
   const b = bp(), steps = ['setup', 'profile', 'register', 'classify', 'counsel', 'findings', 'review', 'outputs'], nAct = S ? CEA.myActions().length : 0;
   return `<header class="hdr"><div class="hdr-in">
     <button class="brand" data-act="go" data-to="overview" aria-label="Triodian · go to overview">${b !== 'phone' ? LOGO(22) : MARKSVG()}</button>
-    ${b !== 'phone' ? '<span class="vrule" aria-hidden="true"></span>' : ''}<span class="apptitle">Confidentiality Exposure</span>
+    ${b !== 'phone' ? '<span class="vrule" aria-hidden="true"></span>' : ''}<span class="apptitle" title="AI Confidentiality Exposure Assessment">AI Confidentiality Exposure<span class="apptitle-long"> Assessment</span></span>
     ${b === 'desk' ? `<nav class="steps" aria-label="Steps">${S && (SRV.user || practice()) ? `<button data-act="go" data-to="actions" ${UI.screen === 'actions' ? 'aria-current="page"' : ''}>My actions${nAct ? ` <span class="navcount">${nAct}</span>` : ''}</button>` : ''}${steps.map(s => `<button data-act="go" data-to="${s}" ${UI.screen === s ? 'aria-current="page"' : ''}>${SNAME[s]}</button>`).join('')}</nav>` : ''}
     <div class="hdr-r">${saveChip()}
-      ${b !== 'phone' && (practice() || !SRV.user) ? `<label class="chip" title="Practice only: choose whose view to try"><span aria-hidden="true">⌾</span>${personSelect('who-hdr')}</label>` : ''}
       ${account()}<button class="iconbtn" data-act="drawer" aria-label="Menu" aria-expanded="${UI.drawer}">☰</button></div></div>${docband()}</header>
     ${SRV.site ? `<div class="examplebar" style="background:#FDF0E1;color:#8A4B08;border-color:#F0D2AE">${esc(SRV.site)}: a test site for trying things out, not the live assessment</div>` : ''}
-    ${S.engagement.example ? `<div class="examplebar">Worked example: a fictional company, deal and advisers, for practice only. Nothing is saved. <button class="lnk" data-act="leaveExample">Leave the worked example</button></div>` : ''}
+    ${S.engagement.example && !suiteBand() ? `<div class="examplebar examplenote">${EXAMPLE_NOTE} <button class="lnk" data-act="leaveExample">Leave the worked example</button></div>` : ''}
     ${blindChannels().length ? `<div class="examplebar" style="background:var(--aubergine-bg);color:var(--aubergine);border-color:#D9CFE0">Blind re-derivation (R3): the classifier’s work on ${esc(blindChannels().map(e => e.id).join(', '))} is hidden until you record your own reach</div>` : ''}`;
 }
 function drawer() {
@@ -273,6 +284,7 @@ let lastBp = null, inChange = false, pendingRender = false, LEAVING = false;
 function render() { if (inChange) { if (!pendingRender) { pendingRender = true; setTimeout(() => { pendingRender = false; doRender(); }, 0); } return; } doRender(); }
 const dsKey = el => el && el !== document.body && el.dataset && Object.keys(el.dataset).length ? el.tagName + '|' + JSON.stringify(Object.assign({}, el.dataset)) : null;
 function doRender() {
+  suiteNote();
   const app = document.getElementById('app'); lastBp = bp();
   if (!S) { app.innerHTML = entryOverlay(); return; }
   if (UI.personId && !person(UI.personId) && (practice() || !SRV.user)) UI.personId = '';
@@ -351,7 +363,7 @@ function saveLabel() {
   if (!SRV.on) return ['b-ochre', 'Not saved', 'The server is not reachable.'];
   return { saved: ['b-green', 'Saved', SRV.lastAt ? 'Saved ' + fmtAt(SRV.lastAt) + ' by ' + SRV.lastBy : 'Saved'], pending: ['b-grey', 'Saving…', 'Changes will be saved in a moment'], saving: ['b-grey', 'Saving…', 'Saving'], error: ['b-red', 'Not saved', SRV.err], conflict: ['b-red', 'Changed elsewhere', SRV.err] }[SRV.state] || ['b-grey', '', ''];
 }
-function saveChip() { const l = saveLabel(); if (!l || !l[1]) return ''; return `<button class="badge ${l[0]}" id="savechip" data-act="saveChip" title="${esc(l[2])}" style="cursor:pointer">${esc(l[1])}</button>`; }
+function saveChip() { const l = saveLabel(); if (!l || !l[1] || practice()) return ''; return `<button class="badge ${l[0]}" id="savechip" data-act="saveChip" title="${esc(l[2])}" style="cursor:pointer">${esc(l[1])}</button>`; }
 function paintSave() { const el = document.getElementById('savechip'); if (el) el.outerHTML = saveChip(); }
 async function loadReal(quiet) {
   const r = await api('GET', '/api/engagement');
