@@ -38,7 +38,7 @@ function create(ctx) {
   };
   const fieldSrc = (e, n) => n === 17 ? (R.indicative(e) || {}).adjustment : n === 21 || n === 22 ? 'Obtainability test' : n === 25 ? 'Finding' : (e.fields[n] || {}).source;
   function summaryTable() {
-    return tbl(['Channel', 'Kind', 'Boundary', 'Reach', 'Class', 'Indicative', 'Required', 'Obtainable', 'Finding', 'Priority', 'F5'], S().channels.map(e => { const f = R.finding(e), ix = R.indicative(e), ob = R.obResult(e);
+    return tbl(['Channel', 'Kind', 'Boundary', 'Reach', 'Class', 'Indicative', 'Required', 'Obtainable', 'Finding', 'Grade', 'F5'], S().channels.map(e => { const f = R.finding(e), ix = R.indicative(e), ob = R.obResult(e);
       return [e.id, R.kindOf(e), R.boundaryOf(e), R.reachOf(e), R.classOf(e), ix ? ix.value : '', R.fv(e, 24), ob.done ? ob.rung : '', f.type ? R.codeOpt(f.type) : f.label, f.priority || '', f.f5 ? 'yes' : (f.absent ? '' : 'no')]; }));
   }
   function worksheetParts(e) {
@@ -55,7 +55,7 @@ function create(ctx) {
     add('G', 'Questions to counsel', '\n\n' + (qs.length ? tbl(['Ref', 'Question', 'Sent', 'Response', 'Received'], qs.map(q => [q.ref, q.question, dDoc(q.sentOn), q.response || q.status, dDoc(q.respondedOn)])) : 'None.\n\n'));
     add('H', 'Counsel’s determinations', '\n\n' + tbl(['Field', 'Determination', 'Question'], [23, 24].map(n => [n + ' ' + R.FLD(n).name, e.fields[n] && e.fields[n].value ? fvs(e, n) : 'awaiting counsel', (e.fields[n] || {}).source || ''])));
     let I = f.type ? f.type + ' ' + R.findingName(f.type) : f.label || '—';
-    if (f.type === 'F2') I += ` · gap ${f.gap} ${f.gap === 1 ? 'rung' : 'rungs'} (required ${f.required}, obtainable ${f.obtainable}) · priority ${f.priority} (${f.exposure}) · failed test ${f.failedTest} · route ${f.route} · owner ${f.owner} · 90-day step: ${f.step}`;
+    if (f.type === 'F2') I += ` · gap ${f.gap} ${f.gap === 1 ? 'rung' : 'rungs'} (required ${f.required}, obtainable ${f.obtainable}) · grade ${f.priority} (${f.exposure}) · failed test ${f.failedTest} · route ${f.route} · owner ${f.owner} · 90-day step: ${f.step}`;
     if (f.type === 'F1') I += ` · obtainable ${f.obtainable} meets required ${f.required} · owner ${f.owner || '—'}`;
     if (f.type === 'F3') I += ` · counsel’s determination ${f.ref}: ${f.basis || ''} · technical classification beside it: ${R.reachOf(e) || '—'} / ${R.classOf(e) || '—'}`;
     if (f.type === 'F4') I += ` · question that would resolve it: ${f.question || '—'} · who could answer: ${f.who || '—'}`;
@@ -83,6 +83,15 @@ function create(ctx) {
     });
     return out;
   }
+  /* The annex's limit statements and ISO vocabulary (tasks ISO.4 and ISO.9): records, re-assessment, what the
+     assessment is in ISO terms, and the ladder beside ISO/IEC 27002:2022. */
+  function isoAnnexMd() {
+    const e = S().engagement, r = e.retention || {}, I = C.isoScope || {}, X = (C.crosswalks || {}).rungs, iv = String(e.reassessment || '').trim();
+    return `## Records: retention, storage and disposition\n\n${I.records || ''}\n\n` + tbl(['Item', 'As recorded in set-up'], [['Retention period', r.period || '[not yet recorded]'], ['Where the records are stored', r.location || '[not yet recorded]'], ['At the end of the period', r.disposition || '[not yet recorded]']])
+      + `## Re-assessment\n\nThe assessment is a statement at a point in time for one matter. It is run again ${iv ? 'at this interval: ' + iv : 'at an interval not yet recorded'}, and when the matter’s stage changes, a channel kind or adviser is added, or a sanctioned tool’s terms change.\n\n`
+      + `## What the assessment is, in ISO terms\n\n${I.what || ''}\n\n${I.not || ''}\n\n`
+      + (X ? `## ${X.title}\n\n${X.intro}\n\n` + tbl(X.head, X.rows) + `${X.note}\n\n` : '');
+  }
   function redlineMd() {
     const vs = S().versions; if (!vs.length) return '';
     const last = vs[vs.length - 1], d = diffSnap(last.snapshot, nowSnap());
@@ -106,7 +115,7 @@ function create(ctx) {
   function genCD2() { return mdHead(O('CD2')) + `## Summary\n\n` + summaryTable() + `## Worksheets\n\n` + S().channels.map(e => worksheetMd(e)).join(''); }
   function genCD3() {
     const steps = R.planSteps();
-    return mdHead(O('CD3')) + `Every F2 step by owner and week, ordered by priority, using only configuration, contract or direction the company already has. Who closes the residual gap (F5), and with what, is a separate decision for the company and is not part of this plan.\n\n## Steps by priority\n\n` + (steps.length ? tbl(['Week', 'Channel', 'Priority', 'Gap', 'Failed test', 'Route', 'Owner', 'Step', 'Evidence it produces'], steps.map(x => [x.week, `${x.channel} (${x.kind}, ${x.boundary})`, x.priority, x.gap, x.failedTest, x.route, x.owner, x.step, x.produces])) : 'No F2 findings: nothing to close from what exists.\n\n')
+    return mdHead(O('CD3')) + `Every F2 step by owner and week, ordered by evidence shortfall grade, using only configuration, contract or direction the company already has. Who closes the residual gap (F5), and with what, is a separate decision for the company and is not part of this plan.\n\n## Steps by grade\n\n` + (steps.length ? tbl(['Week', 'Channel', 'Grade', 'Gap', 'Failed test', 'Route', 'Owner', 'Step', 'Evidence it produces'], steps.map(x => [x.week, `${x.channel} (${x.kind}, ${x.boundary})`, x.priority, x.gap, x.failedTest, x.route, x.owner, x.step, x.produces])) : 'No F2 findings: nothing to close from what exists.\n\n')
       + `## Steps by owner\n\n` + (steps.length ? [...new Set(steps.map(x => x.owner))].map(o => `### ${o}\n\n` + steps.filter(x => x.owner === o).map(x => `- ${x.week}: ${x.channel} · ${x.step} → ${x.produces}`).join('\n') + '\n\n').join('') : '') + redlineMd();
   }
   function genCD4() {
@@ -135,6 +144,7 @@ function create(ctx) {
     ];
     let m = mdHead(O('CD5')) + `Issued in Triodian’s name.\n\n`;
     C.annexOutline.forEach((t, k) => { m += `## ${k + 1}. ${t}\n\n${gen[k]}\n\n${A[k + 1] ? A[k + 1] + '\n\n' : '[Method owner’s text]\n\n'}`; });
+    m += isoAnnexMd();
     m += redlineMd();
     m += `## Exceptions log\n\n` + (s.exceptions.length ? tbl(['Ref', 'Departure', 'Reason', 'Approved by', 'Date'], s.exceptions.map(x => [x.ref, x.departure, x.reason, pname(x.approvedBy), x.on])) : 'None.\n\n');
     m += `Signed for Triodian: ${e.annexSigned.by ? pname(e.annexSigned.by) + ', method owner, ' + dDoc(e.annexSigned.on) : '[not signed]'}\n`;

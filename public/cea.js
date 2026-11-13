@@ -234,6 +234,9 @@ function buildExample() {
   s.exceptions = [{ ref: 'EX-01', departure: 'K7 for ADV-03 recorded as absent: the provider’s tooling is the room itself', reason: 'Assessed under CH-06; a second entry would double-count', approvedBy: 'p4', on: '2027-01-22' }];
   UI.personId = 'p5'; UI.vprev = null; UI.vkey = null;
   X.practiceVersions();
+  // How the records are kept and when the assessment is run again (task ISO.9), printed on the annex.
+  s.engagement.retention = { period: 'Seven years from completion of the purchase', location: 'This deployment, and counsel’s matter file for the outputs', disposition: 'Deleted, with a record of the deletion kept by counsel' };
+  s.engagement.reassessment = 'At signing, and again within 90 days of completion';
   // The sign-offs the example opens with were made on the matter's own dates, not today.
   s.versions.forEach(v => { v.at = (/R2|review/i.test(v.label) ? '2027-01-22' : '2027-01-19') + 'T09:00:00.000Z'; v.by = /R2|review/i.test(v.label) ? 'Kit Morrow' : 'Meredith Vance'; });
 }

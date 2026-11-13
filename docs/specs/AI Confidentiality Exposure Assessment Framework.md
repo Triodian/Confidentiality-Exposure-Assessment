@@ -144,6 +144,12 @@ Where the method says "insider list", read the insider list for a deal or board 
 
 A deal reads exactly as the method did before matter types. An assessment saved without a type is a deal.
 
+### 2.9 In ISO terms
+
+In ISO/IEC 27002:2022 terms the assessment is evidence about data leakage prevention (8.12), information transfer (5.14) and information deletion (8.10) for one matter, at each channel by which its information can reach an external AI model. In ISO/IEC 42001:2023 terms it is evidence for the responsible use of AI systems (A.9.2) and, for an adviser's or provider's tools, for suppliers (A.10.3). It is not an AI system impact assessment (A.5; ISO/IEC 42005:2025).
+
+The assessment does not assess likelihood, bias, data or model behaviour. It grades how far the obtainable evidence falls short of the required rung; that grade is not a risk rating. The Reference screen sets the ladder N0 to N6 beside the ISO/IEC 27002 controls it supports.
+
 ## 3. Framework at a glance
 
 Three instruments are applied in four steps, the same way to every channel for every matter.
@@ -525,9 +531,9 @@ One finding is recorded per channel after counsel has set the required rung. The
 
 F5 is expected on most B1 and B3 channels. Reporting it on each channel, rather than once in the annex, is deliberate: the board paper then shows the gap's extent, not only its existence.
 
-### 9.2 Gap rating (proposed, for confirmation)
+### 9.2 Evidence shortfall grade (proposed, for confirmation)
 
-Gap size is the required rung minus the obtainable rung. Priority combines gap size with exposure consequence.
+Gap size is the required rung minus the obtainable rung. The evidence shortfall grade combines gap size with exposure consequence. It is not a risk rating: the assessment does not assess likelihood.
 
 | Gap size | X1 | X2 | X3 or X4 |
 | --- | --- | --- | --- |
@@ -535,11 +541,11 @@ Gap size is the required rung minus the obtainable rung. Priority combines gap s
 | 2 rungs | Low | Medium | High |
 | 3 or more rungs | Medium | High | High |
 
-A gap at low confidence is reported at its rated priority with the confidence shown beside it. F5 carries no rating; it is reported by count and by the information classes it covers.
+A gap at low confidence is reported at its grade with the confidence shown beside it. F5 carries no rating; it is reported by count and by the information classes it covers.
 
 ### 9.3 Closing routes and the 90-day plan
 
-Each F2 names one route and one owner. The plan lists the F2 steps by owner and by week, ordered by priority. Who closes F5, and with what, is a separate decision for the company.
+Each F2 names one route and one owner. The plan lists the F2 steps by owner and by week, ordered by grade. Who closes F5, and with what, is a separate decision for the company.
 
 | Failed test | Usual route | Usual owner | Typical 90-day step |
 | --- | --- | --- | --- |
@@ -566,7 +572,7 @@ One worksheet per channel. It is the working paper the checker reviews and the s
 | F. Obtainability | Result of T1 to T5 at each rung tested, the obtainable rung and confidence |
 | G. Questions to counsel | Each question, date sent, response, date received |
 | H. Counsel's determinations | Fields 23 and 24, transcribed with question references |
-| I. Finding | Type, gap size and priority, failed test, route, owner, 90-day step; F5 beside it if it applies |
+| I. Finding | Type, gap size and grade, failed test, route, owner, 90-day step; F5 beside it if it applies |
 | J. Not known | Every field recorded as not known, and what would resolve it |
 
 ### 9.5 Question-to-counsel template
@@ -589,7 +595,7 @@ One worksheet per channel. It is the working paper the checker reviews and the s
 | # | Deliverable | Contents | Accepted when |
 | --- | --- | --- | --- |
 | CD1 | Channel register | All 25 fields for every channel. Source index. Count of not-known fields by kind | Every channel kind considered; every entry has a finding or is recorded F4; no field blank |
-| CD2 | Finding per channel | One worksheet per channel (section 9.4). A one-page summary table: channel, kind, boundary, reach, class, indicative, required, obtainable, finding, priority, F5 flag | Each worksheet reviewed; each rung traceable to a test result |
+| CD2 | Finding per channel | One worksheet per channel (section 9.4). A one-page summary table: channel, kind, boundary, reach, class, indicative, required, obtainable, finding, grade, F5 flag | Each worksheet reviewed; each rung traceable to a test result |
 | CD3 | 90-day plan from what exists | Every F2 step by owner and week, with the setting, clause or direction it uses, and what evidence it will produce when done | Each step names an owner who holds the setting, the letter or the team |
 | CD4 | The residual gap, marked | The channels carrying F5, the information classes they reach, the class of control that would close it, the earliest horizon, and what the company would be able to show once it existed. No product named | DLC Legal confirms the language rules in 10.4 are met |
 | CD5 | Technical annex, in Triodian's name | Method, matter profile (code name only), summary table, findings, the demonstration record, limitations, not-known count, statement of what was not done | Validation complete; the check complete and its points closed or disclosed |
@@ -673,7 +679,8 @@ A register extract from the confidentiality assessment can seed a later AI Use A
 - No matter content is collected. If a document supplied contains it, it is returned and a structural or redacted version requested.
 - No prompt history, chat log or individual submission is collected or read.
 - No adviser or vendor confidential material is sought beyond the terms the company already holds.
-- Retained or destroyed at close as DLC Legal directs.
+- Kept for the retention period, in the storage location and with the disposition recorded at set-up and printed on the technical annex (ISO/IEC 42001:2023, 7.5.3). DLC Legal sets them. At close, counsel records whether the working papers are archived or destroyed.
+- Re-assessed at the interval recorded at set-up, and when the matter's stage changes, a channel kind or adviser is added, or a sanctioned tool's terms change. The annex states the interval.
 
 ### 12.4 Exceptions log
 
@@ -685,7 +692,7 @@ Any departure from this framework is logged with the reason and who approved it:
 | --- | --- |
 | Channels by kind and boundary | Shows what the register covered |
 | Fields not known, by kind | Shows how much rests on missing facts |
-| Findings by type and priority | The headline result |
+| Findings by type and grade | The headline result |
 | F5 count and the information classes it reaches | The extent of the residual gap |
 | Obtainable rungs by confidence | How firm the result is |
 | Failed tests by type and boundary | Where evidence breaks down |
@@ -724,7 +731,7 @@ None of these is in the DLC Legal deck. Each was added to make the method execut
 - [ ] **The non-egress ladder N0 to N6** (section 8.3), its base rule, and the boundary adjustments.
 - [ ] **The five-part obtainability test** (8.4), carried over from the AI Use Assessment with T2 redefined as matter-scoped.
 - [ ] **Finding types F4 and F5**, and reporting F5 per channel rather than once.
-- [ ] **The gap priority matrix** (9.2) and the exposure consequence codes X1 to X4.
+- [ ] **The evidence shortfall grade matrix** (9.2) and the exposure consequence codes X1 to X4.
 - [ ] **The ten-day plan, document list and interview list** (section 5).
 - [ ] **The five-minute demonstration protocol** (5.4) and its place in the annex.
 - [ ] **The two-day counsel turnaround** and the 12-to-25 channel default.
