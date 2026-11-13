@@ -60,3 +60,21 @@ test('the worked example is Harrow Valley Foods, with the position its board res
   expect(errs).toEqual([]);
   await ctx.close();
 });
+
+// From Start, the visitor is the shared demo account, which has no access to this app. The example link still opens the
+// example: nothing in it is saved. Without the link, someone without access sees the no-access note and can open it by hand.
+test('a sector link from Start opens the example for a visitor without access to the app', async ({ browser }) => {
+  const ctx = await browser.newContext({ extraHTTPHeaders: { 'X-Dev-User': 'visitor@cea.test' }, viewport: { width: 1280, height: 900 } });
+  await ctx.addInitScript(() => { try { sessionStorage.setItem('triodian.suite.seen', '1'); } catch (e) {} });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(String(e))); p.on('dialog', d => d.accept());
+  await p.goto('/?example=unregulated');
+  await expect(p.locator('.examplenote', { hasText: 'Harrow Valley Foods' }).first()).toBeVisible({ timeout: 15_000 });
+  await expect(p).toHaveURL(/\/(#.*)?$/);
+  await p.locator('.examplenote').getByRole('button', { name: 'Leave the worked example' }).click();
+  await expect(p.locator('#app')).toContainText("You don't have access yet");
+  await p.goto('/'); await p.waitForTimeout(1200);
+  await expect(p.locator('.examplenote', { hasText: 'Worked example:' })).toHaveCount(0);   // no link: the note, not the example
+  await expect(p.locator('#app')).toContainText("You don't have access yet");
+  expect(errs).toEqual([]);
+  await ctx.close();
+});

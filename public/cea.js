@@ -248,9 +248,11 @@ const EX_LEFT = 'triodian.example.left';
 const exampleLeft = () => { try { return sessionStorage.getItem(EX_LEFT) === '1'; } catch (e) { return false; } };
 const markExampleLeft = left => { try { if (left) sessionStorage.setItem(EX_LEFT, '1'); else sessionStorage.removeItem(EX_LEFT); } catch (e) {} };
 // Triodian Start opens the app with ?example=<sector>. This app has one worked example, so the link opens it, and its
-// own parameter is taken off the address (any other, such as the suite's, stays).
-const exampleLink = () => { try { const u = new URLSearchParams(location.search); if (u.get('example')) { markExampleLeft(false); u.delete('example'); const rest = u.toString(); history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash); } } catch (e) {} };
-const openExampleByDefault = () => { exampleLink(); return !exampleLeft() && location.hash !== '#actions'; };
+// own parameter is taken off the address (any other, such as the suite's, stays). Returns whether the link carried it.
+const exampleLink = () => { try { const u = new URLSearchParams(location.search); if (u.get('example')) { markExampleLeft(false); u.delete('example'); const rest = u.toString(); history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash); return true; } } catch (e) {} return false; };
+// A visitor without access to this app (the shared demo account from Start, or someone not yet added) sees the no-access
+// note instead of the example, unless the link asked for the example: nothing in it is saved, so it is open to anyone signed in.
+const openExampleByDefault = () => { const linked = exampleLink(); return (linked || SRV.code !== 'no_access') && !exampleLeft() && location.hash !== '#actions'; };
 /* Opens the worked example: a fictional company and matter, never saved. */
 function openExample() { buildExample(); UI.screen = 'overview'; UI.channelId = null; UI.archived = null; UI.drawer = false; render(); }
 function boot() {
@@ -274,7 +276,7 @@ async function connect() {
   SRV.checked = true;
   if (r.ok) { SRV.on = true; SRV.user = r.body.user; SRV.site = r.body.site || ''; await X.loadReal(); await X.loadArchives(); if (S()) { const h = location.hash.slice(1); UI.screen = h && X.SNAME[h] ? h : 'overview'; } }
   else { SRV.on = false; SRV.code = r.code || ''; SRV.reason = r.error; }
-  if (SRV.code !== 'no_access' && openExampleByDefault()) { openExample(); return; }
+  if (openExampleByDefault()) { openExample(); return; }
   render();
 }
 window.CEAApp = { get state() { return S(); }, go, gates: () => R().gates(), finding: id => R().finding(X.ch(id)), validate: o => R().validateFile(o), broken: () => R().brokenRefs(), hits: () => R().legalHits(), hydrate: o => R().hydrate(o), setState: x => { X.setState(x); render(); }, save: () => X.snapshotForSave(), example: buildExample };
