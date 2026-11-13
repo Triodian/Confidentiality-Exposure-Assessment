@@ -97,7 +97,7 @@ function personSelect(id) { return `<select id="${id}" data-act="person" aria-la
 /* The demo band (public/suite.js, on the demo and test sites) carries the worked example's note, so the app shows no
    band of its own for it there. A client site has no demo band and keeps the app's band. */
 const suiteBand = () => (document.documentElement.getAttribute('data-suite-demo') || 'on') !== 'off';
-const EXAMPLE_NOTE = 'Worked example: a fictional company, deal and advisers, for practice only. Nothing is saved.';
+const EXAMPLE_NOTE = 'Worked example: a fictional company, Harrow Valley Foods, its deal and advisers, for practice only. Nothing is saved.';
 function suiteNote() {
   const h = S && S.engagement.example && suiteBand() ? `<span class="examplenote"><span class="tsu-long">${EXAMPLE_NOTE}</span><span class="tsu-short">Worked example, fictional. Nothing is saved.</span><button data-act="leaveExample">Leave<span class="tsu-long"> the worked example</span></button></span>` : '';
   if (window.TriodianSuiteNote !== h) { window.TriodianSuiteNote = h; window.dispatchEvent(new Event('triodian:note')); }
@@ -171,7 +171,7 @@ function entryOverlay() {
     ${entryStatus()}
     <div class="acts">
       ${SRV.on && canSetup() ? `<button class="act" data-act="new"><span class="mono" style="color:var(--copper)">01</span><span><strong>Start the assessment</strong><br><span class="small soft">Begin at set-up. Everyone with a role then works on the same assessment.</span></span></button>` : ''}
-      <button class="act" data-act="example"><span class="mono" style="color:var(--copper)">${SRV.on && canSetup() ? '02' : '01'}</span><span><strong>Open the worked example</strong><br><span class="small soft">Practise on a fictional deal: a listed company in diligence, with an enterprise assistant, a data room and three advisers. Never saved.</span></span></button>
+      <button class="act" data-act="example"><span class="mono" style="color:var(--copper)">${SRV.on && canSetup() ? '02' : '01'}</span><span><strong>Open the worked example</strong><br><span class="small soft">Practise on a fictional deal: a private manufacturer buying a supplier, in diligence, with an enterprise assistant, a data room and three advisers. Never saved.</span></span></button>
     </div><p class="small" style="margin-top:16px">New to the app? <a href="/user-guide/">Read the user guide</a>: who does what, the eight phases, and how the outputs are made.</p>${SRV.user ? `<p class="small soft" style="margin-top:8px">Signed in as ${esc(SRV.user.email)} · <a href="/profile/">Your profile</a>${SRV.user.isAdmin ? ' · <a href="/admin/">Admin</a>' : ''} · <a href="/auth/logout">Sign out</a></p>` : `<p class="small soft" style="margin-top:8px"><a href="/auth/logout">Sign out</a></p>`}<div class="scope" style="margin-top:22px"><span aria-hidden="true">⚠</span><span>${esc(C.banner)}</span></div></div></div>`;
 }
 const opening = (eb, h1, sub) => `<div class="opening"><div class="eyebrow">${eb}</div><h1 class="h1">${h1}</h1>${sub ? `<p class="sub">${sub}</p>` : ''}</div>`;

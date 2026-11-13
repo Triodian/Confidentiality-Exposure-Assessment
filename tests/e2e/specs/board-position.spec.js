@@ -15,7 +15,7 @@ test('the board’s position suggests a required rung on each channel; only coun
   const card = p.locator('#positionCard');
   await expect(card).toContainText(/resolved by the board/i);
   await expect(card).toContainText('G6 Board and transaction');
-  await expect(card).toContainText('Enterprise tools only where the assistant’s scope excludes');
+  await expect(card).toContainText('Meeting AI may not run in board meetings or on calls about pricing or acquisitions');
 
   // a file that is not a position is refused with the reason
   await p.locator('[data-act="togglePosPaste"]').click();
