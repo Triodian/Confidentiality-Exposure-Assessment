@@ -25,7 +25,8 @@ function create(C, getS, opts) {
       schema: 'triodian.cea.v1',
       engagement: { id: uid(), company: '', reference: '', counselFirm: '', gcActsAsCounsel: false, secondApproverId: '', startDate: '', briefConfirmed: { by: '', on: '', ref: '' }, documentsRequestedOn: '',
         checkerMode: 'validation', checkerPersonId: '', checkerOrganisation: '', example: false, autosave: false,
-        legalPhrases: C.legalPhrases.slice(), productPhrases: C.productPhrases.slice(), annexText: {}, annexSigned: { by: '', on: '' }, closure: { by: '', on: '', disposition: '', note: '' } },
+        legalPhrases: C.legalPhrases.slice(), productPhrases: C.productPhrases.slice(), annexText: {}, annexSigned: { by: '', on: '' }, closure: { by: '', on: '', disposition: '', note: '' },
+        retention: { period: '', location: '', disposition: '' }, reassessment: '' },
       profile: { matterType: 'deal', codeName: '', stage: '', teamCounts: '', folders: [], advisers: [], tools: [], devicePolicy: '', privilegeMarking: '', counselTurnaround: 2 },
       profileAgreed: { gcBy: '', gcOn: '', counselBy: '', counselOn: '' },
       people: [],
@@ -161,7 +162,7 @@ function create(C, getS, opts) {
   }
   const findingCls = t => ({ F1: 'b-green', F2: 'b-red', F3: 'b-slate', F4: 'b-ochre' }[t] || 'b-grey');
   const findingName = t => (C.findings.find(f => f.code === t) || {}).name || '';
-  /** The 90-day plan: every F2 step by owner, ordered by priority then gap (section 9.3). Week from priority. */
+  /** The 90-day plan: every F2 step by owner, ordered by evidence shortfall grade then gap (section 9.3). Week from the grade. */
   function planSteps() {
     const P = { High: 0, Medium: 1, Low: 2 }, W = { High: 'Weeks 1 to 4', Medium: 'Weeks 4 to 8', Low: 'Weeks 8 to 12' };
     return S().channels.map(e => ({ e, f: finding(e) })).filter(x => x.f.type === 'F2').sort((a, b) => (P[a.f.priority] - P[b.f.priority]) || (b.f.gap - a.f.gap))
@@ -382,7 +383,7 @@ function create(C, getS, opts) {
     return [
       ['Channels by kind and boundary', fmt(byKindB)],
       ['Fields not known, by kind', fmt(nkByKind)],
-      ['Findings by type and priority', fmt(fnd)],
+      ['Findings by type and grade', fmt(fnd)],
       ['F5 count and the information classes it reaches', `${f5.count} of ${es.length} channels · classes ${f5.classes.join(', ') || '—'}`],
       ['Obtainable rungs by confidence', fmt(conf)],
       ['Failed tests by type and boundary', fmt(ft)],
@@ -435,6 +436,7 @@ function create(C, getS, opts) {
     const d = newAssessment(), m = {};
     Object.keys(d).forEach(k => { const v = o[k], dv = d[k]; m[k] = v == null ? dv : Array.isArray(dv) ? (Array.isArray(v) ? v : dv) : dv && typeof dv === 'object' ? (v && typeof v === 'object' && !Array.isArray(v) ? Object.assign({}, dv, v) : dv) : v; });
     m.engagement.briefConfirmed = Object.assign({ by: '', on: '', ref: '' }, m.engagement.briefConfirmed); m.engagement.annexSigned = Object.assign({ by: '', on: '' }, m.engagement.annexSigned); m.engagement.closure = Object.assign({ by: '', on: '', disposition: '', note: '' }, m.engagement.closure);
+    m.engagement.retention = Object.assign({ period: '', location: '', disposition: '' }, m.engagement.retention); if (typeof m.engagement.reassessment !== 'string') m.engagement.reassessment = '';
     if (!Array.isArray(m.engagement.legalPhrases)) m.engagement.legalPhrases = C.legalPhrases.slice();
     if (!Array.isArray(m.engagement.productPhrases)) m.engagement.productPhrases = C.productPhrases.slice();
     ['folders', 'advisers', 'tools'].forEach(k => { if (!Array.isArray(m.profile[k])) m.profile[k] = []; });

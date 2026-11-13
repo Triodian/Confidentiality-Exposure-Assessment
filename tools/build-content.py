@@ -309,7 +309,7 @@ C = {
 
   'deliverables': [
     {'id': 'CD1', 'name': 'Channel register', 'contents': 'All 25 fields for every channel. Source index. Count of not-known fields by kind', 'accepted': 'Every channel kind considered; every entry has a finding or is recorded F4; no field blank'},
-    {'id': 'CD2', 'name': 'Finding per channel', 'contents': 'One worksheet per channel (section 9.4). A one-page summary table: channel, kind, boundary, reach, class, indicative, required, obtainable, finding, priority, F5 flag', 'accepted': 'Each worksheet reviewed; each rung traceable to a test result'},
+    {'id': 'CD2', 'name': 'Finding per channel', 'contents': 'One worksheet per channel (section 9.4). A one-page summary table: channel, kind, boundary, reach, class, indicative, required, obtainable, finding, grade, F5 flag', 'accepted': 'Each worksheet reviewed; each rung traceable to a test result'},
     {'id': 'CD3', 'name': '90-day plan from what exists', 'contents': 'Every F2 step by owner and week, with the setting, clause or direction it uses, and what evidence it will produce when done', 'accepted': 'Each step names an owner who holds the setting, the letter or the team'},
     {'id': 'CD4', 'name': 'The residual gap, marked', 'contents': 'The channels carrying F5, the information classes they reach, the class of control that would close it, the earliest horizon, and what the company would be able to show once it existed. No product named', 'accepted': 'Counsel confirms the language rules in 10.4 are met'},
     {'id': 'CD5', 'name': 'Technical annex, in Triodian’s name', 'contents': 'Method, matter profile (code name only), summary table, findings, the demonstration record, limitations, not-known count, statement of what was not done', 'accepted': 'Validation complete; the check complete and its points closed or disclosed'},
@@ -323,7 +323,7 @@ C = {
     ['F', 'Obtainability', 'Result of T1 to T5 at each rung tested, the obtainable rung and confidence'],
     ['G', 'Questions to counsel', 'Each question, date sent, response, date received'],
     ['H', 'Counsel’s determinations', 'Fields 23 and 24, transcribed with question references'],
-    ['I', 'Finding', 'Type, gap size and priority, failed test, route, owner, 90-day step; F5 beside it if it applies'],
+    ['I', 'Finding', 'Type, gap size and grade, failed test, route, owner, 90-day step; F5 beside it if it applies'],
     ['J', 'Not known', 'Every field recorded as not known, and what would resolve it'],
   ],
 
@@ -333,7 +333,7 @@ C = {
     'boundary': {'term': 'Boundary', 'def': 'Whose estate the channel sits in: the company’s own (B1), an adviser’s (B2) or a person’s (B3). The boundary decides what the company can do: configure, require by letter, or direct.', 'where': 'Register'},
     'infoClass': {'term': 'Information class', 'def': 'The highest class of matter information the channel can reach, I1 (the matter exists) to I6 (the most sensitive class, which depends on the matter type: board papers for a deal, privileged advice for a dispute). Descriptive only; counsel determines its legal character.', 'where': 'Classify'},
     'reach': {'term': 'Reach', 'def': 'How matter information can enter the channel: typed text only (R1), documents a person submits (R2), stored content the user can open (R3), or content it receives without a submission (R4). Three yes-or-no tests derive it.', 'where': 'Classify'},
-    'exposure': {'term': 'Exposure consequence', 'def': 'A technical label, X1 to X4, for the information the channel can reach, used only to rate a gap’s priority. Whether any disclosure or trading provision is engaged is counsel’s determination.', 'where': 'Findings'},
+    'exposure': {'term': 'Exposure consequence', 'def': 'A technical label, X1 to X4, for the information the channel can reach, used only to grade a gap’s evidence shortfall. Whether any disclosure or trading provision is engaged is counsel’s determination.', 'where': 'Findings'},
     'rung': {'term': 'Non-egress evidence ladder', 'def': 'A scale, N0 to N6, of what the company could show about a channel: nothing, a direction, an attestation, a configuration export, a record, containment, or a control that reads meaning.', 'where': 'Classify, Reference'},
     'indicative': {'term': 'Indicative rung', 'def': 'The evidence type that corresponds to what the channel can reach, set by rule: N4 for R1 and R2, N5 for R3 and R4, capped at N4 in an adviser’s estate and N1 on a personal device. A technical starting point; which rung applies is for the company and counsel.', 'where': 'Classify'},
     'required': {'term': 'Required rung', 'def': 'The evidence the company can reasonably require for this channel, given its rights over it. Set by counsel, never by Triodian.', 'where': 'Counsel'},
@@ -343,8 +343,13 @@ C = {
     'finding': {'term': 'Finding', 'def': 'One per channel after counsel has set the required rung: shown (F1), gap closable from what exists (F2), no reasonable reach (F3), not determinable on documents (F4). F5 is recorded beside F1 or F2.', 'where': 'Findings'},
     'F5': {'term': 'Residual gap', 'def': 'Every channel that accepts typed or pasted text has the same gap: a paraphrase of a matter paragraph passes every control the company owns, because those controls check files, patterns and destinations and none reads meaning. Named on every channel where it exists; the decision is the company’s. No product is named.', 'where': 'Findings'},
     'F4': {'term': 'Not determinable on documents', 'def': 'The documents do not show what a tool retains, what an adviser’s tooling can reach, or what a setting is. Recorded with the specific question that would resolve it and who could answer it.', 'where': 'Register'},
-    'gap': {'term': 'Gap', 'def': 'The required rung minus the obtainable rung, in rungs. Used only where counsel has set a required rung above the obtainable one. Priority combines gap size with exposure consequence.', 'where': 'Findings'},
-    'plan': {'term': '90-day plan', 'def': 'Every F2 step by owner and week, ordered by priority, using only configuration, contract or direction the company already has. Who closes F5, and with what, is a separate decision.', 'where': 'Outputs'},
+    'grade': {'term': 'Evidence shortfall grade', 'def': 'How serious a gap is, graded High, Medium or Low from its size and the exposure consequence. It is not a risk rating: likelihood is not assessed.', 'where': 'Findings, Outputs'},
+    'likelihood': {'term': 'Likelihood', 'def': 'Not assessed. The assessment establishes what evidence the company can produce and grades how far it falls short of the required rung. It does not estimate how likely a disclosure is, and it does not test bias, data or model behaviour.', 'where': 'Throughout'},
+    'riskCriteria': {'term': 'Risk criteria', 'def': 'ISO Guide 73:2009 (now ISO 31073:2022): the terms of reference against which the significance of a risk is evaluated. Here they are the board’s confidentiality position and the required rung counsel sets for each channel.', 'where': 'Counsel, Findings'},
+    'records': {'term': 'Records', 'def': 'The retention period, the storage location and what happens to the assessment’s records at the end of the period, recorded in set-up and printed on the technical annex (ISO/IEC 42001:2023, 7.5.3).', 'where': 'Set-up, Outputs'},
+    'reassessment': {'term': 'Re-assessment', 'def': 'The assessment is a statement at a point in time for one matter. It is run again at the interval recorded in set-up, and when the matter’s stage changes, a channel kind or adviser is added, or a sanctioned tool’s terms change.', 'where': 'Set-up, Outputs'},
+    'gap': {'term': 'Gap', 'def': 'The required rung minus the obtainable rung, in rungs. Used only where counsel has set a required rung above the obtainable one. The [[grade|evidence shortfall grade]] combines gap size with exposure consequence.', 'where': 'Findings'},
+    'plan': {'term': '90-day plan', 'def': 'Every F2 step by owner and week, ordered by grade, using only configuration, contract or direction the company already has. Who closes F5, and with what, is a separate decision.', 'where': 'Outputs'},
     'profile': {'term': 'Matter profile', 'def': 'Nine items recorded once: code name, stage, team and insider counts, matter folders, advisers, sanctioned tools, device policy, privilege marking and counsel turnaround. Set by counsel and the GC.', 'where': 'Profile'},
     'codeName': {'term': 'Code name', 'def': 'The only name the assessment uses for the matter. Chosen by counsel. No counterparty name, price or figure appears anywhere.', 'where': 'Profile'},
     'dealContent': {'term': 'Matter content', 'def': 'A matter document, a paragraph from one, a price, a counterparty name or a valuation figure. None enters the assessment. A reviewer who finds any in a field records an exception and the field is cleared.', 'where': 'Register, Review'},
@@ -365,6 +370,29 @@ C = {
     'adviser': {'term': 'Adviser', 'def': 'A bank, law firm, technical adviser, accounting firm or data-room provider engaged on the matter. Each has one K7 entry. Questions to an adviser go through the matter team lead or counsel, never from Triodian.', 'where': 'Profile'},
   },
 
+  # ISO/IEC vocabulary beside the ladder (development plan task ISO.4), and what the assessment is in ISO terms (ISO.2, ISO.3, ISO.9).
+  'crosswalks': {
+    'rungs': {
+      'title': 'Non-egress rungs N0 to N6 beside ISO/IEC 27002:2022',
+      'intro': 'ISO/IEC 27002:2022 gives guidance on the controls in Annex A of ISO/IEC 27001:2022. Three of them are about information leaving: data leakage prevention (8.12), information transfer (5.14) and information deletion (8.10). The ladder is the evidence side of those controls for one matter: what the company can hold to show that its information did not reach an external AI model, or what reached one and when.',
+      'head': ['Rung', 'Here', 'ISO/IEC 27002:2022 control it supports', 'Note'],
+      'rows': [
+        ['N0 None', 'Nothing is held', 'None', 'Where the channel can reach matter information, nothing supports 5.14 or 8.12 for it'],
+        ['N1 Direction', 'A written AI-use direction to the matter team and insider list, acknowledged and dated', '5.10 Acceptable use of information and other associated assets; 6.3 Information security awareness, education and training', 'Shows that people were told. It is not evidence of what they did'],
+        ['N2 Attestation', 'A signed statement from the provider’s terms or an adviser: what is retained, whether content trains a model, what the adviser’s tooling reaches', '5.20 Addressing information security within supplier agreements; 5.23 Information security for use of cloud services; 8.10 Information deletion, for what the provider keeps and for how long', 'A statement by the provider or the adviser. It gives no independent opinion'],
+        ['N3 Configuration', 'A dated export of the settings in force over the matter window', '8.9 Configuration management; 8.12 Data leakage prevention, for the rules set; 5.13 Labelling of information; 8.3 Information access restriction, for barriers; 8.23 Web filtering', 'Shows what was set, not what happened'],
+        ['N4 Record', 'A retrievable log of what crossed the channel in the matter window, with who and when', '8.15 Logging; 8.16 Monitoring activities; 5.14 Information transfer, as a record of transfers', 'Answers “what left”. 8.10 applies to how long the log itself is kept'],
+        ['N5 Containment', 'Evidence that the channel cannot reach matter content at all for the matter window', '8.3 Information access restriction; 8.12 Data leakage prevention, as blocking; 5.14 Information transfer, as a rule that prevents the transfer', 'The strongest rung the company can usually show with the controls it has'],
+        ['N6 Meaning control', 'A control at the boundary that reads the meaning of outbound text, with a signed record per submission', '8.12 Data leakage prevention, applied to meaning rather than to patterns; 8.15 Logging, for the signed record', 'No ISO/IEC 27002 control reads the meaning of text. 8.12 is the nearest'],
+      ],
+      'note': 'The cross-walk gives the nearest control in ISO/IEC 27002:2022 so that the two can be read side by side. It is Triodian’s reading, for a person with ISO/IEC 27001 competence to check, and it is not an equivalence. Read each control in a licensed copy of the standard.',
+    },
+  },
+  'isoScope': {
+    'what': 'In ISO/IEC 27002:2022 terms the assessment is evidence about data leakage prevention (8.12), information transfer (5.14) and information deletion (8.10) for one matter, at each channel by which its information can reach an external AI model. In ISO/IEC 42001:2023 terms it is evidence for the responsible use of AI systems (A.9.2) and, for an adviser’s or provider’s tools, for suppliers (A.10.3). It is not an AI system impact assessment (A.5; ISO/IEC 42005:2025).',
+    'not': 'The assessment does not assess likelihood, bias, data or model behaviour. It grades how far the obtainable evidence falls short of the required rung; that grade is not a risk rating.',
+    'records': 'How long the assessment’s records are kept, where, and what happens to them at the end are recorded in set-up and printed on the technical annex (ISO/IEC 42001:2023, 7.5.3). Counsel sets them.',
+  },
   'frameworkMarkdown': framework_md,
   'markSvg': mark_svg,
 }
