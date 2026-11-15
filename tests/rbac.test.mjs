@@ -71,4 +71,10 @@ t('with the setting, counsel cannot give it either', 'cn', n => { n.profileAgree
 t('with the setting, an executive who is not named cannot give it', 'ex2', n => { n.profileAgreed.counselBy = 'ex2'; n.profileAgreed.counselOn = '2026-11-06'; }, false, dual);
 t('the method owner turns the setting on in set-up', 'mo', n => { n.engagement.gcActsAsCounsel = true; n.engagement.secondApproverId = 'ex'; }, true);
 t('the GC cannot turn the setting on', 'gx', n => { n.engagement.gcActsAsCounsel = true; }, false);
+// ---- the first save of a deployment, or a file loaded into an empty one, goes through the same rules (security review 15 Nov 2026, S.5) ----
+const first = (label, who, mutate, expectOk) => { const n = base(); n.channels = []; mutate(n); const r = checkSave(null, n, U(who), users); const okd = !r.error; if (okd !== expectOk) fails++; console.log((okd === expectOk ? 'PASS' : 'FAIL') + ' · first save: ' + label + (r.error ? ' → ' + r.error : '')); };
+first('the method owner starts an assessment from the blank template', 'mo', () => {}, true);
+first('a file carrying counsel’s R6 is refused', 'mo', n => n.reviews = [{ point:'R6', by:'cn', result:'complete', on:'2026-11-01' }], false);
+first('a file carrying another person’s classification and peer review is refused', 'mo', n => n.channels = [{ id:'CH-01', fields:{ '8':{ value:'x' }, '15':{ value:'R3' } }, classifiedBy:'as', peerReview:{ personId:'pr', reach:'R3' } }], false);
+first('a file carrying the GC’s agreement to the profile is refused', 'mo', n => { n.profileAgreed.gcBy = 'gc'; n.profileAgreed.gcOn = '2026-11-01'; }, false);
 console.log(fails ? fails + ' FAILED' : 'all passed'); process.exit(fails ? 1 : 0);

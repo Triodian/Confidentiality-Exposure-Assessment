@@ -6,7 +6,7 @@ done there touches the live assessment. A banner on every page says "Test site".
 
 - Changes go to the `test` branch first; Cloudflare deploys them to the test site.
 - When they have been checked there, merge `test` into `main`; Cloudflare deploys the live site.
-- The first person listed in `BOOTSTRAP_ADMINS` (lib/config.js) to sign in becomes the site's administrator.
+- The first person listed in the Worker variable `FIRST_ADMINS` to sign in becomes the site's administrator, once; after that administrators are managed in Admin (there is no compiled-in list).
 - Both addresses should be covered by the same Access application, or each by its own with the AUD set per environment.
 
 | | Live | Test |
