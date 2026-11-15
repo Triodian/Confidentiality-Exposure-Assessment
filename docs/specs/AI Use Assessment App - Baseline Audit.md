@@ -1,6 +1,6 @@
 # AI Use Assessment App: Baseline Audit
 
-Oct 21, 2026 · @Damian Hickey · Audit of Triodian/use-assessment at commit ae9d7cd, as the baseline for the AI Confidentiality Exposure Assessment app
+Oct 21, 2026 · Audit of Triodian/use-assessment at commit ae9d7cd, as the baseline for the AI Confidentiality Exposure Assessment app
 
 ## 1. Purpose and what was audited
 

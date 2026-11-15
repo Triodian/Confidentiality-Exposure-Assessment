@@ -1,6 +1,6 @@
 # AI Confidentiality Exposure Assessment Framework
 
-Oct 21, 2026 · @Damian Hickey · Draft for confirmation · Revised 8 November 2026 for six matter types and the board's confidentiality position
+Oct 21, 2026 · Draft for confirmation · Revised 8 November 2026 for six matter types and the board's confidentiality position
 
 ## 1. Summary
 
@@ -221,12 +221,12 @@ R = does the work. A = accountable for it. C = consulted. I = informed.
 
 ### 4.3 Team
 
-| Role | Person | Responsibility in the assessment |
-| --- | --- | --- |
-| Method owner | Damian Hickey | Scope, sequence and the evidence each stage has to produce. Signs the technical annex |
-| Delivery manager | Leon Cosgrove | Plan, document requests, interview schedule, exceptions log |
-| AI architect | Abhishek Gupta | Technical reading of each tool and setting: what it reaches, what it retains, what record it leaves |
-| Validation | Sam Ferraro PhD | Checks the measures without having written them, before anything goes to counsel or the checker |
+| Role | Responsibility in the assessment |
+| --- | --- |
+| Method owner | Scope, sequence and the evidence each stage has to produce. Signs the technical annex |
+| Delivery manager | Plan, document requests, interview schedule, exceptions log |
+| AI architect | Technical reading of each tool and setting: what it reaches, what it retains, what record it leaves |
+| Validation | Checks the measures without having written them, before anything goes to counsel or the checker |
 
 ### 4.4 Rules of engagement
 
@@ -659,7 +659,7 @@ A register extract from the confidentiality assessment can seed a later AI Use A
 | R1 | Profile review | End of phase 1 | Counsel and GC | Profile agreed; every channel kind listed for consideration |
 | R2 | Register completeness | End of phase 2 | Delivery manager | Fields 1 to 14 complete or not known; every value sourced and dated; no matter content in any field |
 | R3 | Classification review | During phase 3 | A second Triodian reviewer, not the classifier | Reach re-derived from field 8 without sight of the original; differences resolved and logged |
-| R4 | Validation | End of phase 3 | Sam Ferraro | Rules in 8.3 and 8.4 applied consistently; every adjustment has a reason; every obtainable rung has five test results |
+| R4 | Validation | End of phase 3 | The validator | Rules in 8.3 and 8.4 applied consistently; every adjustment has a reason; every obtainable rung has five test results |
 | R5 | Legal-line and content check | Before any draft leaves Triodian | Method owner | No sentence states what the law requires; no matter content; "required", "gap" and "residual gap" used only as 10.4 allows; no product named |
 | R6 | Counsel review | Phase 5 | Counsel | Draft seen by counsel first; determinations transcribed accurately |
 | R7 | Check | Phase 6 | Independent checker, or validation if none is confirmed | Is the assessment sound, and are its findings supported? |
@@ -763,7 +763,7 @@ None of these is in the counsel deck. Each was added to make the method executab
 
 ### Sources
 
-- Counsel's planning deck: "Matter information and AI: where it can reach an external model, and what your client can prove", Damian Hickey, 21 October 2026, 29 slides.
+- Counsel's planning deck: "Matter information and AI: where it can reach an external model, and what your client can prove", 21 October 2026, 29 slides.
 - AI Use Assessment Framework, 11 October 2026, for structure, the obtainability test and the review points.
 - Opportunity assessment note, this project, 21 October 2026.
 - Development plan tasks 2.7 (matter types) and 2.8 (the board's confidentiality position), 8 November 2026, and the app's content (`tools/build-content.py`, `matterTypes`, `boardPosition`), which this framework follows.
