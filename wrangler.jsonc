@@ -33,6 +33,8 @@
   // never affected. To hold messages instead of sending, set NOTIFY_SENDING to "off".
   "send_email": [{ "name": "EMAIL" }],
 
+  // FIRST_ADMINS: comma-separated emails that become this deployment's first administrator on sign-in, once, while it has
+  // never had one; written per deployment by the installer. There is no compiled-in list (security review 15 Nov 2026).
   // DEMO_LOGIN (demo addition): the shared trio_demo sign-in, the same as the other Triodian apps so one demo
   // sign-in covers all of them. Its cookie key, DEMO_SESSION_KEY, is a Worker secret (the same value in every app). See lib/identity/session.js.
   "vars": { "SUITE_DEMO": "on", "SUITE_COOKIE_DOMAIN": "triodian.com", "SUITE_SESSION_COOKIE": "tri_suite", "NOTIFY_SENDING": "on", "NOTIFY_FROM": "notifications@triodian.com" },
@@ -68,7 +70,7 @@
       "d1_databases": [
         { "binding": "DB", "database_name": "confidentiality-exposure-client-db", "database_id": "REPLACE-WITH-THE-CLIENT-DATABASE-ID" }
       ],
-      "vars": { "SUITE_DEMO": "off", "SUITE_COOKIE_DOMAIN": "CLIENT-DOMAIN.example", "SUITE_SESSION_COOKIE": "tri_suite", "DEMO_LOGIN": "", "SITE_URL": "https://confidentiality-exposure.CLIENT-DOMAIN.example", "NOTIFY_SENDING": "off", "NOTIFY_FROM": "" },
+      "vars": { "SUITE_DEMO": "off", "SUITE_COOKIE_DOMAIN": "CLIENT-DOMAIN.example", "SUITE_SESSION_COOKIE": "tri_suite", "DEMO_LOGIN": "", "FIRST_ADMINS": "ADMIN@CLIENT-DOMAIN.example", "SITE_URL": "https://confidentiality-exposure.CLIENT-DOMAIN.example", "NOTIFY_SENDING": "off", "NOTIFY_FROM": "" },
       "send_email": [{ "name": "EMAIL" }],
       "triggers": { "crons": ["0 21 * * *"] },
       "observability": { "enabled": true }
