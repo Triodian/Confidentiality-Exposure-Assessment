@@ -4,7 +4,7 @@ Oct 21, 2026 · @Damian Hickey · Draft for confirmation · Revised 8 November 2
 
 ## 1. Summary
 
-The AI confidentiality exposure assessment establishes, for one live or recently closed confidential matter, every channel by which the company's matter information can reach an external AI model, and what the company could show about each if asked whether the information left. The matter can be one of six types: a deal (M&A or capital raising), a litigation or dispute, an R&D or intellectual property programme, a tender or bid, board papers, or export-controlled data (section 2.8). The method is the same for each; the type sets the profile's wording, the stages, the adviser types and the names of the information classes. It is the technical half of a joint engagement led by DLC Legal. DLC Legal answers what the company can require of its people and advisers, and what it must disclose if information leaves; this assessment answers what can actually be shown.
+The AI confidentiality exposure assessment establishes, for one live or recently closed confidential matter, every channel by which the company's matter information can reach an external AI model, and what the company could show about each if asked whether the information left. The matter can be one of six types: a deal (M&A or capital raising), a litigation or dispute, an R&D or intellectual property programme, a tender or bid, board papers, or export-controlled data (section 2.8). The method is the same for each; the type sets the profile's wording, the stages, the adviser types and the names of the information classes. It is the technical half of a joint engagement led by counsel. Counsel answers what the company can require of its people and advisers, and what it must disclose if information leaves; this assessment answers what can actually be shown.
 
 | Item | Position |
 | --- | --- |
@@ -16,11 +16,11 @@ The AI confidentiality exposure assessment establishes, for one live or recently
 | Inputs | Through counsel: the matter team and insider list, the adviser list and their letters, the confidentiality deed or other terms that bind the matter, the board's confidentiality position if the board has set one (section 8.6), the tenant owner's configuration summary, and the sanctioned tools' terms |
 | Not required | Matter content, system access, matter data, provider involvement |
 | Outputs | The channel register, one finding per channel, a 90-day plan from what exists, the residual gap marked, and a technical annex in Triodian's name |
-| Independent check | Validation by a separate hand within Triodian; an external checker if DLC Legal confirms one |
-| Measure | The company's own duties and the terms it has signed, as DLC Legal determines them. The assessment is solution-agnostic and presents no product |
-| Fee | Fixed, proposed at A$12,500 to A$15,000, engaged by DLC Legal under privilege |
+| Independent check | Validation by a separate hand within Triodian; an external checker if counsel confirms one |
+| Measure | The company's own duties and the terms it has signed, as counsel determines them. The assessment is solution-agnostic and presents no product |
+| Fee | Fixed and agreed before the engagement starts; Triodian publishes its fees, by jurisdiction, on its website. Engaged by counsel under privilege |
 
-**Status of this document.** The deck was written for deals. On 8 November 2026 the method was extended to six matter types (section 2.8) and to read the board's confidentiality position (section 8.6); section 13.3 lists both for confirmation. The problem statement, the four outputs, the engagement shape, the roles and the fee come from the DLC Legal planning deck (21 October 2026). The channel taxonomy, the five questions, the register fields, the ladder, the test, the finding types, the two-week plan and the templates are drafted here to make the method executable, following the structure of the AI Use Assessment Framework (11 October 2026) so that one app build can serve both. Section 13 lists each drafted element that needs confirmation.
+**Status of this document.** The deck was written for deals. On 8 November 2026 the method was extended to six matter types (section 2.8) and to read the board's confidentiality position (section 8.6); section 13.3 lists both for confirmation. The problem statement, the four outputs, the engagement shape, the roles and the fee come from counsel's planning deck (21 October 2026). The channel taxonomy, the five questions, the register fields, the ladder, the test, the finding types, the two-week plan and the templates are drafted here to make the method executable, following the structure of the AI Use Assessment Framework (11 October 2026) so that one app build can serve both. Section 13 lists each drafted element that needs confirmation.
 
 **Standing rule.** Every legal determination is the company's and its counsel's. Triodian supplies the framework, the facts and the technical classification. Nothing in the assessment or its working papers states a legal conclusion, including whether any information was price-sensitive, whether any carve-out was lost, or whether any deed was breached.
 
@@ -30,7 +30,7 @@ The AI confidentiality exposure assessment establishes, for one live or recently
 
 ### 2.1 Why the matter window
 
-The matter window is the period when a company's confidential information carries its highest value and its hardest consequences at the same time: from the first confidential step until the matter completes or is resolved, or 90 days after. Each matter type brings its own consequences. Which of them apply, and how, is DLC Legal's determination. The assessment records the information classes each channel can carry so that counsel can make it.
+The matter window is the period when a company's confidential information carries its highest value and its hardest consequences at the same time: from the first confidential step until the matter completes or is resolved, or 90 days after. Each matter type brings its own consequences. Which of them apply, and how, is counsel's determination. The assessment records the information classes each channel can carry so that counsel can make it.
 
 | Matter type | What counsel considers in the window (for counsel to determine) |
 | --- | --- |
@@ -109,7 +109,7 @@ The assessment covers every channel for one matter, of one type. The default reg
 
 ### 2.7 Out of scope
 
-- **Legal advice.** Whether any information was price-sensitive, whether any obligation was engaged, what the deed requires, and the privilege position are DLC Legal's.
+- **Legal advice.** Whether any information was price-sensitive, whether any obligation was engaged, what the deed requires, and the privilege position are counsel's.
 - **Matter content.** No matter document is read. Folder names, document counts and dates are the most the register holds.
 - **System access.** No tenant is connected to, queried or tested. Configuration evidence is a dated export supplied by the tenant owner.
 - **Matter data and personal data.** No prompt logs, chat histories or individual submissions are read. Logs are assessed for whether they exist, what they capture, and for what period.
@@ -167,7 +167,7 @@ Three instruments are applied in four steps, the same way to every channel for e
 1. **Fix the matter profile.** The matter code name, the matter team and insider list, the matter folders by name, the advisers, and the privilege position. Agreed with the GC or the executive who approved the brief.
 2. **Register the channels.** Every channel of every kind, with the terms, settings and records that govern it today. Each becomes a register entry.
 3. **Classify and test.** The reach and information class of each channel, the indicative rung, and the evidence obtainable.
-4. **Questions to counsel.** Legal questions go to DLC Legal in writing. Counsel sees every draft first. Counsel's determinations are recorded against each entry and the finding is set.
+4. **Questions to counsel.** Legal questions go to counsel in writing. Counsel sees every draft first. Counsel's determinations are recorded against each entry and the finding is set.
 
 ### 3.3 The logic of a finding
 
@@ -198,15 +198,15 @@ Every channel that accepts typed or pasted text has the same gap: a paraphrase o
 | Party | Role | Engaged by | Where it stops |
 | --- | --- | --- | --- |
 | The company | Client. The CEO or board approves the brief, the fee and the privilege position. The CFO's matter team, the advisers and the tenant owner hold the channels | n/a | n/a |
-| DLC Legal | Leads the engagement, holds the client, engages Triodian, owns every legal call, drafts the matter confidentiality protocol and board paper | The company | n/a |
-| Triodian | Technical party. Does the assessment and the register. Responsible for the result | DLC Legal | Gives no legal advice. Presents no product. Closes the residual gap only if the company asks, under a separate direct engagement |
-| Independent checker | Checks Triodian's assessment and reports to DLC Legal | DLC Legal, separately from Triodian (to be confirmed) | Does not do the assessment or build any control. Gives no legal advice |
+| Counsel | Leads the engagement, holds the client, engages Triodian, owns every legal call, drafts the matter confidentiality protocol and board paper | The company | n/a |
+| Triodian | Technical party. Does the assessment and the register. Responsible for the result | Counsel | Gives no legal advice. Presents no product. Closes the residual gap only if the company asks, under a separate direct engagement |
+| Independent checker | Checks Triodian's assessment and reports to counsel | Counsel, separately from Triodian (to be confirmed) | Does not do the assessment or build any control. Gives no legal advice |
 
 ### 4.2 Responsibility by activity
 
 R = does the work. A = accountable for it. C = consulted. I = informed.
 
-| Activity | CEO or GC | Matter team lead | Tenant owner | Advisers | DLC Legal | Triodian | Checker |
+| Activity | CEO or GC | Matter team lead | Tenant owner | Advisers | Counsel | Triodian | Checker |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Approve the brief, fee and privilege position | A | I | I | I | R | C | I |
 | Fix the matter profile | A | C | C | I | R | C | I |
@@ -230,12 +230,12 @@ R = does the work. A = accountable for it. C = consulted. I = informed.
 
 ### 4.4 Rules of engagement
 
-- **Counsel first.** Every draft goes to DLC Legal before anyone at the company sees it.
+- **Counsel first.** Every draft goes to counsel before anyone at the company sees it.
 - **Legal questions in writing.** Any point needing a legal view is logged as a numbered question to counsel (section 9.5) and is not answered in a working paper.
-- **Privilege.** The work is scoped through counsel on the privilege position DLC Legal determines. Marking, storage and circulation follow its instruction. The privilege marking appears on the first line of every output.
-- **One technical party.** DLC Legal deals with Triodian for all technical matters.
-- **Advisers through the company.** Any question to an adviser goes through the company's matter team lead or through DLC Legal, never directly from Triodian.
-- **Independence of the check.** The checker receives the register, worksheets and annex from DLC Legal, not from Triodian, and reports to DLC Legal.
+- **Privilege.** The work is scoped through counsel on the privilege position counsel determines. Marking, storage and circulation follow its instruction. The privilege marking appears on the first line of every output.
+- **One technical party.** Counsel deals with Triodian for all technical matters.
+- **Advisers through the company.** Any question to an adviser goes through the company's matter team lead or through counsel, never directly from Triodian.
+- **Independence of the check.** The checker receives the register, worksheets and annex from counsel, not from Triodian, and reports to counsel.
 
 ## 5. Workplan
 
@@ -245,18 +245,18 @@ Two weeks, ten working days. The plan assumes documents D1 to D9 arrive by day 2
 
 | Phase | When | Activities | Output | Exit gate |
 | --- | --- | --- | --- | --- |
-| 0. Mobilise | Before day 1 | DLC Legal confirms the brief with the executive who approved it. Privilege position and document handling set. Matter code name chosen. Document request issued | Confirmed brief. Document request list. Named contacts | Brief confirmed in writing by DLC Legal |
-| 1. Matter profile | Days 1 to 2 | Record the matter team and insider list by role and count, the matter folders by name, the advisers, the sanctioned tools, the device policy. Agree the profile with the GC | Matter profile (section 6.1) | GC and DLC Legal agree the profile |
+| 0. Mobilise | Before day 1 | Counsel confirms the brief with the executive who approved it. Privilege position and document handling set. Matter code name chosen. Document request issued | Confirmed brief. Document request list. Named contacts | Brief confirmed in writing by counsel |
+| 1. Matter profile | Days 1 to 2 | Record the matter team and insider list by role and count, the matter folders by name, the advisers, the sanctioned tools, the device policy. Agree the profile with the GC | Matter profile (section 6.1) | GC and counsel agree the profile |
 | 2. Register the channels | Days 2 to 5 | Interview the matter team lead, the tenant owner and the data-room administrator. Read the licence terms, letters and deed. Enter one channel per kind per estate, and one per adviser | Register with fields 1 to 14 complete (section 6.2). Source index | Every entry has a source and a date. Every channel kind considered |
 | 3. Classify and test | Days 5 to 8 | Classify reach and information class. Set the indicative rung. Run the obtainability test. Perform the five-minute demonstration if counsel allows. Validation | Register fields 15 to 22 complete. Rationale per entry. Draft worksheets | Validation passed with no open exceptions |
-| 4. Questions to counsel | Days 5 to 9 | Issue the numbered question set to DLC Legal as questions arise. Record determinations on rights, reach and required rung | Question log with responses. Fields 23 to 25 complete | Every question answered, or open with an owner |
-| 5. Findings and plan | Days 8 to 10 | One finding per channel. The 90-day plan from what exists. The residual gap named. Technical annex drafted. Draft to counsel first | Finding worksheets. 90-day plan. Technical annex, draft | DLC Legal accepts the draft for the check |
-| 6. Check | Day 10, or the following week if an external checker is confirmed | The pack goes to the checker through DLC Legal. Triodian answers queries through the same line | The check, reported to DLC Legal. Final annex | Check confirmed complete |
-| 7. Close | After the check | Register and annex handed to DLC Legal for its protocol and board paper. Working papers archived as DLC Legal directs | Final register. Closure note | DLC Legal's advice issues with the annex attached |
+| 4. Questions to counsel | Days 5 to 9 | Issue the numbered question set to counsel as questions arise. Record determinations on rights, reach and required rung | Question log with responses. Fields 23 to 25 complete | Every question answered, or open with an owner |
+| 5. Findings and plan | Days 8 to 10 | One finding per channel. The 90-day plan from what exists. The residual gap named. Technical annex drafted. Draft to counsel first | Finding worksheets. 90-day plan. Technical annex, draft | Counsel accepts the draft for the check |
+| 6. Check | Day 10, or the following week if an external checker is confirmed | The pack goes to the checker through counsel. Triodian answers queries through the same line | The check, reported to counsel. Final annex | Check confirmed complete |
+| 7. Close | After the check | Register and annex handed to counsel for its protocol and board paper. Working papers archived as counsel directs | Final register. Closure note | Counsel's advice issues with the annex attached |
 
 ### 5.2 Document request list
 
-Issued in phase 0 through DLC Legal. No document contains matter content; where one would, a redacted or structural version is requested.
+Issued in phase 0 through counsel. No document contains matter content; where one would, a redacted or structural version is requested.
 
 | Ref | Document | Used for |
 | --- | --- | --- |
@@ -283,7 +283,7 @@ Issued in phase 0 through DLC Legal. No document contains matter content; where 
 
 ### 5.4 The five-minute demonstration
 
-Performed in phase 3, in front of the CEO and CFO if DLC Legal allows, using nothing not already in the room.
+Performed in phase 3, in front of the CEO and CFO if counsel allows, using nothing not already in the room.
 
 1. Take one redacted paragraph from a past matter, or from this one if counsel allows. For a deal: a valuation assumption, a synergy line, a condition precedent. For other types, a passage of the same kind from the matter's I3 to I5 classes (section 2.4).
 2. Paraphrase it as a diligent analyst would before asking an AI tool for help. No names, no numbers that match a pattern.
@@ -308,7 +308,7 @@ Recorded once per assessment. The profile replaces the calibration set used in t
 | P5 | Advisers | Firm type and role for each, from the type's adviser types (below) |
 | P6 | Sanctioned AI tools | Each tool, licence tier, and whether its scope reaches P4 |
 | P7 | Device policy | Managed only · managed plus BYOD · unmanaged permitted |
-| P8 | Privilege marking | As DLC Legal instructs |
+| P8 | Privilege marking | As counsel instructs |
 | P9 | Counsel turnaround | Working days agreed for questions |
 
 | Type | P1, P3 and P4 as the profile asks them | P2 stages | P5 adviser types |
@@ -350,8 +350,8 @@ The deck names the register's purpose and four outputs. The 25 fields below brea
 | 20 | Independently checkable | Yes · no · partly, with reason | Triodian | 3 |
 | 21 | Obtainable rung | N0 to N6 (section 8.4) | Triodian, by test | 3 |
 | 22 | Confidence in obtainability | High · medium · low | Triodian | 3 |
-| 23 | Rights determination | Counsel's wording on what the company can require over this channel, with question reference | DLC Legal | 4 |
-| 24 | Required rung | N0 to N6 | DLC Legal | 4 |
+| 23 | Rights determination | Counsel's wording on what the company can require over this channel, with question reference | Counsel | 4 |
+| 24 | Required rung | N0 to N6 | Counsel | 4 |
 | 25 | Finding, closing route and owner | F1 to F5 (section 9.1), route (section 9.3), named owner | Triodian, after counsel | 5 |
 
 ### 6.3 Completion rules
@@ -445,7 +445,7 @@ The code is a technical label for the information the channel can reach. Whether
 | Code | Rung | What the company holds | Produced by | Closes the paraphrase gap |
 | --- | --- | --- | --- | --- |
 | N0 | None | Nothing | n/a | No |
-| N1 | Direction | A written AI-use direction covering the channel, issued to the matter team and insider list, with acknowledgements and dates | DLC Legal drafts; matter team lead issues | No |
+| N1 | Direction | A written AI-use direction covering the channel, issued to the matter team and insider list, with acknowledgements and dates | Counsel drafts; matter team lead issues | No |
 | N2 | Attestation | A signed statement from the tool provider's terms or from an adviser: what the tool retains, whether content trains any model, what the adviser's tooling can reach, over the matter window | The provider's terms; the adviser | No |
 | N3 | Configuration | A dated export of the settings in force: assistant scope, DLP rules, labels, barriers, web filter, device policy, with change history for the matter window | The tenant owner | No |
 | N4 | Record | A retrievable log of what crossed the channel in the matter window: submissions, uploads, exports, transcriptions, with who and when, capturing enough to answer "what left" | The tenant owner; the data-room provider; the adviser | Partly: shows what left, after the fact |
@@ -498,7 +498,7 @@ Illustrative only, not drawn from any client.
 | Finding | F2 at 0 rungs if counsel requires N5 and the setting is applied in the 90-day plan; F5 recorded beside it, because the assistant still accepts pasted paraphrase |
 | Question to counsel | Does the deed require the company to show containment over its own estate, and by when? |
 
-A second illustration, for contrast: K5, a phone, B3. Reach R1. Indicative N1. Evidence held N0 (no direction issued). Obtainable N1 once DLC Legal's direction issues and acknowledgements are collected. Finding F2 at one rung with owner the matter team lead, and F5 recorded beside it.
+A second illustration, for contrast: K5, a phone, B3. Reach R1. Indicative N1. Evidence held N0 (no direction issued). Obtainable N1 once counsel's direction issues and acknowledgements are collected. Finding F2 at one rung with owner the matter team lead, and F5 recorded beside it.
 
 ### 8.6 The board's confidentiality position (a suggestion for counsel)
 
@@ -550,10 +550,10 @@ Each F2 names one route and one owner. The plan lists the F2 steps by owner and 
 | Failed test | Usual route | Usual owner | Typical 90-day step |
 | --- | --- | --- | --- |
 | T1, produced, at B1 | Configuration | Tenant owner | Restrict assistant scope over the matter folders; apply barriers; enable retrievable logging; disable AI features on the data room |
-| T1, produced, at B2 | Contract | DLC Legal, through the GC | Attestation and record terms in the adviser letter at the next amendment, with the register beside the clauses |
-| T1, produced, at B3 | Direction | Matter team lead, with DLC Legal's text | Issue the AI-use direction; collect acknowledgements; add it to the insider list process |
+| T1, produced, at B2 | Contract | Counsel, through the GC | Attestation and record terms in the adviser letter at the next amendment, with the register beside the clauses |
+| T1, produced, at B3 | Direction | Matter team lead, with counsel's text | Issue the AI-use direction; collect acknowledgements; add it to the insider list process |
 | T2, matter-scoped | Configuration | Tenant owner | Scope logs and exports to the matter team and window |
-| T3, reachable | Contract | DLC Legal | Clause in the letter or deed; or the finding records that no contracting point falls within 90 days |
+| T3, reachable | Contract | Counsel | Clause in the letter or deed; or the finding records that no contracting point falls within 90 days |
 | T4, checkable | Process | GC | Nominate who verifies the export or attestation; keep the dated copy |
 | T5, timely | Process | Tenant owner; data-room administrator | Confirm retention covers the window; agree retrieval time |
 | Residual (F5) | Separate decision | The company | A control that reads meaning at the boundary. Not part of this plan |
@@ -597,10 +597,10 @@ One worksheet per channel. It is the working paper the checker reviews and the s
 | CD1 | Channel register | All 25 fields for every channel. Source index. Count of not-known fields by kind | Every channel kind considered; every entry has a finding or is recorded F4; no field blank |
 | CD2 | Finding per channel | One worksheet per channel (section 9.4). A one-page summary table: channel, kind, boundary, reach, class, indicative, required, obtainable, finding, grade, F5 flag | Each worksheet reviewed; each rung traceable to a test result |
 | CD3 | 90-day plan from what exists | Every F2 step by owner and week, with the setting, clause or direction it uses, and what evidence it will produce when done | Each step names an owner who holds the setting, the letter or the team |
-| CD4 | The residual gap, marked | The channels carrying F5, the information classes they reach, the class of control that would close it, the earliest horizon, and what the company would be able to show once it existed. No product named | DLC Legal confirms the language rules in 10.4 are met |
+| CD4 | The residual gap, marked | The channels carrying F5, the information classes they reach, the class of control that would close it, the earliest horizon, and what the company would be able to show once it existed. No product named | Counsel confirms the language rules in 10.4 are met |
 | CD5 | Technical annex, in Triodian's name | Method, matter profile (code name only), summary table, findings, the demonstration record, limitations, not-known count, statement of what was not done | Validation complete; the check complete and its points closed or disclosed |
 
-### 10.2 What DLC Legal produces
+### 10.2 What counsel produces
 
 Listed so the interfaces are clear. These are not Triodian deliverables.
 
@@ -656,12 +656,12 @@ A register extract from the confidentiality assessment can seed a later AI Use A
 
 | # | Review | When | Reviewer | Tests |
 | --- | --- | --- | --- | --- |
-| R1 | Profile review | End of phase 1 | DLC Legal and GC | Profile agreed; every channel kind listed for consideration |
+| R1 | Profile review | End of phase 1 | Counsel and GC | Profile agreed; every channel kind listed for consideration |
 | R2 | Register completeness | End of phase 2 | Delivery manager | Fields 1 to 14 complete or not known; every value sourced and dated; no matter content in any field |
 | R3 | Classification review | During phase 3 | A second Triodian reviewer, not the classifier | Reach re-derived from field 8 without sight of the original; differences resolved and logged |
 | R4 | Validation | End of phase 3 | Sam Ferraro | Rules in 8.3 and 8.4 applied consistently; every adjustment has a reason; every obtainable rung has five test results |
 | R5 | Legal-line and content check | Before any draft leaves Triodian | Method owner | No sentence states what the law requires; no matter content; "required", "gap" and "residual gap" used only as 10.4 allows; no product named |
-| R6 | Counsel review | Phase 5 | DLC Legal | Draft seen by counsel first; determinations transcribed accurately |
+| R6 | Counsel review | Phase 5 | Counsel | Draft seen by counsel first; determinations transcribed accurately |
 | R7 | Check | Phase 6 | Independent checker, or validation if none is confirmed | Is the assessment sound, and are its findings supported? |
 
 ### 12.2 Evidence standards
@@ -674,12 +674,12 @@ A register extract from the confidentiality assessment can seed a later AI Use A
 
 ### 12.3 Working papers
 
-- Marked, stored and circulated as DLC Legal directs under the privilege position it determines.
+- Marked, stored and circulated as counsel directs under the privilege position it determines.
 - Versioned. Each worksheet shows preparer, reviewer and date for every version.
 - No matter content is collected. If a document supplied contains it, it is returned and a structural or redacted version requested.
 - No prompt history, chat log or individual submission is collected or read.
 - No adviser or vendor confidential material is sought beyond the terms the company already holds.
-- Kept for the retention period, in the storage location and with the disposition recorded at set-up and printed on the technical annex (ISO/IEC 42001:2023, 7.5.3). DLC Legal sets them. At close, counsel records whether the working papers are archived or destroyed.
+- Kept for the retention period, in the storage location and with the disposition recorded at set-up and printed on the technical annex (ISO/IEC 42001:2023, 7.5.3). Counsel sets them. At close, counsel records whether the working papers are archived or destroyed.
 - Re-assessed at the interval recorded at set-up, and when the matter's stage changes, a channel kind or adviser is added, or a sanctioned tool's terms change. The annex states the interval.
 
 ### 12.4 Exceptions log
@@ -704,9 +704,9 @@ Any departure from this framework is logged with the reason and who approved it:
 
 ### 13.1 Assumptions
 
-- The register is 12 to 25 channels. A company with many advisers or several sanctioned tools extends phase 2 by a day or two within the fixed fee; beyond that, the brief is revisited through DLC Legal.
+- The register is 12 to 25 channels. A company with many advisers or several sanctioned tools extends phase 2 by a day or two within the fixed fee; beyond that, the brief is revisited through counsel.
 - Documents D1 to D9 arrive by day 2. Late documents move the plan day for day.
-- DLC Legal answers questions within two working days.
+- Counsel answers questions within two working days.
 - The tenant owner can export configuration without Triodian touching any system.
 - The independent check fits in the second week only if the checker is confirmed before day 1; otherwise validation stands as R7 and an external check follows.
 
@@ -714,16 +714,16 @@ Any departure from this framework is logged with the reason and who approved it:
 
 | Dependency | Owner | Needed by |
 | --- | --- | --- |
-| Confirmed brief, fee and privilege position | CEO or board, DLC Legal | Before day 1 |
-| Matter code name and profile | DLC Legal, GC | Day 2 |
-| Documents D1 to D10 | Company, through DLC Legal | Day 2 |
+| Confirmed brief, fee and privilege position | CEO or board, counsel | Before day 1 |
+| Matter code name and profile | Counsel, GC | Day 2 |
+| Documents D1 to D10 | Company, through counsel | Day 2 |
 | Interview access, including advisers through the company | Matter team lead | Days 2 to 5 |
-| Counsel's determinations | DLC Legal | Day 9 |
-| Check | Checker, through DLC Legal | Day 10 or following week |
+| Counsel's determinations | Counsel | Day 9 |
+| Check | Checker, through counsel | Day 10 or following week |
 
 ### 13.3 Drafted here, to be confirmed
 
-None of these is in the DLC Legal deck. Each was added to make the method executable.
+None of these is in the counsel deck. Each was added to make the method executable.
 
 - [ ] **The seven channel kinds** (section 2.3) and the six information classes (2.4).
 - [ ] **The 25 register fields and the nine-field matter profile** (section 6).
@@ -746,7 +746,7 @@ None of these is in the DLC Legal deck. Each was added to make the method execut
 - [ ] **Legal references.** ASX Listing Rule 3.1 and the Corporations Act are cited as the deck states them. This framework does not restate them; counsel confirms what appears in any deliverable.
 - [ ] **Whether X1 to X4 stay on the technical side of the line.** They label information classes reachable, not legal consequence. Confirm the labels and wording.
 - [ ] **Whether T3 stays on the technical side.** It records that a setting or term exists and what it says.
-- [ ] **Adviser questions.** Confirm the route: through the matter team lead, or through DLC Legal.
+- [ ] **Adviser questions.** Confirm the route: through the matter team lead, or through counsel.
 - [ ] **Matter content rule.** Confirm the structural-only document requests in 5.2 are sufficient, and the code-name practice.
 - [ ] **Document marking and circulation** under the privilege position.
 - [ ] **Whether F5 may appear in the board paper annex as drafted**, given the deck's commitment that no product is presented.
@@ -757,13 +757,13 @@ None of these is in the DLC Legal deck. Each was added to make the method execut
 
 - [ ] **The independent checker.** "To be confirmed" in the deck. The two-week plan depends on who it is and when.
 - [ ] **Whether the confidentiality assessment is a mode of the AI Use Assessment app or a separate app.** Section 11 is written so either works. The recommendation in the opportunity note of 21 October was a separate, lighter app sharing components and file formats.
-- [ ] **Fee.** A$12,500 to A$15,000 fixed per the deck. Confirm against the ten-day plan and the four-person team.
+- [ ] **Fee.** Not set in this framework; Triodian publishes its fees, by jurisdiction, on its website. Confirm the ten-day plan and the four-person team fit the published fee.
 - [ ] **Recently closed matters.** The deck includes recently closed deals; the same applies to every matter type. Confirm what changes: the window is past, so N4 record and N3 history matter more than N5 containment.
 - [ ] **Post-engagement.** The residual gap's "control that reads meaning" is noted in the deck as designed, not yet built, targeted for December 2026. This framework does not depend on it.
 
 ### Sources
 
-- DLC Legal planning deck: "Matter information and AI: where it can reach an external model, and what your client can prove", Damian Hickey, 21 October 2026, 29 slides.
+- Counsel's planning deck: "Matter information and AI: where it can reach an external model, and what your client can prove", Damian Hickey, 21 October 2026, 29 slides.
 - AI Use Assessment Framework, 11 October 2026, for structure, the obtainability test and the review points.
 - Opportunity assessment note, this project, 21 October 2026.
 - Development plan tasks 2.7 (matter types) and 2.8 (the board's confidentiality position), 8 November 2026, and the app's content (`tools/build-content.py`, `matterTypes`, `boardPosition`), which this framework follows.

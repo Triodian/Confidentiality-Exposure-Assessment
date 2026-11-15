@@ -445,7 +445,7 @@ About four fifths of the baseline carries unchanged: the Worker, identity, stora
 | Language rules (10.4) | R5 legal-line phrase list | Add a second phrase list for product names (Triodian, Pinpole and any named vendor) and a deal-content scan; "required" and "gap" usage checked the same way |
 | Review points R1–R7 (12.1) | R1–R7 | R1 becomes profile review by GC and counsel; R3 is the second-reviewer re-derivation of reach from field 8 (blind, as now); R4 validation; R7 by the checker or by validation if none |
 | Five-minute demonstration (5.4) | — | New small record on the Review screen: performed or not, on what text, which controls passed |
-| Roles (4.1) | Ten roles | Method owner, assessor, peer (reviewer), validation, delivery, counsel (DLC Legal), GC, deal team lead, tenant owner, checker; drop owner, IR, CRO |
+| Roles (4.1) | Ten roles | Method owner, assessor, peer (reviewer), validation, delivery, counsel, GC, deal team lead, tenant owner, checker; drop owner, IR, CRO |
 | Ten-day plan (5.1) | Eight phases with gates | Phases 0–7 as now with new gate conditions; day numbers shown on the overview |
 | Working papers (12.3) | No retention | Retention or destruction at close as counsel directs: an admin action that purges revisions and archives |
 
@@ -453,7 +453,7 @@ About four fifths of the baseline carries unchanged: the Worker, identity, stora
 
 - [ ] One repository with a mode switch, or a new repository seeded from this one (the opportunity note recommends the second).
 - [ ] Whether the deal-content scan refuses the save or only logs an exception (framework 6.3 says the field is cleared and an exception recorded).
-- [ ] Whether the checker is a user with a role in the app or receives the pack through DLC Legal only (framework 4.4 says the latter, so RP may not need a reader role).
+- [ ] Whether the checker is a user with a role in the app or receives the pack through counsel only (framework 4.4 says the latter, so RP may not need a reader role).
 - [ ] Whether the register extract to the AI Use Assessment (framework 11) is built now or left as a file format.
 
 ### Sources
