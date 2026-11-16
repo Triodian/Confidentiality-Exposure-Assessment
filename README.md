@@ -63,9 +63,12 @@ server design; the audit that set the baseline is in `docs/specs/`.
 2. **Sign-in.** In Zero Trust, create an Access application covering `confidentiality.triodian.com` (and the test
    address). Paste its AUD tag into `lib/config.js`, or set the Worker variable `ACCESS_AUD`. Until it is set, every API
    request answers 503 "Sign-in is not configured".
-3. **Deploy.** Connect the repository to Cloudflare Workers Builds (`main` → live, `test` → test site with
-   `--env test`), or run `npx wrangler deploy`. The first person in `BOOTSTRAP_ADMINS` to sign in becomes the
-   administrator and adds everyone else in Admin.
+3. **Deploy.** The Tests workflow (`.github/workflows/tests.yml`) deploys with wrangler after every test passes:
+   a push to `main` deploys the live site, a push to `test` deploys the test site with `--env test`. It needs the
+   repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; the Cloudflare Git build stays
+   disconnected so the workflow is the only deployer. For a one-off deploy from a machine, `npx wrangler deploy`.
+   The first person named in the Worker variable `FIRST_ADMINS` to sign in becomes the administrator, once, and
+   adds everyone else in Admin; nothing is compiled in.
 
 Email needs `triodian.com` onboarded in Cloudflare Email Service; until then sends are listed as Failed in
 Admin → Notifications and saves are unaffected. There is no link to the Risk Appetite app: a matter assessment has no
