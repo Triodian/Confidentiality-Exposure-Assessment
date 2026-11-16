@@ -49,7 +49,8 @@ server design; the audit that set the baseline is in `docs/specs/`.
 - `lib/core/` – cloud-neutral API (`api.js`), the server-side save check (`rbac.js`), blind re-derivation (`blind.js`),
   versions, another matter (`review.js`), notifications, three-way merge
 - `lib/identity/` – sign-in: `provider.js` picks the adapter for the deployment (`IDENTITY_PROVIDER`: `access`, the default, or `oidc`), `cloudflare-access.js` verifies the Cloudflare Access sign-in, `oidc.js` is the OpenID Connect relying party for a deployment not behind Access (Entra ID, Google Workspace, Okta), `session.js` the sessions and `people.js` the shared identity database. The provider supplies the email only; roles stay in the app
-- `lib/store/d1.js` – database access (Cloudflare D1)
+- `lib/store/d1.js` – database access, written against the D1 API; `lib/store/sqlite.js` gives SQLite the same shape (Node, tests)
+- `lib/platform/` – `links.js`, the links between apps (service bindings, or HTTPS with `LINK_SECRET`); `node.js`, the Node platform
 - `lib/config.js` – Access team domain and AUD tag, first administrator
 - `wrangler.jsonc` – Worker configuration (name, custom domain, database, test site)
 - `tools/build-content.py` – builds `public/cea-content.json` and `.js` (the scales, fields, questions, glossary and the
@@ -113,6 +114,20 @@ honours only on localhost.
 ```
 npx wrangler dev --local-upstream localhost --var LOCAL_DEV_NO_SIGNIN_EMAIL:you@example.com
 ```
+
+### On Node, without Cloudflare
+
+The same handler runs on Node with SQLite (`src/node.js`, `lib/platform/node.js`): `env` is the platform, so the Worker's
+bindings become a D1-shaped SQLite database (`lib/store/sqlite.js`), `public/` served from disk, email to a webhook or the
+log, and the links to the other apps over HTTPS with one shared `LINK_SECRET` (`lib/platform/links.js`) in place of the
+service bindings. Nothing in `lib/core` or `lib/identity` differs between the two.
+```
+PORT=8787 DATA_DIR=.data LOCAL_DEV_NO_SIGNIN_EMAIL=you@example.com FIRST_ADMINS=you@example.com node src/node.js
+```
+Behind a TLS proxy set `SITE_URL` to the public origin. Sign-in on Node is the organisation's own OpenID Connect provider
+(`IDENTITY_PROVIDER=oidc`), since there is no Cloudflare Access there. `tests/platform.test.mjs` starts the app this way and
+drives it over HTTP. Cloudflare stays the reference deployment and the installer's default; this is the seam a deployment
+into another cloud builds on.
 
 ## Roadmap
 
