@@ -4,7 +4,10 @@
 //   identity → lib/identity/session.js (the /login page and sessions; Cloudflare Access guards /auth/email only)
 //   storage  → lib/store/d1.js (Cloudflare D1)
 //   email    → Cloudflare Email Service binding EMAIL, only when NOTIFY_SENDING is "on"
+// The same handler runs on Node with SQLite (src/node.js, lib/platform/node.js): env is the platform (development plan ID.3).
 import { whoIs, handleAuth, gate, markDemo } from '../lib/identity/session.js';
+import { handleLink } from '../lib/platform/links.js';
+import { statusForService } from './status.js';
 import { d1Store } from '../lib/store/d1.js';
 import { identityUsers, withIdentity } from '../lib/identity/people.js';
 import { handle } from '../lib/core/api.js';
@@ -33,6 +36,10 @@ const storeFor = env => withIdentity(d1Store(env.DB), env.IDENTITY ? identityUse
 export const release = env => String((env && env.APP_COMMIT) || '').trim() || 'unknown';
 const withRelease = (res, env) => { try { const r = new Response(res.body, res); r.headers.set('X-Triodian-Release', release(env)); return r; } catch (e) { return res; } };
 
+/** What the other apps may read from this one over a link (src/status-service.js on Cloudflare; /api/link/<method>
+ *  with LINK_SECRET elsewhere, lib/platform/links.js). */
+export const LINK_METHODS = { status: async env => ({ status: 200, body: await statusForService(env) }) };
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -44,6 +51,10 @@ export default {
     // Sign-in: /login (a static page), /auth/* (lib/identity/session.js). Pages need a session; assets do not.
     if (url.pathname.startsWith('/auth/')) return (await handleAuth(request, env)) || new Response('Not found', { status: 404 });
     if (!url.pathname.startsWith('/api/')) return (await gate(request, env)) || markDemo(await env.ASSETS.fetch(request), env);
+
+    // Another app of the suite (the practice hub), over HTTPS with the deployment's LINK_SECRET (only where there are no service bindings).
+    const link = await handleLink(request, env, LINK_METHODS);
+    if (link) return link;
 
     const who = await whoIs(request, env);
     if (!who.email) return json({ error: who.error }, who.status || 401);
