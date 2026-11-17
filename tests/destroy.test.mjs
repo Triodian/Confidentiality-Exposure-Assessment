@@ -118,7 +118,7 @@ for (const [where, fault] of [['before the rollover (the UPDATE)', /^UPDATE enga
   ok('the new assessment is still at its revision, untouched', (await store.getEngagement()).revision === cur.revision);
   const r3 = await call('POST', '/api/next-assessment', { revision: cur.revision, resume: true });
   ok('Finish destruction again is harmless: nothing to remove, still a success', r3.status === 200 && r3.body.removed.revisions === 0 && r3.body.removed.notifications === 0);
-  await store.addNotification({ key: 'n-new', to: 'x@acme.test', subject: 'About the new matter', body: 'new matter body', status: 'held' }, '2026-11-17T01:00:00.000Z');
+  await store.addNotification({ key: 'n-new', to: 'x@acme.test', subject: 'About the new matter', body: 'new matter body', status: 'held' }, new Date(Date.now() + 60_000).toISOString());
   const r4 = await call('POST', '/api/next-assessment', { revision: cur.revision, resume: true });
   ok('a resume never touches notifications composed after the rollover', r4.status === 200 && sql.prepare('SELECT COUNT(*) AS n FROM notifications').get().n === 1);
 }
