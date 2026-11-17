@@ -1,6 +1,6 @@
 # AI Confidentiality Exposure Assessment
 
-[![Tests](https://github.com/Triodian/Confidentiality-Exposure-Assessment/actions/workflows/tests.yml/badge.svg)](https://github.com/Triodian/Confidentiality-Exposure-Assessment/actions/workflows/tests.yml) [![Licence: Apache 2.0](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE)
+[![Tests](https://github.com/Triodian/Confidentiality-Exposure-Assessment/actions/workflows/tests.yml/badge.svg)](https://github.com/Triodian/Confidentiality-Exposure-Assessment/actions/workflows/tests.yml) [![Licence: Apache 2.0](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Triodian/Confidentiality-Exposure-Assessment/badge)](https://scorecard.dev/viewer/?uri=github.com/Triodian/Confidentiality-Exposure-Assessment)
 
 AI Confidentiality Exposure Assessment shows, for one transaction, where confidential information can reach an
 external AI model: each channel the information passes through (email, document rooms, meeting tools, advisers'
